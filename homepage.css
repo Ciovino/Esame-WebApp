@@ -1,9 +1,26 @@
 body {
+    color: white !important;
     background-image: url("StackedWaves.svg");
+    height: 100%;
     background-size: cover;
     background-attachment: fixed;
-    background-position: center bottom;
     background-repeat: no-repeat;
+}
+
+body * {
+    padding: 2px;
+}
+
+div.immagini-podcast > img {
+    padding: 0px;
+    object-fit: cover;
+    width: 240px;
+    height: 240px;
+    transition: 0.5s;
+}
+
+div.immagini-podcast > img:hover {
+    scale: 1.05;
 }
 
 div#footer {
