@@ -22,44 +22,94 @@
             <div class="col-3">
                 <header id="navbar-laterale" class="navbar">
                     <div class="container-fluid d-flex flex-column align-items-start">
-                        <h2>Podcast </h2>
-                        <h3>Navbar</h3>
-                        <h3>Registrati o Login</h3>
+                        <h2>Podcast</h2>
+                        <h3>Registrati</h3>
+                        <h3>Login</h3>
+                        <h3>Il tuo profilo</h3>
                     </div>
                 </header>
 
-                <div id="barra-ricerca">
-                    <h3>Barra di ricerca</h3>
-                </div>
+                <aside id="barra-ricerca">
+                    <h3>Categorie</h3>
+                    <h3>I podcast che segui</h3>
+                    <h3>I tuoi podcast</h3>
+                </aside>
             </div>
 
-            <div class="col-9">
-                <div id="main">
-                    <!-- Podcast più recenti -->
-                    <div id="recenti" class="row">
-                        <h3 class="row">I podcast di oggi</h3>
-                        <div class="immagini-podcast d-flex">
-                            <img class="rounded-5 m-2" src="Biscotti.jpg">
-                            <img class="rounded-5 m-2" src="Coding.jpg">
+            <main class="col-9">
+                <!-- Podcast più recenti -->
+                <div id="recenti" class="elenco-podcast row">
+                    <h3 class="row">I podcast di oggi</h3>
+
+                    <div class="immagini-podcast d-flex flex-wrap">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Biscotti</h5>
+                                <p class="card-text">I biscotti, quelli buoni.</p>
+                            </div>
+                            <img src="Biscotti.jpg" class="immagine-podcast card-img-bottom" alt="Biscotti">
                         </div>
-                    </div>
-                    <!-- Tutti i podcast -->
-                    <div id="tutti" class="row">
-                        <h3 class="row">Tutti i podcast</h3>
-                        <div class="immagini-podcast d-flex">
-                            <img class="rounded-5 m-2" src="Coding 2.jpg">
-                            <img class="rounded-5 m-2" src="Fiori.jpg">
-                            <img class="rounded-5 m-2" src="Biscotti.jpg">
-                            <img class="rounded-5 m-2" src="Coding.jpg">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">CodingIsFun</h5>
+                                <p class="card-text">Come rendere divertente la programmazione.</p>
+                            </div>
+                            <img src="Coding.jpg" class="immagine-podcast card-img-bottom" alt="Coding">
                         </div>
                     </div>
                 </div>
-            </div>
+                <!-- Tutti i podcast -->
+                <div id="tutti" class="elenco-podcast row">
+                    <h3 class="row">Tutti i podcast</h3>
+
+                    <div class="immagini-podcast d-flex flex-wrap">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">WebApp</h5>
+                                <p class="card-text">Impara a creare una Web App.</p>
+                            </div>
+                            <img src="Coding 2.jpg" class="immagine-podcast card-img-bottom" alt="Coding">
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Fioritura</h5>
+                                <p class="card-text">Il miglior podcast sul giardinaggio.</p>
+                            </div>
+                            <img src="Fiori.jpg" class="immagine-podcast card-img-bottom" alt="Fiori">
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Biscotti</h5>
+                                <p class="card-text">I biscotti, quelli buoni.</p>
+                            </div>
+                            <img src="Biscotti.jpg" class="immagine-podcast card-img-bottom" alt="Biscotti">
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">CodingIsFun</h5>
+                                <p class="card-text">Come rendere divertente la programmazione.</p>
+                            </div>
+                            <img src="Coding.jpg" class="immagine-podcast card-img-bottom" alt="Coding">
+                        </div>
+
+                    </div>
+                </div>
+            </main>
         </div>
-        <hr>
 
-        <div id="footer" class="text-white m-3 d-flex justify-content-center w-100">
-            <h3>Footer</h3>
+        <div id="footer" class="d-flex justify-content-center align-items-center w-100">
+            <h3>
+                Podcast - IAW 22/23
+            </h3>
+
+            <h2 id="icone">
+                <i class="bi bi-instagram"></i>
+                <i class="bi bi-github"></i>
+            </h2>
         </div>
 
         <!-- Bootstrap 5.3 JavaScript -->

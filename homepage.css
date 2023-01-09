@@ -1,33 +1,56 @@
+:root {
+    /* Palette colori */
+    --oxford-blue: #0b2545;
+    --prussian-blue: #13315c;
+    --indigo-dye: #134074;
+    --pewter-blue: #8da9c4;
+    --mint-cream: #eef4ed;
+}
+
+html {
+    height: 100%;
+}
+
 body {
     color: white !important;
+
     background-image: url("StackedWaves.svg");
-    height: 100%;
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
+
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 body * {
     padding: 2px;
 }
 
-div.immagini-podcast > img {
-    padding: 0px;
-    object-fit: cover;
-    width: 240px;
-    height: 240px;
-    transition: 0.5s;
+header#navbar-laterale {
+    border-bottom: 3px solid var(--oxford-blue);
 }
 
-div.immagini-podcast > img:hover {
-    scale: 1.05;
+div.card {
+    border: 3px solid var(--oxford-blue);
+    margin: 3px;
+    max-width: 18rem;
+    max-height: 18rem;
+
+    background: linear-gradient(
+        180deg,
+        rgba(255, 110, 0, 1) 18%,
+        rgba(255, 166, 0, 1) 66%
+    );
+}
+
+.immagine-podcast {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
 }
 
 div#footer {
-    bottom: 0;
-    position: fixed;
-}
-
-header#navbar-laterale {
-    border: 3px solid #0b2545;
+    margin-top: auto;
 }
