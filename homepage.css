@@ -12,6 +12,7 @@ html {
 }
 
 body {
+    font-family: "Kanit", sans-serif !important;
     color: white !important;
 
     background-image: url("StackedWaves.svg");
@@ -30,6 +31,11 @@ body * {
 
 header#navbar-laterale {
     border-bottom: 3px solid var(--oxford-blue);
+}
+
+div#barra-laterale a {
+    color: white;
+    text-decoration: none;
 }
 
 div.card {
