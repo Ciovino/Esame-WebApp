@@ -19,3 +19,9 @@ Realizzare un'applicazione web per la gestione di podcast.
   - *Podcast recenti*: I 3/4 podcast che hanno l'aggiornamento più recente.
   - *Tutti i podcast*: Tutti i podcast del sito (**da scegliere un ordinamento**);
 - Footer, con le icone per i social.
+
+### Registrati
+- Form di registrazione contenente:
+  - Email (**univoca**);
+  - Password;
+  - Scegliere se diventare un creatore.

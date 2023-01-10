@@ -29,32 +29,24 @@ body * {
     padding: 2px;
 }
 
-header#navbar-laterale {
-    border-bottom: 3px solid var(--oxford-blue);
+div#nuovo-utente {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-div#barra-laterale a {
-    color: var(--mint-cream);
-    text-decoration: none;
+form.decorazione-form {
+    color: var(--oxford-blue);
+
+    border: 3px solid var(--prussian-blue);
+    border-radius: 10px;
+
+    background-color: rgba(238, 244, 237, 0.6);
 }
 
-div.card {
-    border: 3px solid var(--oxford-blue);
-    margin: 3px;
-    max-width: 18rem;
-    max-height: 18rem;
-
-    background: linear-gradient(
-        180deg,
-        rgba(255, 110, 0, 1) 18%,
-        rgba(255, 166, 0, 1) 66%
-    );
-}
-
-.immagine-podcast {
-    width: 10rem;
-    height: 10rem;
-    object-fit: cover;
+form.decorazione-form > div {
+    margin: 10px;
 }
 
 div#footer {
