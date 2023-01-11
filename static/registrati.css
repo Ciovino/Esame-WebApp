@@ -30,23 +30,33 @@ body * {
 }
 
 div#nuovo-utente {
+    margin: 0;
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -55%);
+}
+
+form div {
+    margin: 1.5rem;
 }
 
 form.decorazione-form {
     color: var(--oxford-blue);
 
     border: 3px solid var(--prussian-blue);
-    border-radius: 10px;
+    border-radius: 15px;
 
     background-color: rgba(238, 244, 237, 0.6);
 }
 
-form.decorazione-form > div {
-    margin: 10px;
+label {
+    padding-left: 5px;
+}
+
+button {
+    color: var(--mint-cream) !important;
+    background-color: var(--indigo-dye) !important;
 }
 
 div#footer {

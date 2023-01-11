@@ -1,0 +1,4 @@
+- Bootstrap 5.3
+- Bootstrap Icon
+- Flask
+- Google Font

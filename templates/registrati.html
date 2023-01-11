@@ -9,28 +9,43 @@
 {% endblock %}
 
 {% block main %}
-<div id="nuovo-utente" class="d-flex justify-content-center align-items-center">
-    <form action="/add_new_user" method="POST" enctype="multipart/form-data" class="decorazione-form">
-        <!-- Univoca -->
-        <div class="d-flex justify-content-start align-items-center">
-            <label for="email" class="form-label m-0">
-                <h5 class="m-0">Email</h5>
-            </label>
-            <input type="email" class="form-control" name="email" placeholder="mail@domain.com">
+<div id="nuovo-utente" class="row justify-content-center">
+    <form action="/add_new_user" method="POST" enctype="multipart/form-data" class="decorazione-form col-4">
+        <h1 class="text-center fst-italic mb-5 mt-3">Registrati</h1>
+
+        <!-- Username (Univoco) -->
+        <div>
+            <label for="username">Scegli il tuo username</label>
+            <input type="text" class="form-control" name="username" placeholder="Username">
         </div>
 
-        <div class="d-flex justify-content-start align-items-center">
-            <label for="password" class="form-label m-0">
-                <h5 class="m-0">Password</h5>
-            </label>
-            <input type="password" class="form-control" name="password">
+        <!-- Email -->
+        <div>
+            <label for="email">Scrivi la tua email</label>
+            <input type="email" class="form-control" name="email" placeholder="email@esempio.com">
         </div>
 
-        <div class="d-flex justify-content-start align-items-center">
-            <label class="form-check-label m-0" for="creatore">
-                <h5 class="m-0">Creatore</h5>
-            </label>
-            <input name="creatore" type="checkbox" class="form-check-input" value="">
+        <!-- Password -->
+        <div>
+            <label for="name">Scegli una password</label>
+            <input type="password" class="form-control" name="password" placeholder="Password">
+        </div>
+
+        <div class="row justify-content-center m-0">
+            <!-- Creatore -->
+            <div class="col-4 m-0">
+                <label for="tipo_utente" class="form-label">Cosa vuoi fare?</label>
+                <select name="tipo_utente" class="form-select">
+                    <option selected>Ascoltare</option>
+                    <option>Creare</option>
+                </select>
+            </div>
+
+            <!-- Immagine profilo -->
+            <div class="col-8 m-0">
+                <label for="immagine_profilo" class="form-label">Scegli un'immagine profilo</label>
+                <input name="immagine_profilo" class="form-control" type="file">
+            </div>
         </div>
 
         <div class="d-flex justify-content-center align-items-center">
