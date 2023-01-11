@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='login.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - Login</title>
+{% endblock %}
+
+{% block main %}
+<div id="nuovo-utente" class="row justify-content-center">
+    <form action="/login" method="POST" enctype="multipart/form-data" class="decorazione-form col-3">
+        <h1 class="text-center fst-italic mb-5 mt-3">Login</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" name="username" placeholder="Il tuo username">
+            <label for="username">Il tuo username</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="password" class="form-control" name="password" placeholder="La tua password">
+            <label for="password">Password</label>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center">
+            <button type="submit" class="btn mb-3">
+                </h5>Login</h3>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
