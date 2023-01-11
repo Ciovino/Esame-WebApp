@@ -22,6 +22,13 @@ Realizzare un'applicazione web per la gestione di podcast.
 
 ### Registrati
 - Form di registrazione contenente:
-  - Email (**univoca**);
-  - Password;
-  - Scegliere se diventare un creatore.
+  - *Username* (**univoco**);
+  - *Email*;
+  - *Password*;
+  - *Creatore* o *Ascoltatore*;
+  - *Immagine profilo*.
+  
+### Login
+- Form di login contentente:
+  - *Username*;
+  - *Password*.

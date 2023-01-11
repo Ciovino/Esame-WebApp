@@ -30,12 +30,17 @@ body * {
 }
 
 header#navbar-laterale {
+    border-top: 3px solid var(--oxford-blue);
     border-bottom: 3px solid var(--oxford-blue);
 }
 
 div#barra-laterale a {
     color: var(--mint-cream);
     text-decoration: none;
+}
+
+div.elenco-podcast {
+    border-top: 3px solid var(--oxford-blue);
 }
 
 div.card {
@@ -59,4 +64,5 @@ div.card {
 
 div#footer {
     margin-top: auto;
+    border-top: 3px solid var(--oxford-blue);
 }

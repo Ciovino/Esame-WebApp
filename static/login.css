@@ -61,4 +61,5 @@ button {
 
 div#footer {
     margin-top: auto;
+    border-top: 3px solid var(--oxford-blue);
 }
