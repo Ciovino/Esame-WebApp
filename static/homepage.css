@@ -34,9 +34,15 @@ header#navbar-laterale {
     border-bottom: 3px solid var(--oxford-blue);
 }
 
-div#barra-laterale a {
+a.clean-link {
     color: var(--mint-cream);
     text-decoration: none;
+
+    transition: 0.3s;
+}
+
+a.clean-link:hover {
+    color: var(--prussian-blue);
 }
 
 div.elenco-podcast {

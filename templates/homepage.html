@@ -12,18 +12,18 @@
 <header id="navbar-laterale" class="navbar">
     <div class="container-fluid d-flex flex-column align-items-start">
         <h2>Podcast</h2>
-        <h3 class="ps-2"><a href="{{ url_for('registrati') }}" title="Registrati">Registrati</a></h3>
-        <h3 class="ps-2"><a href="{{ url_for('login') }}" title="Login">Login</a></h3>
-        <h3 class="ps-2"><a href="#" title="Logout">Logout</a></h3>
-        <h3 class="ps-2"><a href="#" title="Profilo">Profilo</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="{{ url_for('login') }}" title="Login">Login</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="#" title="Logout">Logout</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="#" title="Profilo">Profilo</a></h3>
     </div>
 </header>
 
 <aside id="barra-ricerca">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h3 class="ps-2"><a href="#" title="Categorie">Categorie</a></h3>
-        <h3 class="ps-2"><a href="#" title="Seguiti">I podcast che segui</a></h3>
-        <h3 class="ps-2"><a href="#" title="I tuoi podcast">I tuoi podcast</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="#" title="Categorie">Categorie</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="#" title="Seguiti">I podcast che segui</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="#" title="I tuoi podcast">I tuoi podcast</a></h3>
     </div>
 </aside>
 {% endblock %}
