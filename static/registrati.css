@@ -37,6 +37,12 @@ div#nuovo-utente {
     transform: translate(-50%, -55%);
 }
 
+h2#torna-homepage {
+    position: absolute;
+    margin-top: 1.5rem;
+    margin-left: 2rem;
+}
+
 form div {
     margin: 1.5rem;
 }
@@ -55,14 +61,14 @@ label {
 }
 
 a.clean-link {
-    color: var(--mint-cream);
+    color: var(--prussian-blue);
     text-decoration: none;
 
     transition: 0.3s;
 }
 
 a.clean-link:hover {
-    color: var(--prussian-blue);
+    color: var(--mint-cream);
 }
 
 button {

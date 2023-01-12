@@ -10,9 +10,14 @@
 
 {% block main %}
 <div id="nuovo-utente" class="row justify-content-center">
+
     <form action="/add_new_user" method="POST" enctype="multipart/form-data" class="decorazione-form col-4">
         <!-- Freccia per tornare alla home -->
-
+        <h2 id="torna-homepage">
+            <a class="clean-link" title="Homepage" href="{{url_for('homepage')}}">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+        </h2>
         <h1 class="text-center fst-italic mb-5 mt-3">Registrati</h1>
 
         <!-- Username (Univoco) -->
@@ -37,7 +42,7 @@
         <div class="row justify-content-center m-0">
             <!-- Creatore -->
             <div class="col-4 m-0">
-                <label for="tipo_utente" class="form-label">Cosa vuoi fare?</label>
+                <label for="tipo_utente">Cosa vuoi fare?</label>
                 <select required name="tipo_utente" class="form-select">
                     <option selected>Ascoltare</option>
                     <option>Creare</option>
@@ -46,7 +51,7 @@
 
             <!-- Immagine profilo -->
             <div class="col-8 m-0">
-                <label for="immagine_profilo" class="form-label">Scegli un'immagine profilo</label>
+                <label for="immagine_profilo">Scegli un'immagine profilo</label>
                 <input name="immagine_profilo" class="form-control" type="file" accept=".jpg,.jpeg,.png">
             </div>
         </div>
