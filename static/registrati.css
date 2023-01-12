@@ -54,6 +54,17 @@ label {
     padding-left: 5px;
 }
 
+a.clean-link {
+    color: var(--mint-cream);
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+a.clean-link:hover {
+    color: var(--prussian-blue);
+}
+
 button {
     color: var(--mint-cream) !important;
     background-color: var(--indigo-dye) !important;

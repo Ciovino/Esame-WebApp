@@ -11,31 +11,34 @@
 {% block main %}
 <div id="nuovo-utente" class="row justify-content-center">
     <form action="/add_new_user" method="POST" enctype="multipart/form-data" class="decorazione-form col-4">
+        <!-- Freccia per tornare alla home -->
+
         <h1 class="text-center fst-italic mb-5 mt-3">Registrati</h1>
 
         <!-- Username (Univoco) -->
         <div>
             <label for="username">Scegli il tuo username</label>
-            <input type="text" class="form-control" name="username" placeholder="Username">
+            <input required type="text" class="form-control" name="username" placeholder="Username" minlength="4"
+                maxlength="20">
         </div>
 
         <!-- Email -->
         <div>
             <label for="email">Scrivi la tua email</label>
-            <input type="email" class="form-control" name="email" placeholder="email@esempio.com">
+            <input required type="email" class="form-control" name="email" placeholder="email@esempio.com">
         </div>
 
         <!-- Password -->
         <div>
             <label for="name">Scegli una password</label>
-            <input type="password" class="form-control" name="password" placeholder="Password">
+            <input required type="password" class="form-control" name="password" placeholder="Password" minlength="8">
         </div>
 
         <div class="row justify-content-center m-0">
             <!-- Creatore -->
             <div class="col-4 m-0">
                 <label for="tipo_utente" class="form-label">Cosa vuoi fare?</label>
-                <select name="tipo_utente" class="form-select">
+                <select required name="tipo_utente" class="form-select">
                     <option selected>Ascoltare</option>
                     <option>Creare</option>
                 </select>
@@ -44,14 +47,25 @@
             <!-- Immagine profilo -->
             <div class="col-8 m-0">
                 <label for="immagine_profilo" class="form-label">Scegli un'immagine profilo</label>
-                <input name="immagine_profilo" class="form-control" type="file">
+                <input name="immagine_profilo" class="form-control" type="file" accept=".jpg,.jpeg,.png">
             </div>
         </div>
 
-        <div class="d-flex justify-content-center align-items-center">
-            <button type="submit" class="btn btn-primary">
-                </h5>Registrati</h3>
-            </button>
+        <div class="row justify-content-center align-items-center m-0 mt-3 mb-3">
+            <!-- Link per andare al Login -->
+            <div id="login" class="col-6 m-0">
+                <h6 class="text-center m-0">Ti sei già registrato?</h6>
+                <h6 class="text-center m-0">
+                    Vai al <a href="{{ url_for('login') }}" title="Vai al Login" class="clean-link"> Login</a>
+                </h6>
+            </div>
+
+            <!-- Bottone per registrarsi -->
+            <div id="registrati" class="col-6 m-0 d-flex justify-content-center">
+                <button type="submit" class="btn btn-lg">
+                    Registrati
+                </button>
+            </div>
         </div>
     </form>
 </div>
