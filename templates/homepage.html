@@ -12,10 +12,14 @@
 <header id="navbar-laterale" class="navbar">
     <div class="container-fluid d-flex flex-column align-items-start">
         <h2>Podcast</h2>
+
+        {% if current_user.is_authenticated %}
+        <h3 class="ps-2"><a class="clean-link" href="#" title="Profilo">Profilo</a></h3>
+        <h3 class="ps-2"><a class="clean-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h3>
+        {% else %}
         <h3 class="ps-2"><a class="clean-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a></h3>
         <h3 class="ps-2"><a class="clean-link" href="{{ url_for('login') }}" title="Login">Login</a></h3>
-        <h3 class="ps-2"><a class="clean-link" href="#" title="Logout">Logout</a></h3>
-        <h3 class="ps-2"><a class="clean-link" href="#" title="Profilo">Profilo</a></h3>
+        {% endif %}
     </div>
 </header>
 
