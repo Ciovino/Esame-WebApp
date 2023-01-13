@@ -1,4 +1,7 @@
 from flask import Flask, render_template, redirect, request, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
+import os # Per le estensioni dei file
+import db_dao as dao
 
 app= Flask(__name__)
 
@@ -19,48 +22,61 @@ def login():
 
 @app.route('/add_new_user', methods=['POST'])
 def add_new_user():
-    new_user = request.form.to_dict()
-
     # Nome utente univoco
-    if not utente_univoco(new_user.get('username')):
+    username = request.form.get('username')
+    app.logger.info(username)
+    if not dao.utente_univoco(username):
         # Messaggio di errore
+        app.logger.info('username già usato')
         return redirect(url_for('registrati'))
     
     # Email univoca
-    if not email_univoca(new_user.get('email')):
+    email = request.form.get('email')
+    app.logger.info(email)
+    if not dao.email_univoca(email):
         # Messaggio di errore
+        app.logger.info('email già usata')
         return redirect(url_for('registrati'))
     
-    # TODO: Cripta password
+    # Cripta password
+    password = generate_password_hash(request.form.get('password'), method='sha256')
 
     # Ascoltatore o Creatore
-    if new_user.get('tipo_utente') == 'Ascoltare':
-        new_user['tipo_utente'] = 0
-    elif new_user.get('tipo_utente') == 'Creare':
-        new_user['tipo_utente'] = 1
+    tipo_utente = request.form.get('tipo_utente')
+    app.logger.info(tipo_utente)
+    if tipo_utente == 'Ascoltare':
+        tipo_utente = 0
+    elif tipo_utente == 'Creare':
+        tipo_utente = 1
     else:
         # Errore
+        app.logger.info('utente non valido')
         return redirect(url_for('registrati'))
     
     # Immagine profilo
-    new_user['immagine_profilo'] = 'Prova'
+    immagine_profilo = request.files['immagine_profilo']
+    if immagine_profilo:
+        extension = os.path.splitext(immagine_profilo.filename)[-1].lower()
+        nome_file = 'Immagini/Profilo/' + username + extension
 
-    if not aggiungi_utente_database(new_user):
+        immagine_profilo.save('static/' + nome_file)
+    else:
+        nome_file = 'Immagini/Profilo/_default.png'
+    
+    immagine_profilo = nome_file
+
+    new_user = {'username': username, 
+                'email': email, 
+                'password': password,
+                'tipo_utente': tipo_utente,
+                'immagine_profilo': immagine_profilo}
+
+    app.logger.info(new_user)
+
+    if not dao.aggiungi_nuovo_utente(new_user):
         # Errore
+        app.logger.info('impossibile aggiungere')
         return redirect(url_for('registrati'))
 
-    # Successo
-    return redirect(url_for('login'))
-
-# Controlla che l'username sia univoco all'interno del database
-def utente_univoco(username):
-    return True
-
-# Controlla che la email sia univoca all'interno del database
-def email_univoca(email):
-    return True
-
-# Aggiunge al databse
-def aggiungi_utente_database(utente):
-    app.logger.info(utente)
-    return True
+    # Utente Registrato
+    return redirect(url_for('homepage'))
