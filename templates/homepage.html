@@ -31,7 +31,8 @@
         {% if current_user.is_authenticated %}
         <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="Seguiti">I podcast che segui</a></h4>
         {% if current_user.is_creatore() %}
-        <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="I tuoi podcast">I tuoi podcast</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('tuoi_podcast') }}" title="I tuoi podcast">I tuoi
+                podcast</a></h4>
         {% endif %}
         {% endif %}
     </div>

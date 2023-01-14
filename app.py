@@ -64,6 +64,11 @@ def logout():
     logout_user()
     return redirect(url_for('homepage'))
 
+@app.route('/tuoi_podcast')
+@login_required
+def tuoi_podcast():
+    return render_template('tuoi_podcast.html')
+
 @login_manager.user_loader
 def user_load(id):
     utente_db = dao.recupera_utente_id(id)
@@ -137,3 +142,7 @@ def add_new_user():
 
     # Utente Registrato
     return redirect(url_for('homepage'))
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error404.html')

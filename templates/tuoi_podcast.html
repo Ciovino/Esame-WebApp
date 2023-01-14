@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='tuoi_podcast.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast</title>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2>
+            Podcast
+            <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+                <i class="bi bi-house"></i>
+            </a>
+        </h2>
+
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2>Ricerca</h2>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="Categorie">Categorie</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="Seguiti">I podcast che segui</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link active" href="#" title="I tuoi podcast">I tuoi
+                podcast</a></h4>
+    </div>
+</aside>
+{% endblock %}
