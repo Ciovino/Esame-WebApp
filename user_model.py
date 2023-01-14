@@ -26,3 +26,6 @@ class User(UserMixin):
 
     def get_immagine(self):
         return self.immagine_profilo
+    
+    def is_creatore(self):
+        return (self.tipo_utente == 1)

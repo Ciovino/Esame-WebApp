@@ -29,6 +29,11 @@ body * {
     padding: 2px;
 }
 
+a.clean-link {
+    color: var(--mint-cream);
+    text-decoration: none;
+}
+
 .top-border {
     border-top: 3px solid var(--oxford-blue);
 }

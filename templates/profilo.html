@@ -11,7 +11,12 @@
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>Podcast</h2>
+        <h2>
+            Podcast
+            <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+                <i class="bi bi-house"></i>
+            </a>
+        </h2>
 
         <h4 class="ps-2 mb-3"><a class="home-link active" href="#" title="Profilo">Profilo</a></h4>
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
@@ -36,26 +41,45 @@
     </div>
 </div>
 
-<div id="info-personali" class="top-border">
-    <div id="username" class="row m-0">
-        <h3>Username</h3>
-        <p>{{ current_user.get_username() }}</p>
+<div class="top-border">
+    <div id="titolo" class="row m-0">
+        <h2>I tuoi dati</h2>
     </div>
-    <div id="email" class="row m-0">
-        <h3>Email</h3>
-        <p>{{ current_user.get_email() }}</p>
-    </div>
-    <div id="password" class="row m-0">
-        <h3>Password</h3>
-        <p>{{ current_user.get_password() }}</p>
-    </div>
-    <div id="tipo_utente" class="row m-0">
-        <h3>Tipo Utente</h3>
-        <p>{{ current_user.get_tipo() }}</p>
-    </div>
-    <div id="immagine-profilo" class="row m-0">
-        <h3>Immagine profilo</h3>
-        <img class="foto-profilo ps-0 pe-0" src="{{ url_for('static', filename=current_user.get_immagine()) }}">
-    </div>
+
+    <dl id="info" class="row m-0 align-items-center">
+        <dt class="col-3">
+            <h3>Username</h3>
+        </dt>
+        <dd class="col-9 m-0 d-flex justify-content-between align-items-center">
+            <p class="m-0 fst-italic">{{ current_user.get_username() }}</p>
+        </dd>
+
+        <dt class="col-3">
+            <h3>Email</h3>
+        </dt>
+        <dd class="col-9">
+            <p class="m-0 fst-italic">{{ current_user.get_email() }}</p>
+        </dd>
+
+        <dt class="col-3">
+            <h3>Password</h3>
+        </dt>
+        <dd class="col-9">
+            <p class="m-0 fst-italic">{{ current_user.get_password() }}</p>
+        </dd>
+
+        <dt class="col-3">
+            <h3>Tipo Utente</h3>
+        </dt>
+        <dd class="col-9">
+            <p class="m-0 fst-italic">{{ current_user.get_tipo() }}</p>
+        </dd>
+
+        <dt class="col-3">
+            <h3>Immagine profilo</h3>
+        </dt>
+        <dd class="col-9"><img class="foto-profilo piccola ps-0 pe-0"
+                src="{{ url_for('static', filename=current_user.get_immagine()) }}"></dd>
+    </dl>
 </div>
 {% endblock %}

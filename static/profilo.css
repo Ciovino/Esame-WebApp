@@ -5,18 +5,19 @@ a.home-link {
     color: var(--mint-cream);
     text-decoration: none;
 
-    border: 2px solid var(--mint-cream);
     border-radius: 10px;
 
     transition: 0.3s;
 }
 
-a.active {
-    background-color: var(--indigo-dye);
+a.home-link:hover {
+    border: 1px solid var(--mint-cream);
+    background-color: var(--prussian-blue);
 }
 
-a.home-link:hover {
-    background-color: var(--prussian-blue);
+a.active {
+    border: 2px solid var(--mint-cream);
+    background-color: var(--indigo-dye);
 }
 
 div#saluto {
@@ -30,4 +31,9 @@ img.foto-profilo {
     border-radius: 50%;
 
     background-color: rgba(238, 244, 237, 0.6);
+}
+
+img.piccola {
+    width: 5rem;
+    height: 5rem;
 }
