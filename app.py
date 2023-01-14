@@ -64,6 +64,11 @@ def logout():
     logout_user()
     return redirect(url_for('homepage'))
 
+@app.route('/seguiti')
+@login_required
+def seguiti():
+    return render_template('seguiti.html')
+
 @app.route('/tuoi_podcast')
 @login_required
 def tuoi_podcast():
