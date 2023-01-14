@@ -53,6 +53,11 @@ def login():
 
     return redirect(url_for('homepage'))
 
+@app.route('/profilo')
+@login_required
+def profilo():
+    return render_template('profilo.html')
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -65,7 +70,7 @@ def user_load(id):
 
     utente = User(id = utente_db['id_utente'],
                     username = utente_db['username'],
-                    email = utente_db['username'],
+                    email = utente_db['email'],
                     password = utente_db['password'],
                     tipo_utente = utente_db['tipo_utente'],
                     immagine_profilo = utente_db['immagine_profilo'])

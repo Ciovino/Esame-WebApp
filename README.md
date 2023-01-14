@@ -25,10 +25,19 @@ Realizzare un'applicazione web per la gestione di podcast.
   - *Username* (**univoco**);
   - *Email*;
   - *Password*;
-  - *Creatore* o *Ascoltatore*;
+  - *Tipo* di utente;
   - *Immagine profilo*.
   
 ### Login
 - Form di login contentente:
   - *Username*;
   - *Password*.
+
+### Pagina Personale
+- Messaggio di benvenuto;
+- Elenco delle informazioni dell'utente:
+  - *Username*;
+  - *Email*;
+  - *Password*;
+  - *Tipo* di utente;
+  - *Immagine profilo*.

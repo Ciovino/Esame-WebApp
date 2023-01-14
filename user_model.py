@@ -11,3 +11,18 @@ class User(UserMixin):
     
     def get_username(self):
         return self.username
+
+    def get_email(self):
+        return self.email
+    
+    def get_password(self):
+        return "********"
+
+    def get_tipo(self):
+        if self.tipo_utente == 0:
+            return "Ascoltatore"
+        else:
+            return "Creatore"
+
+    def get_immagine(self):
+        return self.immagine_profilo

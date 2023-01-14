@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='profilo.css') }}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - Profilo</title>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2>Podcast</h2>
+
+        <h4 class="ps-2 mb-3"><a class="home-link active" href="#" title="Profilo">Profilo</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2>Ricerca</h2>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="Categorie">Categorie</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="Seguiti">I podcast che segui</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="I tuoi podcast">I tuoi podcast</a></h4>
+    </div>
+</aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+<div id="saluto" class="row m-0 top-border">
+    <div class="col-6 d-flex justify-content-evenly align-items-center">
+        <img class="foto-profilo" src="{{ url_for('static', filename=current_user.get_immagine()) }}">
+        <h1 class="m-0 fst-italic">Ciao {{ current_user.get_username() }}</h1>
+    </div>
+</div>
+
+<div id="info-personali" class="top-border">
+    <div id="username" class="row m-0">
+        <h3>Username</h3>
+        <p>{{ current_user.get_username() }}</p>
+    </div>
+    <div id="email" class="row m-0">
+        <h3>Email</h3>
+        <p>{{ current_user.get_email() }}</p>
+    </div>
+    <div id="password" class="row m-0">
+        <h3>Password</h3>
+        <p>{{ current_user.get_password() }}</p>
+    </div>
+    <div id="tipo_utente" class="row m-0">
+        <h3>Tipo Utente</h3>
+        <p>{{ current_user.get_tipo() }}</p>
+    </div>
+    <div id="immagine-profilo" class="row m-0">
+        <h3>Immagine profilo</h3>
+        <img class="foto-profilo ps-0 pe-0" src="{{ url_for('static', filename=current_user.get_immagine()) }}">
+    </div>
+</div>
+{% endblock %}
