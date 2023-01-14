@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='404.css') }}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - Not found</title>
+{% endblock %}
+
+{% block main %}
+<div id="error" class="row justify-content-center">
+    <div class="col-4 bordo">
+        <h2 class="text-center m-0">404 - Pagina non trovata</h2>
+    </div>
+</div>
+{% endblock %}
