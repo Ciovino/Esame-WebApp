@@ -18,9 +18,14 @@
             </a>
         </h2>
 
-        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
-        </h4>
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a></h4>
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+        {% else %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
+        {% endif %}
     </div>
 </header>
 
@@ -48,5 +53,61 @@
         <img class="foto-profilo" src="{{ url_for('static', filename=podcast.immagine) }}">
         <h1 class="m-0 fst-italic">{{ podcast.titolo }}</h1>
     </div>
+</div>
+
+<div id="lista-episodi" class="top-border">
+    {% if num_episodi == 0 %}
+    <h1>Non ci sono ancora episodi per questo podcast.</h1>
+    {% else %}
+    {% for episodio in lista_episodi %}
+    <h3>{{ episodio.numero_episodio }} - {{ episodio.titolo }}</h3>
+    <!-- Numero episodio - Titolo - Data -->
+    <!-- Descrizione -->
+    <!-- Play -->
+    {% endfor %}
+    {% endif %}
+
+    {% if current_user.is_authenticated and (current_user.get_id() == podcast.id_utente) %}
+    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#nuovo-episodio">Crea</button>
+
+    <div class="modal fade" id="nuovo-episodio" tabindex="-1" aria-labelledby="modale-nuovo-episodio"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/nuovo-episodio" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <p class="text-center">Carica un nuovo episodio</p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row d-flex align-items-center mb-2">
+                            <labal for="titolo" class="col-2">Titolo:</labal>
+                            <input name="titolo" class="form-control col" type="text" placeholder="..." required>
+                        </div>
+                        <div class="row d-flex align-items-start mb-2">
+                            <labal for="descrizione" class=" col-2 mt-2">Descrizione:</labal>
+                            <textarea name="descrizione" class="form-control col" rows="3" required minlength="30"
+                                maxlength="200"></textarea>
+                        </div>
+                        <div class="row d-flex align-items-start mb-2">
+                            <labal for="audio" class="col-2 mt-2">File audio:</labal>
+                            <input name="audio" class="form-control col" type="file" accept=".mp3" required>
+                        </div>
+                        <div class="row d-flex align-items-start">
+                            <labal for="data_pubblicazione" class="col-2 mt-2">Data:</labal>
+                            <input type="date" name="data_pubblicazione" class="form-control col" required
+                                min="{{ data_oggi }}" value="{{ data_oggi }}">
+                        </div>
+
+                        <input type="hidden" name="numero_episodio" value="{{ num_episodi + 1 }}" />
+                        <input type="hidden" name="id_podcast" value="{{ podcast.id_podcast }}" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" type="submit">Crea</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

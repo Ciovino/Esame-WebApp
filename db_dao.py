@@ -108,9 +108,10 @@ def tutti_podcast():
     connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    query = '''SELECT p.id_utente, u.username, p.titolo, p.descrizione, p.categoria, p.immagine, p.id_podcast
+    query = '''SELECT p.id_utente, u.username, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione, p.id_podcast
             FROM utenti u, podcast p
-            WHERE u.id_utente = p.id_utente'''
+            WHERE u.id_utente = p.id_utente
+            ORDER BY p.data_creazione DESC'''
 
     cursor.execute(query)
 
@@ -127,12 +128,12 @@ def tutti_podcast():
 def aggiungi_podcast(podcast):
     connection = sqlite3.connect(db_path)
     cursor = connection.cursor()
-    query = "INSERT INTO podcast(id_utente, titolo, descrizione, categoria, immagine) VALUES (?,?,?,?,?)"
+    query = "INSERT INTO podcast(id_utente, titolo, descrizione, categoria, immagine, data_creazione) VALUES (?,?,?,?,?,?)"
 
     success = False
 
     try:
-        cursor.execute(query, (podcast['id_utente'], podcast['titolo'], podcast['descrizione'], podcast['categoria'], podcast['immagine']))
+        cursor.execute(query, (podcast['id_utente'], podcast['titolo'], podcast['descrizione'], podcast['categoria'], podcast['immagine'], podcast['data_creazione']))
         connection.commit()
         success = True
     except Exception as e:
@@ -148,6 +149,42 @@ def aggiungi_podcast(podcast):
 def titolo_podcast_valido(titolo, id_utente):
     # Un utente non può avere due podcast con lo stesso titolo
     return True
+
+# Aggiungi episodio al db
+def aggiungi_episodio(episodio):
+    connection = sqlite3.connect(db_path)
+    cursor = connection.cursor()
+    query = "INSERT INTO episodi(id_podcast, titolo, descrizione, numero_episodio, data, audio) VALUES (?,?,?,?,?,?)"
+
+    success = False
+
+    try:
+        cursor.execute(query, (episodio['id_podcast'], episodio['titolo'], episodio['descrizione'], episodio['numero_episodio'], episodio['data'], episodio['audio']))
+        connection.commit()
+        success = True
+    except Exception as e:
+        print('ERROR', str(e))
+        connection.rollback()
+
+    cursor.close()
+    connection.close()
+
+    return success
+
+def recupera_episodi_podcast(id_podcast):
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = "SELECT * FROM episodi WHERE id_podcast = ? ORDER BY data"
+
+    cursor.execute(query, (id_podcast,))
+
+    tutti_episodi = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return tutti_episodi
 
 # Aggiungi nuovo utente al db
 def aggiungi_nuovo_utente(user):

@@ -8,6 +8,9 @@ class User(UserMixin):
         self.password = password
         self.tipo_utente = tipo_utente
         self.immagine_profilo = immagine_profilo
+
+    def get_id(self):
+        return self.id
     
     def get_username(self):
         return self.username

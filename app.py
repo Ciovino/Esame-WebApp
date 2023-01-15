@@ -3,6 +3,7 @@ from flask_session import Session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from user_model import User
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 import os # Per le estensioni dei file
 import db_dao as dao
 
@@ -119,11 +120,15 @@ def nuovo_podcast():
     
     immagine = nome_file
 
+    # Data di creazione
+    data_creazione = datetime.now().strftime('%Y-%m-%d')
+
     podcast = {'id_utente': id_utente,
                 'titolo' : titolo,
                 'descrizione' : descrizione,
                 'categoria' : categoria,
-                'immagine' : immagine}
+                'immagine' : immagine,
+                'data_creazione' : data_creazione}
 
     if not dao.aggiungi_podcast(podcast):
         # Errore
@@ -134,10 +139,64 @@ def nuovo_podcast():
 @app.route('/podcast/<int:id_podcast>')
 def podcast(id_podcast):
     podcast_completo = dao.recupera_podcast(id_podcast)
+    lista_episodi = dao.recupera_episodi_podcast(id_podcast)
 
-    app.logger.info(podcast_completo)
+    num_episodi = len(lista_episodi)
+    
+    for episodio in lista_episodi:
+        giorni = (datetime.now() - datetime.strptime(episodio['data'], '%Y-%m-%d')).days
 
-    return render_template('podcast.html', podcast=podcast_completo)
+        if giorni < 0:
+            num_episodi = num_episodi - 1
+            lista_episodi.remove(episodio)            
+
+    return render_template('podcast.html', podcast=podcast_completo, num_episodi=num_episodi, lista_episodi=lista_episodi, data_oggi=datetime.now().strftime('%Y-%m-%d'))
+
+@app.route('/nuovo-episodio', methods=['POST'])
+@login_required
+def nuovo_episodio():
+    # Id podcast
+    id_podcast = request.form.get('id_podcast')
+    
+    # Numero episodio
+    numero_episodio = request.form.get('numero_episodio')
+
+    # Titolo
+    titolo = request.form.get('titolo')
+
+    # Descrizione
+    descrizione = request.form.get('descrizione')
+
+    # Audio
+    audio = request.files['audio']
+    if audio:
+        extension = os.path.splitext(audio.filename)[-1].lower()
+
+        # static/Audio/<titolo>_<id_podcast>_<num_episodio>.<estensione>
+        nome_file = 'Audio/' + titolo + '_' + id_podcast + '_' + numero_episodio + extension
+        audio.save('static/' + nome_file)
+    else:
+        # Errore
+        return redirect(url_for('podcast', id_podcast=id_podcast))
+    
+    audio = nome_file
+
+    # Data
+    data = request.form.get('data_pubblicazione')
+
+    episodio = {'id_podcast' : id_podcast,
+                'numero_episodio' : numero_episodio,
+                'titolo' : titolo,
+                'descrizione' : descrizione,
+                'audio' : audio, 
+                'data' : data}
+    
+    if not dao.aggiungi_episodio(episodio):
+        # Errore
+        app.logger.info('impossibile aggiungere')
+
+    return redirect(url_for('podcast', id_podcast=id_podcast))
+
 
 @login_manager.user_loader
 def user_load(id):
