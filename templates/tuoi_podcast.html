@@ -27,7 +27,9 @@
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <h2>Ricerca</h2>
-        <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="Categorie">Categorie</a></h4>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
+        </h4>
         {% if current_user.is_authenticated %}
         <h4 class="ps-2 mb-3"><a class="home-link" href="#" title="Seguiti">I podcast che segui</a></h4>
         {% if current_user.is_creatore() %}
@@ -36,4 +38,23 @@
         {% endif %}
     </div>
 </aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+{% if num_podcast == 0 %}
+<h1>Nessun podcast. Creane uno.</h1>
+{% else %}
+<div class="immagini-podcast d-flex flex-wrap">
+    {% for podcast in tutti_podcast %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ podcast.titolo }}</h5>
+            <p class="card-text">{{ podcast.descrizione }}</p>
+        </div>
+        <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img-bottom"
+            alt="{{ podcast.titolo }}">
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock %}

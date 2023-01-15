@@ -1,0 +1,21 @@
+a.home-link {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    color: var(--mint-cream);
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    transition: 0.3s;
+}
+
+a.home-link:hover {
+    border: 1px solid var(--mint-cream);
+    background-color: var(--prussian-blue);
+}
+
+a.active {
+    border: 2px solid var(--mint-cream);
+    background-color: var(--indigo-dye);
+}

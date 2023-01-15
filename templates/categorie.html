@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block css %}
-<link rel="stylesheet" href="{{url_for('static', filename='seguiti.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='categorie.css')}}">
 {% endblock %}
 
 {% block titolo %}
-<title>Podcast - Seguiti</title>
+<title>Podcast - Categorie</title>
 {% endblock %}
 
 {% block barra_laterale %}
@@ -18,20 +18,25 @@
             </a>
         </h2>
 
-        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
-        </h4>
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a></h4>
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+        {% else %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
+        {% endif %}
     </div>
 </header>
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <h2>Ricerca</h2>
-        <h4 class="ps-2 mb-3">
-            <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
-        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link active" href="#" title="Categorie">Categorie</a></h4>
         {% if current_user.is_authenticated %}
-        <h4 class="ps-2 mb-3"><a class="home-link active" href="#" title="Seguiti">I podcast che segui</a></h4>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('seguiti') }}" title="Seguiti">I podcast che segui</a>
+        </h4>
         {% if current_user.is_creatore() %}
         <h4 class="ps-2 mb-3">
             <a class="home-link" href="{{ url_for('tuoi_podcast') }}" title="I tuoi podcast">I tuoi podcast</a>

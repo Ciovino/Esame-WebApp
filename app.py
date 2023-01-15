@@ -64,6 +64,10 @@ def logout():
     logout_user()
     return redirect(url_for('homepage'))
 
+@app.route('/categorie')
+def categorie():
+    return render_template('categorie.html')
+
 @app.route('/seguiti')
 @login_required
 def seguiti():
@@ -72,7 +76,10 @@ def seguiti():
 @app.route('/tuoi_podcast')
 @login_required
 def tuoi_podcast():
-    return render_template('tuoi_podcast.html')
+    tutti_podcast = dao.recupera_podcast(current_user.get_id())
+    num_podcast = tutti_podcast.len()
+
+    return render_template('tuoi_podcast.html', num_podcast=num_podcast, tutti_podcast=tutti_podcast)
 
 @login_manager.user_loader
 def user_load(id):
