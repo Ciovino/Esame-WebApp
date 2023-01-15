@@ -71,6 +71,84 @@ def recupera_utente_id(id):
 
     return utente
 
+# Recupera tutti i podcast di un utente
+def recupera_podcast_utente(id_utente):
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = "SELECT * FROM podcast WHERE id_utente = ?"
+
+    cursor.execute(query, (id_utente,))
+
+    tutti_podcast = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return tutti_podcast
+
+# Recupea le informazioni di un podcast
+def recupera_podcast(id_podcast):
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = "SELECT * FROM podcast WHERE id_podcast = ?"
+
+    cursor.execute(query, (id_podcast,))
+
+    podcast = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return dict(podcast)
+
+# Recupera le informazioni di tutti i podcast
+def tutti_podcast():
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = '''SELECT p.id_utente, u.username, p.titolo, p.descrizione, p.categoria, p.immagine, p.id_podcast
+            FROM utenti u, podcast p
+            WHERE u.id_utente = p.id_utente'''
+
+    cursor.execute(query)
+
+    tutti_podcast = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    dati = [dict(podcast) for podcast in tutti_podcast]
+
+    return dati
+
+# Aggiunge un podcast al dc
+def aggiungi_podcast(podcast):
+    connection = sqlite3.connect(db_path)
+    cursor = connection.cursor()
+    query = "INSERT INTO podcast(id_utente, titolo, descrizione, categoria, immagine) VALUES (?,?,?,?,?)"
+
+    success = False
+
+    try:
+        cursor.execute(query, (podcast['id_utente'], podcast['titolo'], podcast['descrizione'], podcast['categoria'], podcast['immagine']))
+        connection.commit()
+        success = True
+    except Exception as e:
+        print('ERROR', str(e))
+        connection.rollback()
+
+    cursor.close()
+    connection.close()
+
+    return success
+
+# Controlla che il titolo per il podcast sia valido
+def titolo_podcast_valido(titolo, id_utente):
+    # Un utente non può avere due podcast con lo stesso titolo
+    return True
+
 # Aggiungi nuovo utente al db
 def aggiungi_nuovo_utente(user):
     connection = sqlite3.connect(db_path)

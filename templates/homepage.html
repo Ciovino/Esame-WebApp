@@ -74,42 +74,18 @@
     <h3 class="row m-0">Tutti i podcast</h3>
 
     <div class="immagini-podcast d-flex flex-wrap">
+        {% for podcast in tutti_podcast %}
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">WebApp</h5>
-                <p class="card-text">Impara a creare una Web App.</p>
+                <h5 class="card-title"><b>{{ podcast.titolo }}</b> di <em>{{ podcast.username }}</em></h5>
+                <p class="card-text">{{ podcast.descrizione }}</p>
             </div>
-            <img src="{{url_for('static', filename='Immagini/Podcast/Coding 2.jpg')}}"
-                class="immagine-podcast card-img-bottom" alt="Coding">
+            <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
+                <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img-bottom"
+                    alt="{{ podcast.titolo }}">
+            </a>
         </div>
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Fioritura</h5>
-                <p class="card-text">Il miglior podcast sul giardinaggio.</p>
-            </div>
-            <img src="{{url_for('static', filename='Immagini/Podcast/Fiori.jpg')}}"
-                class="immagine-podcast card-img-bottom" alt="Fiori">
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Biscotti</h5>
-                <p class="card-text">I biscotti, quelli buoni.</p>
-            </div>
-            <img src="{{url_for('static', filename='Immagini/Podcast/Biscotti.jpg')}}"
-                class="immagine-podcast card-img-bottom" alt="Biscotti">
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">CodingIsFun</h5>
-                <p class="card-text">Come rendere divertente la programmazione.</p>
-            </div>
-            <img src="{{url_for('static', filename='Immagini/Podcast/Coding.jpg')}}"
-                class="immagine-podcast card-img-bottom" alt="Coding">
-        </div>
-
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

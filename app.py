@@ -21,7 +21,9 @@ login_manager.init_app(app)
 # Route
 @app.route('/')
 def homepage():
-    return render_template('homepage.html')
+    tutti_podcast = dao.tutti_podcast()
+
+    return render_template('homepage.html', tutti_podcast=tutti_podcast)
 
 @app.route('/registrati')
 def registrati():
@@ -76,10 +78,66 @@ def seguiti():
 @app.route('/tuoi_podcast')
 @login_required
 def tuoi_podcast():
-    tutti_podcast = dao.recupera_podcast(current_user.get_id())
-    num_podcast = tutti_podcast.len()
+    tutti_podcast = dao.recupera_podcast_utente(current_user.get_id())
+    num_podcast = len(tutti_podcast)
 
     return render_template('tuoi_podcast.html', num_podcast=num_podcast, tutti_podcast=tutti_podcast)
+
+@app.route('/nuovo-podcast', methods=['POST'])
+@login_required
+def nuovo_podcast():
+    # Id_utente
+    id_utente = request.form.get('id_utente')
+    if id_utente != current_user.get_id():
+        # Errore (strano)
+        return redirect(url_for('tuoi_podcast'))
+
+    # Titolo
+    titolo = request.form.get('titolo')
+    if not dao.titolo_podcast_valido(titolo, id_utente):
+        # Errore
+        return redirect(url_for('tuoi_podcast'))
+
+    # Descrizione
+    descrizione = request.form.get('descrizione')
+
+    # Categoria
+    categoria = request.form.get('categoria')
+
+    # Immagine
+    immagine = request.files['immagine']
+    if immagine:
+        extension = os.path.splitext(immagine.filename)[-1].lower()
+
+        # static/Immagini/Podcast/<titolo>_<id_utente>.<estensione>
+        nome_file = 'Immagini/Podcast/' + titolo + '_' + id_utente + extension
+
+        immagine.save('static/' + nome_file)
+    else:
+        # Errore
+        return redirect(url_for('tuoi_podcast'))
+    
+    immagine = nome_file
+
+    podcast = {'id_utente': id_utente,
+                'titolo' : titolo,
+                'descrizione' : descrizione,
+                'categoria' : categoria,
+                'immagine' : immagine}
+
+    if not dao.aggiungi_podcast(podcast):
+        # Errore
+        app.logger.info('impossibile aggiungere')
+
+    return redirect(url_for('tuoi_podcast'))
+
+@app.route('/podcast/<int:id_podcast>')
+def podcast(id_podcast):
+    podcast_completo = dao.recupera_podcast(id_podcast)
+
+    app.logger.info(podcast_completo)
+
+    return render_template('podcast.html', podcast=podcast_completo)
 
 @login_manager.user_loader
 def user_load(id):

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='podcast.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - {{ podcast.titolo }}</title>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2>
+            Podcast
+            <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+                <i class="bi bi-house"></i>
+            </a>
+        </h2>
+
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2>Ricerca</h2>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
+        </h4>
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('seguiti') }}" title="Seguiti">I podcast che
+                segui</a></h4>
+        {% if current_user.is_creatore() %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('tuoi_podcast') }}" title="I tuoi podcast">I tuoi
+                podcast</a></h4>
+        {% endif %}
+        {% endif %}
+    </div>
+</aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+<div id="titolo" class="row m-0 top-border">
+    <div class="col-6 d-flex justify-content-evenly align-items-center">
+        <img class="foto-profilo" src="{{ url_for('static', filename=podcast.immagine) }}">
+        <h1 class="m-0 fst-italic">{{ podcast.titolo }}</h1>
+    </div>
+</div>
+{% endblock %}
