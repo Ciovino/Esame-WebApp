@@ -40,7 +40,7 @@ def email_univoca(email):
         
     return True
 
-# Recupera le informazioni dell'utente
+# Recupera l'utente dall'username
 def recupera_utente_username(username):
     connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
@@ -56,6 +56,7 @@ def recupera_utente_username(username):
 
     return utente
 
+# Recupera l'utente dall'id
 def recupera_utente_id(id):
     connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
@@ -71,7 +72,7 @@ def recupera_utente_id(id):
 
     return utente
 
-# Recupera tutti i podcast di un utente
+# Recupera i podcast creati da un utente
 def recupera_podcast_utente(id_utente):
     connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
@@ -87,7 +88,7 @@ def recupera_podcast_utente(id_utente):
 
     return tutti_podcast
 
-# Recupea le informazioni di un podcast
+# Recupera un podcast dall'id
 def recupera_podcast(id_podcast):
     connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
@@ -124,7 +125,7 @@ def tutti_podcast():
 
     return dati
 
-# Aggiunge un podcast al dc
+# Aggiunge un podcast al db
 def aggiungi_podcast(podcast):
     connection = sqlite3.connect(db_path)
     cursor = connection.cursor()
@@ -154,12 +155,12 @@ def titolo_podcast_valido(titolo, id_utente):
 def aggiungi_episodio(episodio):
     connection = sqlite3.connect(db_path)
     cursor = connection.cursor()
-    query = "INSERT INTO episodi(id_podcast, titolo, descrizione, numero_episodio, data, audio) VALUES (?,?,?,?,?,?)"
+    query = "INSERT INTO episodi(id_podcast, titolo, descrizione, data, audio) VALUES (?,?,?,?,?)"
 
     success = False
 
     try:
-        cursor.execute(query, (episodio['id_podcast'], episodio['titolo'], episodio['descrizione'], episodio['numero_episodio'], episodio['data'], episodio['audio']))
+        cursor.execute(query, (episodio['id_podcast'], episodio['titolo'], episodio['descrizione'], episodio['data'], episodio['audio']))
         connection.commit()
         success = True
     except Exception as e:
@@ -171,11 +172,29 @@ def aggiungi_episodio(episodio):
 
     return success
 
+def prossimo_id_episodio():
+    connection = sqlite3.connect(db_path)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = "SELECT MAX(id_episodio) FROM episodi"
+
+    cursor.execute(query)
+
+    max_id = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if max_id[0] == None: # Nessun episodio salvato nel db
+        return 1
+    else:
+        return int(max_id[0]) + 1
+
 def recupera_episodi_podcast(id_podcast):
     connection = sqlite3.connect(db_path)
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    query = "SELECT * FROM episodi WHERE id_podcast = ? ORDER BY data"
+    query = "SELECT * FROM episodi WHERE id_podcast = ? ORDER BY data, id_episodio"
 
     cursor.execute(query, (id_podcast,))
 
@@ -184,7 +203,9 @@ def recupera_episodi_podcast(id_podcast):
     cursor.close()
     connection.close()
 
-    return tutti_episodi
+    dati = [dict(episodio) for episodio in tutti_episodi]
+
+    return dati
 
 # Aggiungi nuovo utente al db
 def aggiungi_nuovo_utente(user):

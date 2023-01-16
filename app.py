@@ -4,8 +4,11 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from user_model import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import locale
 import os # Per le estensioni dei file
 import db_dao as dao
+
+# locale.setlocale(locale.LC_ALL, 'it_CH')
 
 app= Flask(__name__)
 app.config['SECRET_KEY'] = 'segreto_segretissimo'
@@ -139,18 +142,28 @@ def nuovo_podcast():
 @app.route('/podcast/<int:id_podcast>')
 def podcast(id_podcast):
     podcast_completo = dao.recupera_podcast(id_podcast)
-    lista_episodi = dao.recupera_episodi_podcast(id_podcast)
-
-    num_episodi = len(lista_episodi)
+    episodi_pubblici = dao.recupera_episodi_podcast(id_podcast)
+    episodi_privati = []    
     
-    for episodio in lista_episodi:
+    for episodio in episodi_pubblici:
         giorni = (datetime.now() - datetime.strptime(episodio['data'], '%Y-%m-%d')).days
 
-        if giorni < 0:
-            num_episodi = num_episodi - 1
-            lista_episodi.remove(episodio)            
+        episodio['data'] = datetime.strptime(episodio['data'], '%Y-%m-%d').strftime('%d %b %Y')
 
-    return render_template('podcast.html', podcast=podcast_completo, num_episodi=num_episodi, lista_episodi=lista_episodi, data_oggi=datetime.now().strftime('%Y-%m-%d'))
+        if giorni < 0:
+            episodi_pubblici.remove(episodio)
+            episodi_privati.append(episodio)
+    
+    num_episodi_privati = len(episodi_privati)
+    num_episodi_pubblici = len(episodi_pubblici)
+
+    return render_template('podcast.html', 
+                            podcast=podcast_completo,
+                            num_episodi_pubblici=num_episodi_pubblici, 
+                            episodi_pubblici=episodi_pubblici, 
+                            num_episodi_privati=num_episodi_privati, 
+                            episodi_privati=episodi_privati, 
+                            data_oggi=datetime.now().strftime('%Y-%m-%d'))
 
 @app.route('/nuovo-episodio', methods=['POST'])
 @login_required
@@ -159,7 +172,7 @@ def nuovo_episodio():
     id_podcast = request.form.get('id_podcast')
     
     # Numero episodio
-    numero_episodio = request.form.get('numero_episodio')
+    id_episodio = dao.prossimo_id_episodio()
 
     # Titolo
     titolo = request.form.get('titolo')
@@ -172,8 +185,8 @@ def nuovo_episodio():
     if audio:
         extension = os.path.splitext(audio.filename)[-1].lower()
 
-        # static/Audio/<titolo>_<id_podcast>_<num_episodio>.<estensione>
-        nome_file = 'Audio/' + titolo + '_' + id_podcast + '_' + numero_episodio + extension
+        # static/Audio/<titolo>_<id_podcast>_<id_episodio>.<estensione>
+        nome_file = 'Audio/' + titolo + '_' + id_podcast + '_' + str(id_episodio) + extension
         audio.save('static/' + nome_file)
     else:
         # Errore
@@ -185,7 +198,6 @@ def nuovo_episodio():
     data = request.form.get('data_pubblicazione')
 
     episodio = {'id_podcast' : id_podcast,
-                'numero_episodio' : numero_episodio,
                 'titolo' : titolo,
                 'descrizione' : descrizione,
                 'audio' : audio, 

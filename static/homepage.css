@@ -30,7 +30,7 @@ div.card {
 }
 
 .immagine-podcast {
-    width: 10rem;
-    height: 10rem;
+    max-width: 18rem;
+    max-height: 10rem;
     object-fit: cover;
 }
