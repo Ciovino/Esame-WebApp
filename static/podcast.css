@@ -67,7 +67,34 @@ button {
     transition: 0.4s;
 }
 
+.descrizione-episodio {
+    width: 700px;
+}
+
 button:active {
+    background-color: var(--mint-cream) !important;
+    color: var(--oxford-blue) !important;
+}
+
+div.btn-group > button {
+    color: var(--mint-cream) !important;
+    background-color: var(--indigo-dye) !important;
+}
+
+div.btn-group > button:hover {
+    border-color: var(--mint-cream) !important;
+}
+
+.btn-modal {
+    color: var(--mint-cream) !important;
+    border: 2px solid var(--mint-cream);
+    border-radius: 10px;
+    background-color: transparent !important;
+
+    transition: 0.4s;
+}
+
+.btn-modal:active {
     background-color: var(--mint-cream) !important;
     color: var(--oxford-blue) !important;
 }

@@ -75,11 +75,11 @@
 <div id="tutti-podcast" class="top-border row m-0">
     <h3 class="row m-0">Tutti i podcast</h3>
 
-    <div class="immagini-podcast d-flex flex-wrap">
+    <div class="immagini-podcast d-flex flex-wrap justify-content-center align-items-start">
         {% for podcast in tutti_podcast %}
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title"><b>{{ podcast.titolo }}</b> di <em>{{ podcast.username }}</em></h5>
+                <h5 class="card-title">{{ podcast.titolo }}</h5>
                 <p class="card-text">{{ podcast.descrizione }}</p>
             </div>
             <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">

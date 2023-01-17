@@ -1,6 +1,6 @@
 import sqlite3
 
-db_path = 'database/db_esame.db'
+db_path = 'database/db_test.db'
 
 # Controlla che l'username sia univoco all'interno del database
 def utente_univoco(username):
@@ -9,6 +9,7 @@ def utente_univoco(username):
         return False
 
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "SELECT COUNT(*) FROM utenti WHERE username = ?"
 
@@ -28,6 +29,7 @@ def email_univoca(email):
         return False
 
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "SELECT COUNT(*) FROM utenti WHERE email = ?"
 
@@ -43,6 +45,7 @@ def email_univoca(email):
 # Recupera l'utente dall'username
 def recupera_utente_username(username):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = "SELECT * FROM utenti WHERE username = ?"
@@ -59,6 +62,7 @@ def recupera_utente_username(username):
 # Recupera l'utente dall'id
 def recupera_utente_id(id):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = "SELECT * FROM utenti WHERE id_utente = ?"
@@ -75,9 +79,10 @@ def recupera_utente_id(id):
 # Recupera i podcast creati da un utente
 def recupera_podcast_utente(id_utente):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    query = "SELECT * FROM podcast WHERE id_utente = ?"
+    query = "SELECT * FROM podcast WHERE id_utente = ? ORDER BY data_creazione, id_podcast DESC"
 
     cursor.execute(query, (id_utente,))
 
@@ -91,6 +96,7 @@ def recupera_podcast_utente(id_utente):
 # Recupera un podcast dall'id
 def recupera_podcast(id_podcast):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = '''SELECT p.id_utente, u.username, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione, p.id_podcast 
@@ -109,6 +115,7 @@ def recupera_podcast(id_podcast):
 # Recupera le informazioni di tutti i podcast
 def tutti_podcast():
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = '''SELECT p.id_utente, u.username, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione, p.id_podcast
@@ -130,6 +137,7 @@ def tutti_podcast():
 # Aggiunge un podcast al db
 def aggiungi_podcast(podcast):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "INSERT INTO podcast(id_utente, titolo, descrizione, categoria, immagine, data_creazione) VALUES (?,?,?,?,?,?)"
 
@@ -137,6 +145,48 @@ def aggiungi_podcast(podcast):
 
     try:
         cursor.execute(query, (podcast['id_utente'], podcast['titolo'], podcast['descrizione'], podcast['categoria'], podcast['immagine'], podcast['data_creazione']))
+        connection.commit()
+        success = True
+    except Exception as e:
+        print('ERROR', str(e))
+        connection.rollback()
+
+    cursor.close()
+    connection.close()
+
+    return success
+
+def modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    cursor = connection.cursor()
+    query = "UPDATE podcast SET titolo = ?, descrizione = ? WHERE id_podcast = ?"
+
+    success = False
+
+    try:
+        cursor.execute(query, (nuovo_titolo, nuova_descrizione, id_podcast))
+        connection.commit()
+        success = True
+    except Exception as e:
+        print('ERROR', str(e))
+        connection.rollback()
+
+    cursor.close()
+    connection.close()
+
+    return success
+
+def elimina_podcast(id_podcast):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    cursor = connection.cursor()
+    query = "DELETE FROM podcast WHERE id_podcast = ?"
+
+    success = False
+
+    try:
+        cursor.execute(query, (id_podcast, ))
         connection.commit()
         success = True
     except Exception as e:
@@ -156,6 +206,7 @@ def titolo_podcast_valido(titolo, id_utente):
 # Aggiungi episodio al db
 def aggiungi_episodio(episodio):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "INSERT INTO episodi(id_podcast, titolo, descrizione, data, audio) VALUES (?,?,?,?,?)"
 
@@ -174,8 +225,51 @@ def aggiungi_episodio(episodio):
 
     return success
 
+def modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    cursor = connection.cursor()
+    query = "UPDATE episodi SET titolo = ?, descrizione = ? WHERE id_episodio = ?"
+
+    success = False
+
+    try:
+        cursor.execute(query, (nuovo_titolo, nuova_descrizione, id_episodio))
+        connection.commit()
+        success = True
+    except Exception as e:
+        print('ERROR', str(e))
+        connection.rollback()
+
+    cursor.close()
+    connection.close()
+
+    return success
+
+def elimina_episodio(id_episodio):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    cursor = connection.cursor()
+    query = "DELETE FROM episodi WHERE id_episodio = ?"
+
+    success = False
+
+    try:
+        cursor.execute(query, (id_episodio, ))
+        connection.commit()
+        success = True
+    except Exception as e:
+        print('ERROR', str(e))
+        connection.rollback()
+
+    cursor.close()
+    connection.close()
+
+    return success
+
 def prossimo_id_episodio():
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = "SELECT MAX(id_episodio) FROM episodi"
@@ -194,6 +288,7 @@ def prossimo_id_episodio():
 
 def recupera_episodi_podcast(id_podcast):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = "SELECT * FROM episodi WHERE id_podcast = ? ORDER BY data, id_episodio"
@@ -211,6 +306,7 @@ def recupera_episodi_podcast(id_podcast):
 
 def recupera_episodio(id_episodio):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = "SELECT * FROM episodi WHERE id_episodio = ?"
@@ -226,6 +322,7 @@ def recupera_episodio(id_episodio):
 
 def episodio_successivo(id_podcast, id_episodio, data, data_oggi):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = '''SELECT * 
@@ -248,6 +345,7 @@ def episodio_successivo(id_podcast, id_episodio, data, data_oggi):
 
 def episodio_precedente(id_podcast, id_episodio, data):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = '''SELECT * 
@@ -270,6 +368,7 @@ def episodio_precedente(id_podcast, id_episodio, data):
 
 def aggiungi_commento(commento):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "INSERT INTO commenti(id_utente, id_episodio, contenuto, data) VALUES (?,?,?,?)"
 
@@ -290,6 +389,7 @@ def aggiungi_commento(commento):
 
 def modifica_commento(id_commento, nuovo_contenuto):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "UPDATE commenti SET contenuto = ? WHERE id_commento = ?"
 
@@ -310,6 +410,7 @@ def modifica_commento(id_commento, nuovo_contenuto):
 
 def cancella_commento(id_commento):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "DELETE FROM commenti WHERE id_commento = ?"
 
@@ -330,6 +431,7 @@ def cancella_commento(id_commento):
 
 def commenti_episodio(id_episodio):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
     query = '''SELECT c.id_utente, c.id_episodio, c.contenuto, c.data, c.id_commento, u.username, u.immagine_profilo
@@ -351,6 +453,7 @@ def commenti_episodio(id_episodio):
 # Aggiungi nuovo utente al db
 def aggiungi_nuovo_utente(user):
     connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
     query = "INSERT INTO utenti(username, email, password, tipo_utente, immagine_profilo) VALUES (?,?,?,?,?)"
 

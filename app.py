@@ -92,9 +92,13 @@ def tuoi_podcast():
 def nuovo_podcast():
     # Id_utente
     id_utente = request.form.get('id_utente')
-    if id_utente != current_user.get_id():
+
+    app.logger.info(str(id_utente) + ' ' + str(current_user.get_id()))
+    if int(id_utente) != int(current_user.get_id()):
         # Errore (strano)
         return redirect(url_for('tuoi_podcast'))
+
+    app.logger.info('utente')
 
     # Titolo
     titolo = request.form.get('titolo')
@@ -102,11 +106,15 @@ def nuovo_podcast():
         # Errore
         return redirect(url_for('tuoi_podcast'))
 
+    app.logger.info('titolo')
+
     # Descrizione
     descrizione = request.form.get('descrizione')
+    app.logger.info('descrizione')
 
     # Categoria
     categoria = request.form.get('categoria')
+    app.logger.info('categoria')
 
     # Immagine
     immagine = request.files['immagine']
@@ -122,9 +130,11 @@ def nuovo_podcast():
         return redirect(url_for('tuoi_podcast'))
     
     immagine = nome_file
+    app.logger.info('immagine')
 
     # Data di creazione
     data_creazione = datetime.now().strftime('%Y-%m-%d')
+    app.logger.info('data_creazione')
 
     podcast = {'id_utente': id_utente,
                 'titolo' : titolo,
@@ -133,9 +143,35 @@ def nuovo_podcast():
                 'immagine' : immagine,
                 'data_creazione' : data_creazione}
 
+    app.logger.info(podcast)
+
     if not dao.aggiungi_podcast(podcast):
         # Errore
         app.logger.info('impossibile aggiungere')
+
+    return redirect(url_for('tuoi_podcast'))
+
+@app.route('/modifica_podcast', methods=['POST'])
+@login_required
+def modifica_podcast():
+    id_podcast = request.form.get('id_podcast')
+    nuovo_titolo = request.form.get('titolo')
+    nuova_descrizione = request.form.get('descrizione')
+
+    if not dao.modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione):
+        # Errore
+        app.logger.info('impossibile modificare')
+
+    return redirect(url_for('podcast', id_podcast=id_podcast))
+
+@app.route('/elimina_podcast', methods=['POST'])
+@login_required
+def elimina_podcast():
+    id_podcast = request.form.get('id_podcast')
+
+    if not dao.elimina_podcast(id_podcast):
+        # Errore
+        app.logger.info('impossibile eliminare')
 
     return redirect(url_for('tuoi_podcast'))
 
@@ -290,6 +326,31 @@ def nuovo_episodio():
 
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
+@app.route('/modifica_episodio', methods=['POST'])
+@login_required
+def modifica_episodio():
+    id_podcast = request.form.get('id_podcast')
+    id_episodio = request.form.get('id_episodio')
+    nuovo_titolo = request.form.get('titolo')
+    nuova_descrizione = request.form.get('descrizione')
+
+    if not dao.modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione):
+        # Errore
+        app.logger.info('impossibile modificare')
+
+    return redirect(url_for('podcast', id_podcast=id_podcast))
+
+@app.route('/elimina_episodio', methods=['POST'])
+@login_required
+def elimina_episodio():
+    id_podcast = request.form.get('id_podcast')
+    id_episodio = request.form.get('id_episodio')
+
+    if not dao.elimina_episodio(id_episodio):
+        # Errore
+        app.logger.info('impossibile eliminare')
+
+    return redirect(url_for('podcast', id_podcast=id_podcast))
 
 @login_manager.user_loader
 def user_load(id):

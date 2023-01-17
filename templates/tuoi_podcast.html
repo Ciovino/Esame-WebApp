@@ -42,10 +42,8 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-{% if num_podcast == 0 %}
-<h1>Nessun podcast. Creane uno.</h1>
-{% else %}
-<div class="immagini-podcast d-flex flex-wrap">
+<div class="immagini-podcast d-flex flex-wrap justify-content-center align-items-start">
+    {% if num_podcast != 0 %}
     {% for podcast in tutti_podcast %}
     <div class="card">
         <div class="card-body">
@@ -58,43 +56,60 @@
         </a>
     </div>
     {% endfor %}
-</div>
-{% endif %}
-<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#nuovo-podcast">Crea</button>
+    {% endif %}
 
-<div class="modal fade" id="nuovo-podcast" tabindex="-1" aria-labelledby="modale-nuovo-podcast" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="/nuovo-podcast" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <p class="text-center">Crea un nuovo podcast</p>
-                </div>
-                <div class="modal-body">
-                    <div class="row d-flex align-items-center mb-2">
-                        <labal for="titolo" class="col-2">Titolo:</labal>
-                        <input name="titolo" class="form-control col" type="text" placeholder="..." required>
-                    </div>
-                    <div class="row d-flex align-items-start mb-2">
-                        <labal for="descrizione" class=" col-2 mt-2">Descrizione:</labal>
-                        <textarea name="descrizione" class="form-control col" rows="3" required minlength="30"
-                            maxlength="200"></textarea>
-                    </div>
-                    <div class="row d-flex align-items-start mb-2">
-                        <labal for="immagine" class="col-2 mt-2">Immagine:</labal>
-                        <input name="immagine" class="form-control col" type="file" accept=".jpg,.jpeg,.png" required>
-                    </div>
-                    <div class="row d-flex align-items-start">
-                        <labal for="categoria" class="col-2 mt-2">Categoria:</labal>
-                        <input type="text" name="categoria" class="form-control col" required>
-                    </div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Nuovo Podcast</h5>
+            <p class="card-text">Crea un nuovo podcast</p>
+        </div>
 
-                    <input type="hidden" name="id_utente" value="{{ current_user.get_id() }}" />
+        <a type="button" data-bs-toggle="modal" data-bs-target="#nuovo-podcast">
+            <h1 class="text-center"><i class="bi bi-plus-square"></i></h1>
+        </a>
+
+        <div class="modal fade" id="nuovo-podcast" tabindex="-1" aria-labelledby="modale-nuovo-podcast"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content decorazione-modal">
+                    <form action="/nuovo-podcast" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h3 class="text-center">Crea un nuovo podcast</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row d-flex align-items-center mb-2">
+                                <labal for="titolo" class="col-3">Titolo:</labal>
+                                <input name="titolo" class="form-control col" type="text" placeholder="..." required>
+                            </div>
+                            <div class="row d-flex align-items-start mb-2">
+                                <labal for="descrizione" class="col-3 mt-2">Descrizione:</labal>
+                                <textarea name="descrizione" class="form-control col" rows="3" required minlength="30"
+                                    maxlength="200"></textarea>
+                            </div>
+                            <div class="row d-flex align-items-start mb-2">
+                                <labal for="immagine" class="col-3 mt-2">Immagine:</labal>
+                                <input name="immagine" class="form-control col" type="file" accept=".jpg,.jpeg,.png"
+                                    required>
+                            </div>
+                            <div class="row d-flex align-items-start">
+                                <labal for="categoria" class="col-3 mt-2">Categoria:</labal>
+                                <input type="text" name="categoria" class="form-control col" required>
+                            </div>
+
+                            <input type="hidden" name="id_utente" value="{{ current_user.get_id() }}" />
+                        </div>
+                        <div class="modal-footer">
+                            <button class="me-3 btn-modal ps-3 pe-3" type="submit">
+                                <h5 class="m-0">Crea</h5>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn" type="submit">Crea</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
+
+
+
 </div>
 {% endblock %}

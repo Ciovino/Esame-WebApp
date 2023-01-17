@@ -38,3 +38,24 @@ div.card {
     max-height: 10rem;
     object-fit: cover;
 }
+
+.decorazione-modal {
+    color: var(--mint-cream);
+    background-color: var(--indigo-dye);
+    border: 2px solid var(--mint-cream);
+    border-radius: 15px;
+}
+
+.btn-modal {
+    color: var(--mint-cream) !important;
+    border: 2px solid var(--mint-cream);
+    border-radius: 10px;
+    background-color: transparent !important;
+
+    transition: 0.4s;
+}
+
+.btn-modal:active {
+    background-color: var(--mint-cream) !important;
+    color: var(--oxford-blue) !important;
+}
