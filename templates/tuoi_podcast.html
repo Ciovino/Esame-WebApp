@@ -46,28 +46,32 @@
     {% if num_podcast != 0 %}
     {% for podcast in tutti_podcast %}
     <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ podcast.titolo }}</h5>
-            <p class="card-text">{{ podcast.descrizione }}</p>
-        </div>
+        <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
+            alt="{{ podcast.titolo }}">
+
         <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
-            <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img-bottom"
-                alt="{{ podcast.titolo }}">
+            <div class="card-img-overlay p-0">
+                <div class="card-body">
+                    <p class="card-title">{{ podcast.titolo }}</p>
+                    <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
+                </div>
+            </div>
         </a>
     </div>
     {% endfor %}
     {% endif %}
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Nuovo Podcast</h5>
-            <p class="card-text">Crea un nuovo podcast</p>
-        </div>
+    <div id="card-nuovo-podcast" class="card d-flex align-items-center justify-content-end">
+        <h1 class="text-center"><i class="bi bi-plus-square"></i></h1>
 
         <a type="button" data-bs-toggle="modal" data-bs-target="#nuovo-podcast">
-            <h1 class="text-center"><i class="bi bi-plus-square"></i></h1>
+            <div class="card-img-overlay p-0">
+                <div class="card-body">
+                    <p class="card-title">Nuovo Podcast</p>
+                    <p class="card-text">Crea un nuovo podcast</p>
+                </div>
+            </div>
         </a>
-
         <div class="modal fade" id="nuovo-podcast" tabindex="-1" aria-labelledby="modale-nuovo-podcast"
             aria-hidden="true">
             <div class="modal-dialog">
@@ -83,8 +87,8 @@
                             </div>
                             <div class="row d-flex align-items-start mb-2">
                                 <labal for="descrizione" class="col-3 mt-2">Descrizione:</labal>
-                                <textarea name="descrizione" class="form-control col" rows="3" required minlength="30"
-                                    maxlength="200"></textarea>
+                                <textarea name="descrizione" class="form-control col" rows="3" required minlength="10"
+                                    maxlength="140"></textarea>
                             </div>
                             <div class="row d-flex align-items-start mb-2">
                                 <labal for="immagine" class="col-3 mt-2">Immagine:</labal>

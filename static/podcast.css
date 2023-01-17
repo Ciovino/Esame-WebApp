@@ -31,6 +31,8 @@ img.foto-podcast {
     border-radius: 50%;
 
     background-color: rgba(238, 244, 237, 0.6);
+
+    object-fit: cover;
 }
 
 div.sfondo {

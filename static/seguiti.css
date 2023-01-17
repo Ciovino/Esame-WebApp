@@ -21,20 +21,46 @@ a.active {
 }
 
 div.card {
-    border: 3px solid var(--oxford-blue);
+    border-width: 0px;
+    padding: 0px;
     margin: 3px;
-    max-width: 18rem;
-    max-height: 18rem;
 
-    background: linear-gradient(
-        180deg,
-        rgba(255, 110, 0, 1) 18%,
-        rgba(255, 166, 0, 1) 66%
-    );
+    min-width: 10rem;
+    min-height: 10rem;
+    max-width: 20rem;
+    max-height: 20rem;
+
+    background: transparent;
 }
 
 .immagine-podcast {
-    max-width: 18rem;
-    max-height: 10rem;
-    object-fit: cover;
+    border-radius: 20px;
+    padding: 0px;
+    max-width: 20rem;
+    max-height: 20rem;
+    object-fit: contain;
+}
+
+.card-body {
+    border-radius: 20px;
+    padding: 10px 20px 0px 20px;
+
+    color: var(--mint-cream);
+    min-height: 10rem;
+
+    background: rgb(0, 0, 0);
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.6) 44%,
+        rgba(149, 149, 149, 0) 100%
+    );
+}
+
+.card-title {
+    font-size: x-large;
+}
+
+.card-text {
+    overflow: hidden hidden;
 }

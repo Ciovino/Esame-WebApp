@@ -25,9 +25,12 @@ login_manager.init_app(app)
 # Route
 @app.route('/')
 def homepage():
+    piu_seguiti = dao.podcast_piu_seguiti()
     tutti_podcast = dao.tutti_podcast()
 
-    return render_template('homepage.html', tutti_podcast=tutti_podcast)
+    return render_template('homepage.html', 
+                        tutti_podcast=tutti_podcast,
+                        piu_seguiti=piu_seguiti)
 
 @app.route('/registrati')
 def registrati():

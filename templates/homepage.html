@@ -46,28 +46,26 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-<!-- Podcast più recenti -->
+<!-- Podcast più seguiti -->
 <div id="podcast-recenti" class="top-border row m-0">
     <h3 class="row m-0">I podcast di oggi</h3>
 
-    <div class="immagini-podcast d-flex flex-wrap">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Biscotti</h5>
-                <p class="card-text">I biscotti, quelli buoni.</p>
-            </div>
-            <img src="{{url_for('static', filename='Immagini/Podcast/Biscotti.jpg')}}"
-                class="immagine-podcast card-img-bottom" alt="Biscotti">
-        </div>
+    <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
+        {% for podcast in piu_seguiti %}
+        <div class="card d-flexjustify-content-center">
+            <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
+                alt="{{ podcast.titolo }}">
 
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">CodingIsFun</h5>
-                <p class="card-text">Come rendere divertente la programmazione.</p>
-            </div>
-            <img src="{{url_for('static', filename='Immagini/Podcast/Coding.jpg')}}"
-                class="immagine-podcast card-img-bottom" alt="Coding">
+            <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
+                <div class="card-img-overlay p-0">
+                    <div class="card-body">
+                        <p class="card-title">{{ podcast.titolo }}</p>
+                        <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
+                    </div>
+                </div>
+            </a>
         </div>
+        {% endfor %}
     </div>
 </div>
 
@@ -78,13 +76,16 @@
     <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
         {% for podcast in tutti_podcast %}
         <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{ podcast.titolo }}</h5>
-                <p class="card-text">{{ podcast.descrizione }}</p>
-            </div>
+            <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
+                alt="{{ podcast.titolo }}">
+
             <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
-                <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img-bottom"
-                    alt="{{ podcast.titolo }}">
+                <div class="card-img-overlay p-0">
+                    <div class="card-body">
+                        <p class="card-title">{{ podcast.titolo }}</p>
+                        <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
+                    </div>
+                </div>
             </a>
         </div>
         {% endfor %}

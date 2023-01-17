@@ -131,7 +131,7 @@
                                     <div class="row d-flex align-items-start mb-2">
                                         <labal for="contenuto" class=" col-3 mt-2">Commento:</labal>
                                         <input type="text" name="contenuto" class="form-control col" required
-                                            minlength="5" maxlength="100"></input>
+                                            minlength="2" maxlength="140"></input>
                                     </div>
 
                                     <input type="hidden" name="id_commento" value="{{ commento.id_commento }}" />
@@ -190,7 +190,7 @@
         <div class="col-9">
             <label for="contenuto" class="visually-hidden">Commento</label>
             <input type="textarea" class="form-control" name="contenuto" placeholder="Scrivi un commento" required
-                minlength="5" maxlength="100">
+                minlength="2" maxlength="140">
         </div>
         <div class="col-1">
             <button type="submit" class="btn mb-3">Commenta</button>
