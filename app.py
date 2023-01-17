@@ -77,7 +77,11 @@ def categorie():
 @app.route('/seguiti')
 @login_required
 def seguiti():
-    return render_template('seguiti.html')
+    podcast_seguiti = dao.recupera_seguiti(current_user.get_id())
+
+    return render_template('seguiti.html', 
+                        num_seguiti=len(podcast_seguiti), 
+                        podcast_seguiti=podcast_seguiti)
 
 @app.route('/tuoi_podcast')
 @login_required
@@ -85,7 +89,9 @@ def tuoi_podcast():
     tutti_podcast = dao.recupera_podcast_utente(current_user.get_id())
     num_podcast = len(tutti_podcast)
 
-    return render_template('tuoi_podcast.html', num_podcast=num_podcast, tutti_podcast=tutti_podcast)
+    return render_template('tuoi_podcast.html',
+                        num_podcast=num_podcast, 
+                        tutti_podcast=tutti_podcast)
 
 @app.route('/nuovo-podcast', methods=['POST'])
 @login_required

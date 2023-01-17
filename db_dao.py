@@ -472,6 +472,25 @@ def aggiungi_nuovo_utente(user):
 
     return success
 
+def recupera_seguiti(id_utente):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = '''SELECT s.id_utente, s.id_podcast, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione
+            FROM seguiti s, podcast p
+            WHERE s.id_utente = ? AND s.id_podcast = p.id_podcast
+            ORDER BY p.data_creazione DESC'''
+
+    cursor.execute(query, (id_utente, ))
+
+    podcast_seguiti = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return podcast_seguiti
+
 def podcast_seguito(id_podcast, id_utente):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")

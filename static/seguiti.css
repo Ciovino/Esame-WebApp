@@ -19,3 +19,22 @@ a.active {
     border: 2px solid var(--mint-cream);
     background-color: var(--indigo-dye);
 }
+
+div.card {
+    border: 3px solid var(--oxford-blue);
+    margin: 3px;
+    max-width: 18rem;
+    max-height: 18rem;
+
+    background: linear-gradient(
+        180deg,
+        rgba(255, 110, 0, 1) 18%,
+        rgba(255, 166, 0, 1) 66%
+    );
+}
+
+.immagine-podcast {
+    max-width: 18rem;
+    max-height: 10rem;
+    object-fit: cover;
+}
