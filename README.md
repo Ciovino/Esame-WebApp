@@ -19,10 +19,10 @@ Realizzare un'applicazione web per la gestione di podcast.
 - Main, con i podcast:
   - *Podcast recenti*: I 3/4 podcast che hanno l'aggiornamento più recente.
   - *Tutti i podcast*: Tutti i podcast del sito (**da scegliere un ordinamento**);
-- Footer, con le icone per i social.
+- *Footer*, con le icone per i social.
 
 ### Registrati
-- Form di registrazione contenente:
+- *Form* di registrazione contenente:
   - *Username* (**univoco**);
   - *Email* (*univoca*);
   - *Password*;
@@ -30,12 +30,12 @@ Realizzare un'applicazione web per la gestione di podcast.
   - *Immagine profilo*.
   
 ### Login
-- Form di login contentente:
+- *Form* di login contentente:
   - *Username*;
   - *Password*.
 
 ### Pagina Personale
-- Messaggio di benvenuto;
+- Messaggio di *benvenuto*;
 - Elenco delle informazioni dell'utente:
   - *Username*;
   - *Email*;
@@ -45,12 +45,25 @@ Realizzare un'applicazione web per la gestione di podcast.
 
 ### Pagina dei podcast creati
 - Elenco dei podcast (*Se non ci sono podcast, viene visualizzato "Nessun podcast. Creane uno."*);
-- Bottone per la creazione di un nuovo podcast:
+- *Bottone* per la creazione di un nuovo podcast:
   - *Titolo*;
   - *Descrizione*;
   - *Immagine*;
   - *Categoria*.
 
 ### Pagina del podcast
-- *Titolo* e nome dell'*autore*;
-- Elenco di episodi;
+- Immagine del podcast, *titolo* del podcast e nome dell'*autore*;
+- Elenco di *episodi pubblici*;
+- Elenco di *episodi privati* (visibili solo all'autore);
+- *Form* per aggiunta di un nuovo episodio.
+
+### Pagina degli episodi
+- *Immagine del podcast*, *titolo del podcast*, nome dell'*autore*, *titolo dell'episodio* e *descrizione dell'episodio*;
+- *Player* con link per:
+  - *Episodio precedente* (se c'è);
+  - Tornare al *podcast*;
+  - *Episodio successivo* (se c'è);
+- Sezione *commenti*:
+  - Elenco di *tutti i commenti* presenti:
+    - Ogni commento che l'utente loggato ha scritto è sia *modificabile* che *cancellabile*;
+  - *Form* per aggiunta di un nuovo commento

@@ -43,52 +43,65 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-<div id="saluto" class="row m-0 top-border">
-    <div class="col-6 d-flex justify-content-evenly align-items-center">
+<div id="saluto" class="top-border">
+    <div class="d-flex justify-content-evenly align-items-center">
         <img class="foto-profilo" src="{{ url_for('static', filename=current_user.get_immagine()) }}">
         <h1 class="m-0 fst-italic">Ciao {{ current_user.get_username() }}</h1>
     </div>
 </div>
 
 <div class="top-border">
-    <div id="titolo" class="row m-0">
-        <h2>I tuoi dati</h2>
+    <div id="titolo" class="row m-0 justify-content-center">
+        <h2 class="mt-3 col-3">I tuoi dati</h2>
     </div>
 
-    <dl id="info" class="row m-0 align-items-center">
-        <dt class="col-3">
-            <h3>Username</h3>
-        </dt>
-        <dd class="col-9 m-0 d-flex justify-content-between align-items-center">
-            <p class="m-0 fst-italic">{{ current_user.get_username() }}</p>
-        </dd>
+    <dl id="info">
+        <div class="row m-0 align-items-center justify-content-center">
+            <dt class="col-3">
+                <h3>Username</h3>
+            </dt>
+            <dd class="col-3 m-0 d-flex justify-content-between align-items-center">
+                <p class="m-0 fst-italic">{{ current_user.get_username() }}</p>
+            </dd>
+        </div>
 
-        <dt class="col-3">
-            <h3>Email</h3>
-        </dt>
-        <dd class="col-9">
-            <p class="m-0 fst-italic">{{ current_user.get_email() }}</p>
-        </dd>
+        <div class="row m-0 align-items-center justify-content-center">
+            <dt class="col-3">
+                <h3>Email</h3>
+            </dt>
+            <dd class="col-3">
+                <p class="m-0 fst-italic">{{ current_user.get_email() }}</p>
+            </dd>
+        </div>
 
-        <dt class="col-3">
-            <h3>Password</h3>
-        </dt>
-        <dd class="col-9">
-            <p class="m-0 fst-italic">{{ current_user.get_password() }}</p>
-        </dd>
+        <div class="row m-0 align-items-center justify-content-center">
+            <dt class="col-3">
+                <h3>Password</h3>
+            </dt>
+            <dd class="col-3">
+                <p class="m-0 fst-italic">{{ current_user.get_password() }}</p>
+            </dd>
+        </div>
 
-        <dt class="col-3">
-            <h3>Tipo Utente</h3>
-        </dt>
-        <dd class="col-9">
-            <p class="m-0 fst-italic">{{ current_user.get_tipo() }}</p>
-        </dd>
+        <div class="row m-0 align-items-center justify-content-center">
+            <dt class="col-3">
+                <h3>Tipo Utente</h3>
+            </dt>
+            <dd class="col-3">
+                <p class="m-0 fst-italic">{{ current_user.get_tipo() }}</p>
+            </dd>
+        </div>
 
-        <dt class="col-3">
-            <h3>Immagine profilo</h3>
-        </dt>
-        <dd class="col-9"><img class="foto-profilo piccola ps-0 pe-0"
-                src="{{ url_for('static', filename=current_user.get_immagine()) }}"></dd>
+        <div class="row m-0 align-items-center justify-content-center">
+            <dt class="col-3">
+                <h3>Immagine profilo</h3>
+            </dt>
+            <dd class="col-3">
+                <img class="foto-profilo piccola ps-0 pe-0"
+                    src="{{ url_for('static', filename=current_user.get_immagine()) }}">
+            </dd>
+        </div>
     </dl>
+
 </div>
 {% endblock %}

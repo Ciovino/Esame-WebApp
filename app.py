@@ -165,6 +165,87 @@ def podcast(id_podcast):
                             episodi_privati=episodi_privati, 
                             data_oggi=datetime.now().strftime('%Y-%m-%d'))
 
+@app.route('/podcast/<int:id_podcast>/<int:id_episodio>')
+@login_required
+def episodio(id_podcast, id_episodio):
+    podcast = dao.recupera_podcast(id_podcast)
+
+    episodio = dao.recupera_episodio(id_episodio)
+    episodio_precedente = dao.episodio_precedente(id_podcast, id_episodio, episodio['data'])
+    episodio_successivo = dao.episodio_successivo(id_podcast, id_episodio, episodio['data'], datetime.now().strftime('%Y-%m-%d'))
+
+    commenti = dao.commenti_episodio(id_episodio)
+
+    for commento in commenti:
+        commento['data'] = datetime.strptime(episodio['data'], '%Y-%m-%d').strftime('%d %b %Y')
+
+    return render_template('episodio.html',
+                            podcast = podcast,
+                            episodio = episodio,
+                            episodio_precedente=episodio_precedente,
+                            episodio_successivo=episodio_successivo,
+                            num_commenti = len(commenti),
+                            commenti = commenti)
+
+@app.route('/nuovo-commento', methods=['POST'])
+@login_required
+def nuovo_commento():
+    # Id podcast
+    id_podcast = request.form.get('id_podcast')
+
+    # Id_utente
+    id_utente = request.form.get('id_utente')
+
+    # Id episodio
+    id_episodio = request.form.get('id_episodio')
+
+    # Contenuto 
+    contenuto = request.form.get('contenuto')
+
+    # Data
+    data = datetime.now().strftime('%Y-%m-%d')
+
+    commento = { 'id_utente' : id_utente,
+                'id_episodio' : id_episodio,
+                'contenuto': contenuto,
+                'data' : data}
+
+    if not dao.aggiungi_commento(commento):
+        # Errore
+        app.logger.info('impossibile aggiungere')
+
+    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
+
+@app.route('/modifica', methods=['POST'])
+@login_required
+def modifica():
+    id_podcast = request.form.get('id_podcast')
+    id_episodio = request.form.get('id_episodio')
+
+    id_commento = request.form.get('id_commento')
+
+    nuovo_contenuto = request.form.get('contenuto')
+
+    if not dao.modifica_commento(id_commento, nuovo_contenuto):
+        # Errore
+        app.logger.info('impossibile modificare')
+
+    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
+
+@app.route('/elimina', methods=['POST'])
+@login_required
+def elimina():
+    id_podcast = request.form.get('id_podcast')
+    id_episodio = request.form.get('id_episodio')
+
+    id_commento = request.form.get('id_commento')
+
+    if not dao.cancella_commento(id_commento):
+        # Errore
+        app.logger.info('impossibile eliminare')
+
+    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
+
 @app.route('/nuovo-episodio', methods=['POST'])
 @login_required
 def nuovo_episodio():

@@ -48,54 +48,55 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-<div id="titolo" class="row m-0 top-border">
-    <div class="col-6 d-flex justify-content-evenly align-items-center">
+<div id="titolo" class="top-border">
+    <div class="d-flex justify-content-evenly align-items-center">
         <img class="foto-podcast" src="{{ url_for('static', filename=podcast.immagine) }}">
-        <h1 class="m-0 fst-italic">{{ podcast.titolo }}</h1>
+        <h1 class="m-0 fst-italic"><b>{{ podcast.titolo }}</b> - <em>{{ podcast.username }}</em></h1>
     </div>
 </div>
 
-<div id="lista-pubblica" class="top-border pt-3">
+<div id="lista-pubblica" class="lista-episodi top-border pt-3">
     {% if num_episodi_pubblici == 0 %}
     <h1>Non ci sono ancora episodi per questo podcast.</h1>
     {% else %}
-    <div class="">
-        <h3 class="text-center">Episodi</h3>
-        {% for idx in range(num_episodi_pubblici) %}
-        <div class="episodio row justify-content-center">
-            <div class="sfondo col-11">
-                <div class="titolo-episodio row m-0 justify-content-end">
-                    <!-- Numero episodio - Titolo - Data -->
-                    <div class="col-1 ">
-                        <h4 class="m-0 text-center">{{ idx + 1 }}</h4>
-                    </div>
-                    <div class="col-8">
-                        <h4 class="m-0">{{ episodi_pubblici[idx].titolo }}</h4>
-                    </div>
-                    <div class="col-3">
-                        <h4 class="m-0">{{ episodi_pubblici[idx].data }}</h4>
-                    </div>
+    <h3 class="text-center titolo">Episodi</h3>
+    {% for idx in range(num_episodi_pubblici) %}
+    <div class="episodio row justify-content-center">
+        <div class="sfondo col-11">
+            <div class="titolo-episodio row m-0 justify-content-end">
+                <!-- Numero episodio - Titolo - Data -->
+                <div class="col-1 ">
+                    <h4 class="m-0 text-center">{{ idx + 1 }}</h4>
                 </div>
+                <div class="col-8">
+                    <h4 class="m-0">{{ episodi_pubblici[idx].titolo }}</h4>
+                </div>
+                <div class="col-3">
+                    <h4 class="m-0">{{ episodi_pubblici[idx].data }}</h4>
+                </div>
+            </div>
 
-                <div class="titolo-episodio row m-0 justify-content-center align-items-start">
-                    <!-- Descrizione - Tasto play -->
-                    <div class="col-9 d-flex align-items-center">
-                        <p class="m-0 ps-2">{{ episodi_pubblici[idx].descrizione }}</p>
-                    </div>
-                    <div class="col-2 d-flex justify-content-end">
-                        <a href="#" class="btn" tabindex="-1" role="button">Ascolta</a>
-                    </div>
+            <div class="titolo-episodio row m-0 justify-content-center align-items-start">
+                <!-- Descrizione - Tasto play -->
+                <div class="col-9 d-flex align-items-center">
+                    <p class="m-0 ps-2">{{ episodi_pubblici[idx].descrizione }}</p>
+                </div>
+                <div class="col-2 d-flex justify-content-end">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('episodio', id_podcast=podcast.id_podcast, id_episodio=episodi_pubblici[idx].id_episodio) }}"
+                        class="btn" tabindex="-1" role="button">Ascolta</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        {% endfor %}
     </div>
+    {% endfor %}
     {% endif %}
 </div>
 
 {% if current_user.is_authenticated and (current_user.get_id() == podcast.id_utente) %}
 {% if num_episodi_privati != 0 %}
-<div id="lista-privata" class="top-border mt-3 pt-2">
+<div id="lista-privata" class="lista-episodi top-border mt-3 pt-2">
     <h3 class="text-center">Episodi non ancora pubblicati</h3>
     {% for idx in range(num_episodi_privati) %}
     <div class="episodio row justify-content-center">
@@ -134,8 +135,8 @@
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content decorazione-modal">
-                <form action="/nuovo-episodio" method="POST" enctype="multipart/form-data" class="decorazione-modal">
-                    <div class="modal-header">
+                <form action="/nuovo-episodio" method="POST" enctype="multipart/form-data">
+                    <div class=" modal-header">
                         <h4 class="text-center">Carica un nuovo episodio</h4>
                     </div>
                     <div class="modal-body">
