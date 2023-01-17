@@ -193,13 +193,19 @@ def podcast(id_podcast):
     num_episodi_privati = len(episodi_privati)
     num_episodi_pubblici = len(episodi_pubblici)
 
+    if current_user.is_authenticated:
+        seguito = dao.podcast_seguito(id_podcast, current_user.get_id())
+    else:
+        seguito = -1
+
     return render_template('podcast.html', 
                             podcast=podcast_completo,
                             num_episodi_pubblici=num_episodi_pubblici, 
                             episodi_pubblici=episodi_pubblici, 
                             num_episodi_privati=num_episodi_privati, 
                             episodi_privati=episodi_privati, 
-                            data_oggi=datetime.now().strftime('%Y-%m-%d'))
+                            data_oggi=datetime.now().strftime('%Y-%m-%d'),
+                            seguito=seguito)
 
 @app.route('/podcast/<int:id_podcast>/<int:id_episodio>')
 @login_required
@@ -425,6 +431,20 @@ def add_new_user():
 
     # Utente Registrato
     return redirect(url_for('homepage'))
+
+@app.route('/segui', methods=['POST'])
+@login_required
+def segui():
+    id_utente = current_user.get_id()
+    id_podcast = request.form.get('id_podcast')
+
+    da_seguire = request.form.get('da_seguire')
+
+    if not dao.segui(id_podcast, id_utente, da_seguire):
+        # Errore
+        app.logger.info('impossibile seguire/smettere di seguire il podcast')
+    
+    return redirect(url_for('podcast', id_podcast=id_podcast))
 
 @app.errorhandler(404)
 def page_not_found(e):

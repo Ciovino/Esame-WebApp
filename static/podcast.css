@@ -98,3 +98,13 @@ div.btn-group > button:hover {
     background-color: var(--mint-cream) !important;
     color: var(--oxford-blue) !important;
 }
+
+.btn-segui {
+    margin: 0;
+    border-width: 0px;
+}
+
+.btn-segui:active {
+    background-color: transparent !important;
+    color: var(--mint-cream) !important;
+}

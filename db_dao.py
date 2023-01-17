@@ -471,3 +471,56 @@ def aggiungi_nuovo_utente(user):
     connection.close()
 
     return success
+
+def podcast_seguito(id_podcast, id_utente):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = '''SELECT COUNT(*)
+            FROM seguiti
+            WHERE id_podcast = ? AND id_utente = ?'''
+
+    cursor.execute(query, (id_podcast, id_utente))
+
+    seguito = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if int(seguito[0]) == 1:
+        return 1
+
+    return 0
+
+def segui(id_podcast, id_utente, da_seguire):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    if int(da_seguire) == 0:
+        # Smettere di seguire
+        query = '''DELETE FROM seguiti WHERE id_podcast = ? AND id_utente = ?'''
+    elif int(da_seguire) == 1:
+        # Seguire
+        query = '''INSERT INTO seguiti(id_podcast, id_utente) VALUES (?,?)'''
+    else:
+        # Errore
+        print(f'Valore (da_seguire):{da_seguire} non valido')
+        return False
+
+    success = False
+
+    try:
+        cursor.execute(query, (id_podcast, id_utente))
+        connection.commit()
+        success = True
+    except Exception as e:
+        print('ERROR', str(e))
+        connection.rollback()
+
+    cursor.close()
+    connection.close()
+
+    return success

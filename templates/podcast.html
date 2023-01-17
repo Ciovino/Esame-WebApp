@@ -56,8 +56,32 @@
                 <h1 class="m-0 col"><b>{{ podcast.titolo }}</b> - <em>{{ podcast.username }}</em></h1>
             </div>
             <div class="descrizione-episodio">
-                <p class="m-0 col">{{ podcast.descrizione }}</p>
+                <h5 class="m-0 col">{{ podcast.descrizione }}</h5>
             </div>
+            {% if seguito != -1 %}
+            <div class="segui">
+                <form action="/segui" method="POST" enctype="multipart/form-data">
+                    {% if seguito == 1 %}
+                    <!-- Podcast seguito -->
+                    <h6 class="m-0">
+                        <button type="submit" class="btn-segui">
+                            Non seguire più <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </h6>
+                    <input type="hidden" name="da_seguire" value="0">
+                    {% elif seguito == 0 %}
+                    <!-- Podcast non seguito -->
+                    <h6 class="m-0">
+                        <button type="submit" class="btn-segui">
+                            Segui <i class="bi bi-heart"></i>
+                        </button>
+                    </h6>
+                    <input type="hidden" name="da_seguire" value="1">
+                    {% endif %}
+                    <input type="hidden" name="id_podcast" value="{{ podcast.id_podcast }}">
+                </form>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
