@@ -22,6 +22,19 @@ Session(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# Categorie dei podcast
+intrattenimento = ['Arte', 'Commedia', 'Narrativa', 'Cinema', 'Letteratura', 'Musica']
+business        = ['Economia', 'Tecnologia', 'Finanza', 'Politica']
+formazione      = ['Storia', 'Scienza', 'Filosofia']
+divertimento    = ['Sport', 'Tennis', 'Calcio', 'Bowling', 'Videogiochi']
+benessere       = ['Moda', 'Cibo', 'Fitness']
+
+tutte_categorie = { 'Arte e Intrattenimento' : intrattenimento,
+                    'Business e Tecnologia'  : business,
+                    'Formazione'             : formazione,
+                    'Sport e Divertimento'   : divertimento,
+                    'Lifestyle e Benessere'  : benessere }
+
 # Route
 @app.route('/')
 def homepage():
@@ -75,7 +88,24 @@ def logout():
 
 @app.route('/categorie')
 def categorie():
-    return render_template('categorie.html')
+    return render_template('categorie.html', 
+                        tutte_categorie=tutte_categorie)
+
+@app.route('/categorie/<categoria>')
+def singola_categoria(categoria):
+    tutti_podcast = dao.tutti_podcast()
+    podcast_categoria = []
+
+    for podcast in tutti_podcast:
+        in_categoria = podcast['categoria'].find(categoria) > -1
+
+        if in_categoria:
+            podcast_categoria.append(podcast)
+
+    return render_template('singola_categoria.html',
+                        categoria=categoria,
+                        podcast_categoria=podcast_categoria,
+                        num_podcast = len(podcast_categoria))
 
 @app.route('/seguiti')
 @login_required
@@ -94,7 +124,8 @@ def tuoi_podcast():
 
     return render_template('tuoi_podcast.html',
                         num_podcast=num_podcast, 
-                        tutti_podcast=tutti_podcast)
+                        tutti_podcast=tutti_podcast,
+                        tutte_categorie=tutte_categorie)
 
 @app.route('/nuovo-podcast', methods=['POST'])
 @login_required
@@ -102,12 +133,9 @@ def nuovo_podcast():
     # Id_utente
     id_utente = request.form.get('id_utente')
 
-    app.logger.info(str(id_utente) + ' ' + str(current_user.get_id()))
     if int(id_utente) != int(current_user.get_id()):
         # Errore (strano)
         return redirect(url_for('tuoi_podcast'))
-
-    app.logger.info('utente')
 
     # Titolo
     titolo = request.form.get('titolo')
@@ -115,23 +143,21 @@ def nuovo_podcast():
         # Errore
         return redirect(url_for('tuoi_podcast'))
 
-    app.logger.info('titolo')
-
     # Descrizione
     descrizione = request.form.get('descrizione')
-    app.logger.info('descrizione')
 
     # Categoria
-    categoria = request.form.get('categoria')
-    app.logger.info('categoria')
+    categorie_podcast = request.form.getlist('categoria')    
+    categoria = da_lista_a_stringa(categorie_podcast)
 
     # Immagine
     immagine = request.files['immagine']
     if immagine:
         extension = os.path.splitext(immagine.filename)[-1].lower()
+        id_podcast = dao.prossimo_id_podcast()
 
-        # static/Immagini/Podcast/<titolo>_<id_utente>.<estensione>
-        nome_file = 'Immagini/Podcast/' + titolo + '_' + id_utente + extension
+        # static/Immagini/Podcast/<id_utente>_<id_podcast>.<estensione>
+        nome_file = 'Immagini/Podcast/' + id_utente + '_' + str(id_podcast) + extension
 
         immagine.save('static/' + nome_file)
     else:
@@ -139,11 +165,9 @@ def nuovo_podcast():
         return redirect(url_for('tuoi_podcast'))
     
     immagine = nome_file
-    app.logger.info('immagine')
 
     # Data di creazione
     data_creazione = datetime.now().strftime('%Y-%m-%d')
-    app.logger.info('data_creazione')
 
     podcast = {'id_utente': id_utente,
                 'titolo' : titolo,
@@ -151,8 +175,6 @@ def nuovo_podcast():
                 'categoria' : categoria,
                 'immagine' : immagine,
                 'data_creazione' : data_creazione}
-
-    app.logger.info(podcast)
 
     if not dao.aggiungi_podcast(podcast):
         # Errore
@@ -166,8 +188,20 @@ def modifica_podcast():
     id_podcast = request.form.get('id_podcast')
     nuovo_titolo = request.form.get('titolo')
     nuova_descrizione = request.form.get('descrizione')
+    nuova_immagine = request.files['immagine']
+    nuove_categorie = request.form.getlist('categoria')
 
-    if not dao.modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione):
+    if nuova_immagine:
+        extension = os.path.splitext(nuova_immagine.filename)[-1].lower()
+
+        # static/Immagini/Podcast/<id_utente>_<id_podcast>.<estensione>
+        nome_file = 'Immagini/Podcast/' + str(current_user.get_id()) + '_' + id_podcast + extension
+
+        nuova_immagine.save('static/' + nome_file)
+    
+    categoria_db = da_lista_a_stringa(nuove_categorie)
+
+    if not dao.modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione, categoria_db):
         # Errore
         app.logger.info('impossibile modificare')
 
@@ -214,7 +248,8 @@ def podcast(id_podcast):
                             num_episodi_privati=num_episodi_privati, 
                             episodi_privati=episodi_privati, 
                             data_oggi=datetime.now().strftime('%Y-%m-%d'),
-                            seguito=seguito)
+                            seguito=seguito,
+                            tutte_categorie=tutte_categorie)
 
 @app.route('/podcast/<int:id_podcast>/<int:id_episodio>')
 @login_required
@@ -458,3 +493,20 @@ def segui():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('error404.html')
+
+def da_lista_a_stringa(lista:list):
+    if not lista:
+        return ""
+    
+    stringa = lista[0]
+
+    for i in range(1, len(lista)):
+        stringa = stringa + '_' + lista[i]
+
+    return stringa
+
+def da_stringa_a_lista(stringa:str):
+    if not stringa:
+        return []
+
+    return stringa.split('_')

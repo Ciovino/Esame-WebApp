@@ -11,12 +11,12 @@
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
-            Podcast
-            <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2>
+                Podcast
                 <i class="bi bi-house"></i>
-            </a>
-        </h2>
+            </h2>
+        </a>
 
         {% if current_user.is_authenticated %}
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a></h4>
@@ -45,4 +45,28 @@
         {% endif %}
     </div>
 </aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+
+{% for nome_categoria, sotto_categoria in tutte_categorie.items() %}
+<div id="macro-categoria" class="top-border">
+    <h1>{{nome_categoria}}</h1>
+    <div class="d-flex flex-wrap justify-content-start align-items-start">
+        {% for categoria in sotto_categoria %}
+        <div class="card">
+            <img src="{{url_for('static', filename='Immagini/Sfondi/Slug.jpg')}}" class="immagine-podcast card-img"
+                alt="{{categoria}}">
+            <a href="{{ url_for('singola_categoria', categoria=categoria )}}">
+                <div class="card-img-overlay p-0">
+                    <div class="card-body">
+                        <p class="card-title">{{categoria}}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

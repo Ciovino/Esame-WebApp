@@ -121,7 +121,7 @@ def tutti_podcast():
     query = '''SELECT p.id_utente, u.username, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione, p.id_podcast
             FROM utenti u, podcast p
             WHERE u.id_utente = p.id_utente
-            ORDER BY p.data_creazione DESC'''
+            ORDER BY p.data_creazione DESC, p.id_podcast DESC'''
 
     cursor.execute(query)
 
@@ -133,6 +133,25 @@ def tutti_podcast():
     dati = [dict(podcast) for podcast in tutti_podcast]
 
     return dati
+
+def prossimo_id_podcast():
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    query = "SELECT MAX(id_podcast) FROM podcast"
+
+    cursor.execute(query)
+
+    max_id = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if max_id[0] == None: # Nessun podcast salvato nel db
+        return 1
+    else:
+        return int(max_id[0]) + 1
 
 # Aggiunge un podcast al db
 def aggiungi_podcast(podcast):
@@ -156,16 +175,16 @@ def aggiungi_podcast(podcast):
 
     return success
 
-def modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione):
+def modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione, nuova_categoria):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
-    query = "UPDATE podcast SET titolo = ?, descrizione = ? WHERE id_podcast = ?"
+    query = "UPDATE podcast SET titolo = ?, descrizione = ?, categoria = ? WHERE id_podcast = ?"
 
     success = False
 
     try:
-        cursor.execute(query, (nuovo_titolo, nuova_descrizione, id_podcast))
+        cursor.execute(query, (nuovo_titolo, nuova_descrizione, nuova_categoria, id_podcast))
         connection.commit()
         success = True
     except Exception as e:
@@ -501,9 +520,9 @@ def recupera_seguiti(id_utente):
     connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    query = '''SELECT s.id_utente, s.id_podcast, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione
-            FROM seguiti s, podcast p
-            WHERE s.id_utente = ? AND s.id_podcast = p.id_podcast
+    query = '''SELECT s.id_utente, u.username, s.id_podcast, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione
+            FROM seguiti s, podcast p, utenti u
+            WHERE s.id_utente = ? AND s.id_podcast = p.id_podcast AND u.id_utente = p.id_utente
             ORDER BY p.data_creazione DESC'''
 
     cursor.execute(query, (id_utente, ))

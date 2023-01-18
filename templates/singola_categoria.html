@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='singola_categoria.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - {{categoria}}</title>
+{% endblock %}
+
+{% block script %}
+<script defer src="{{ url_for('static', filename='categoria.js') }}"></script>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2>
+                Podcast
+                <i class="bi bi-house"></i>
+            </h2>
+        </a>
+
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+        {% else %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
+        {% endif %}
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2>Ricerca</h2>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
+        </h4>
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('seguiti') }}" title="Seguiti">I podcast che segui</a>
+        </h4>
+        {% if current_user.is_creatore() %}
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('tuoi_podcast') }}" title="I tuoi podcast">I tuoi podcast</a>
+        </h4>
+        {% endif %}
+        {% endif %}
+    </div>
+</aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+<div class="row m-0 justify-content-evenly align-items-center top-border">
+    <h1 class="col-6">Podcast di <em>{{categoria}}</em></h1>
+    {% if num_podcast != 0 %}
+    <div class="col-4 input-group w-auto">
+        <input id="input-categoria" type="text" class="form-control" placeholder="Cerca tra gli episodi"
+            aria-label="cerca episodio" aria-describedby="basic-addon2" value="">
+        <button class="btn-search" type="button" id="basic-addon2">
+            <i class="fs-5 bi bi-search"></i>
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+{% if num_podcast != 0 %}
+<div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-center">
+    {% for podcast in podcast_categoria %}
+    <div class="card podcast-categoria">
+        <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
+            alt="{{ podcast.titolo }}">
+
+        <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
+            <div class="card-img-overlay p-0">
+                <div class="card-body">
+                    <p class="card-title m-0">{{ podcast.titolo }}</p>
+                    <p class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</p>
+                    <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+    <h2 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h2>
+</div>
+{% else %}
+<h3 class="m-0 mt-3">Non ci sono podcast per questa categoria</h3>
+{% endif %}
+<div class="m-0 mt-2 d-flex justify-content-around">
+    <a href="{{ url_for('homepage') }}" class="home-link">
+        <h5 class="m-0 p-1">Torna alla Home</h5>
+    </a>
+
+    <a href="{{ url_for('categorie') }}" class="home-link">
+        <h5 class="m-0 p-1">Tutte le categorie</h5>
+    </a>
+</div>
+{% endblock %}

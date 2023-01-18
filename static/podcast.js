@@ -1,5 +1,15 @@
 "use strict;";
 
+const calcola_eliminati = function (episodi) {
+    let eliminati = 0;
+    for (let i = 0; i < episodi.length; i++) {
+        if (episodi[i].classList.contains("non-visibile")) {
+            eliminati++;
+        }
+    }
+    return eliminati;
+};
+
 const input_episodi = document.querySelector("#input-episodi");
 let lista_episodi = document.querySelectorAll("#episodio-pubblico");
 let nessun_risultato = document.querySelector("#nessun-risultato");
@@ -48,13 +58,3 @@ input_episodi.addEventListener("input", (event) => {
         nessun_risultato.classList.add("non-visibile");
     }
 });
-
-const calcola_eliminati = function (episodi) {
-    let eliminati = 0;
-    for (let i = 0; i < episodi.length; i++) {
-        if (lista_episodi[i].classList.contains("non-visibile")) {
-            eliminati++;
-        }
-    }
-    return eliminati;
-};

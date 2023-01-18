@@ -15,12 +15,12 @@
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
-            Podcast
-            <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2>
+                Podcast
                 <i class="bi bi-house"></i>
-            </a>
-        </h2>
+            </h2>
+        </a>
 
         {% if current_user.is_authenticated %}
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a></h4>
@@ -286,9 +286,30 @@
                         </div>
                         <div class="row d-flex align-items-start mb-2">
                             <labal for="descrizione" class="col-3 mt-2">Descrizione:</labal>
-                            <textarea name="descrizione" class="form-control col" rows="3" required minlength="10"
-                                maxlength="140" value="{{ podcast.descrizione }}"
-                                placeholder="{{ podcast.descrizione }}"></textarea>
+                            <input type="text" name="descrizione" class="form-control col" required minlength="10"
+                                maxlength="140" value="{{ podcast.descrizione }}"></input>
+                        </div>
+                        <div class="row d-flex align-items-start mb-2">
+                            <labal for="immagine" class="col-3 mt-2">Immagine:</labal>
+                            <input name="immagine" class="form-control col" type="file" accept=".jpg,.jpeg,.png">
+                        </div>
+                        <div class="row d-flex align-items-start">
+                            <labal for="categoria" class="col-3 mt-2">Categoria:</labal>
+                            <select name="categoria" class="form-control col" multiple required size="4">
+                                {% for nome_categoria, sotto_categorie in tutte_categorie.items() %}
+                                <optgroup label="{{nome_categoria}}">
+                                    {% for categoria in sotto_categorie %}
+                                    {% if podcast.categoria.find(categoria) > -1 %}
+                                    <!-- Vecchia categoria, già selezionata -->
+                                    <option value="{{categoria}}" selected>{{categoria}}</option>
+                                    {% else %}
+                                    <!-- Categorie non selezionate -->
+                                    <option value="{{categoria}}">{{categoria}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </optgroup>
+                                {% endfor %}
+                            </select>
                         </div>
 
                         <input type="hidden" name="id_podcast" value="{{podcast.id_podcast}}">

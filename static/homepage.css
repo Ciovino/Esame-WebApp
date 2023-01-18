@@ -30,6 +30,7 @@ div.card {
 }
 
 .immagine-podcast {
+    border: 2px solid var(--mint-cream);
     border-radius: 20px;
     padding: 0px;
     max-width: 20rem;
@@ -47,8 +48,8 @@ div.card {
     background: rgb(0, 0, 0);
     background: linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0.7) 0%,
-        rgba(0, 0, 0, 0.6) 44%,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.45) 44%,
         rgba(149, 149, 149, 0) 100%
     );
 }

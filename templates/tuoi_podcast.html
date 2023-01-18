@@ -11,12 +11,12 @@
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
-            Podcast
-            <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2>
+                Podcast
                 <i class="bi bi-house"></i>
-            </a>
-        </h2>
+            </h2>
+        </a>
 
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
         </h4>
@@ -62,19 +62,19 @@
     {% endif %}
 
     <div id="card-nuovo-podcast" class="card d-flex align-items-center justify-content-end">
-        <h1 class="text-center"><i class="bi bi-plus-square"></i></h1>
-
         <a type="button" data-bs-toggle="modal" data-bs-target="#nuovo-podcast">
+            <h1 class="text-center text-nuovo-podcast"><i class="bi bi-plus-square"></i></h1>
             <div class="card-img-overlay p-0">
-                <div class="card-body">
+                <div class="card-body body-nuovo-podcast">
                     <p class="card-title">Nuovo Podcast</p>
                     <p class="card-text">Crea un nuovo podcast</p>
                 </div>
             </div>
         </a>
+
         <div class="modal fade" id="nuovo-podcast" tabindex="-1" aria-labelledby="modale-nuovo-podcast"
             aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content decorazione-modal">
                     <form action="/nuovo-podcast" method="POST" enctype="multipart/form-data">
                         <div class="modal-header">
@@ -97,7 +97,15 @@
                             </div>
                             <div class="row d-flex align-items-start">
                                 <labal for="categoria" class="col-3 mt-2">Categoria:</labal>
-                                <input type="text" name="categoria" class="form-control col" required>
+                                <select name="categoria" class="form-control col" multiple required size="4">
+                                    {% for nome_categoria, sotto_categorie in tutte_categorie.items() %}
+                                    <optgroup label="{{nome_categoria}}">
+                                        {% for categoria in sotto_categorie %}
+                                        <option value="{{categoria}}">{{categoria}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    {% endfor %}
+                                </select>
                             </div>
 
                             <input type="hidden" name="id_utente" value="{{ current_user.get_id() }}" />

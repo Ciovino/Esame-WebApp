@@ -11,12 +11,12 @@
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
-            Podcast
-            <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2>
+                Podcast
                 <i class="bi bi-house"></i>
-            </a>
-        </h2>
+            </h2>
+        </a>
 
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
         </h4>
@@ -54,7 +54,8 @@
         <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
             <div class="card-img-overlay p-0">
                 <div class="card-body">
-                    <p class="card-title">{{ podcast.titolo }}</p>
+                    <p class="card-title m-0">{{ podcast.titolo }}</p>
+                    <p class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</p>
                     <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
                 </div>
             </div>
