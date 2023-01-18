@@ -55,8 +55,8 @@
     <div class="d-flex flex-wrap justify-content-start align-items-start">
         {% for categoria in sotto_categoria %}
         <div class="card">
-            <img src="{{url_for('static', filename='Immagini/Sfondi/Slug.jpg')}}" class="immagine-podcast card-img"
-                alt="{{categoria}}">
+            <img src="{{url_for('static', filename='Immagini/Categorie/' + categoria + '.jpg')}}"
+                class="immagine-podcast card-img" alt="{{categoria}}">
             <a href="{{ url_for('singola_categoria', categoria=categoria )}}">
                 <div class="card-img-overlay p-0">
                     <div class="card-body">
