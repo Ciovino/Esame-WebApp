@@ -477,11 +477,14 @@ def podcast_piu_seguiti():
     connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    query = '''SELECT s.id_utente, s.id_podcast, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione, COUNT(p.id_podcast) AS totale
-            FROM seguiti s, podcast p
-            WHERE s.id_podcast = p.id_podcast
-            GROUP BY p.id_podcast
-            ORDER BY totale DESC
+    query = '''SELECT p.id_utente, u.username, p.id_podcast, s.totale, p.titolo, p.descrizione, p.categoria, p.immagine, p.data_creazione
+            FROM utenti u, podcast p, (SELECT s.id_podcast, COUNT(p.id_podcast) as totale
+						                FROM seguiti s, podcast p
+						                WHERE s.id_podcast = p.id_podcast
+						                GROUP BY p.id_podcast
+						                ORDER BY totale DESC) as s
+            WHERE u.id_utente = p.id_utente AND p.id_podcast = s.id_podcast
+            ORDER BY s.totale DESC
             LIMIT 3'''
 
     cursor.execute(query)

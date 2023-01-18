@@ -8,6 +8,10 @@
 <title>Podcast - {{ podcast.titolo }}</title>
 {% endblock %}
 
+{% block script %}
+<script defer src="{{ url_for('static', filename='podcast.js') }}"></script>
+{% endblock %}
+
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
@@ -90,9 +94,20 @@
     {% if num_episodi_pubblici == 0 %}
     <h1 class="text-center">Non ci sono ancora episodi per questo podcast.</h1>
     {% else %}
-    <h3 class="text-center titolo">Episodi</h3>
+    <div class="row m-0 justify-content-evenly align-items-center">
+        <div class="col-3">
+            <h3 class="text-center titolo">Episodi</h3>
+        </div>
+        <div class="col-3 input-group w-auto">
+            <input id="input-episodi" type="text" class="form-control" placeholder="Cerca tra gli episodi"
+                aria-label="cerca episodio" aria-describedby="basic-addon2" value="">
+            <button class="btn-search" type="button" id="basic-addon2">
+                <i class="fs-5 bi bi-search"></i>
+            </button>
+        </div>
+    </div>
     {% for idx in range(num_episodi_pubblici) %}
-    <div class="episodio row justify-content-center">
+    <div id="episodio-pubblico" class="episodio row justify-content-center">
         <div class="sfondo col-11">
             <div class="titolo-episodio row m-0 justify-content-end">
                 <!-- Numero episodio - Titolo - Data -->
@@ -100,7 +115,7 @@
                     <h4 class="m-0 text-center">{{ idx + 1 }}</h4>
                 </div>
                 <div class="col-8">
-                    <h4 class="m-0">{{ episodi_pubblici[idx].titolo }}</h4>
+                    <h4 class="m-0 titolo-episodio">{{ episodi_pubblici[idx].titolo }}</h4>
                 </div>
                 <div class="col-3">
                     <h4 class="m-0">{{ episodi_pubblici[idx].data }}</h4>
@@ -110,7 +125,7 @@
             <div class="titolo-episodio row m-0 justify-content-center align-items-start">
                 <!-- Descrizione - Tasto play -->
                 <div class="col-8 d-flex align-items-center">
-                    <p class="m-0 ps-2">{{ episodi_pubblici[idx].descrizione }}</p>
+                    <p class="m-0 ps-2 descrizione-episodio">{{ episodi_pubblici[idx].descrizione }}</p>
                 </div>
                 <div class="col-3 d-flex justify-content-center">
 
@@ -208,6 +223,7 @@
         </div>
     </div>
     {% endfor %}
+    <h2 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h2>
     {% endif %}
 </div>
 

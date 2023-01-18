@@ -60,6 +60,12 @@ main {
     max-height: 90vh;
 }
 
+.btn-search {
+    color: var(--oxford-blue) !important;
+    background-color: #fff !important;
+    padding: 0px 10px 0px 10px;
+}
+
 button {
     color: var(--mint-cream) !important;
     border: 2px solid var(--mint-cream);
@@ -109,4 +115,8 @@ div.btn-group > button:hover {
 .btn-segui:active {
     background-color: transparent !important;
     color: var(--mint-cream) !important;
+}
+
+.non-visibile {
+    display: none;
 }
