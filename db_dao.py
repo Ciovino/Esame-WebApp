@@ -139,7 +139,7 @@ def prossimo_id_podcast():
     connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    query = "SELECT MAX(id_podcast) FROM podcast"
+    query = "SELECT seq FROM sqlite_sequence WHERE name = 'podcast'"
 
     cursor.execute(query)
 
@@ -244,16 +244,16 @@ def aggiungi_episodio(episodio):
 
     return success
 
-def modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione):
+def modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione, nuova_data):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
-    query = "UPDATE episodi SET titolo = ?, descrizione = ? WHERE id_episodio = ?"
+    query = "UPDATE episodi SET titolo = ?, descrizione = ?, data = ? WHERE id_episodio = ?"
 
     success = False
 
     try:
-        cursor.execute(query, (nuovo_titolo, nuova_descrizione, id_episodio))
+        cursor.execute(query, (nuovo_titolo, nuova_descrizione, nuova_data, id_episodio))
         connection.commit()
         success = True
     except Exception as e:
@@ -291,7 +291,7 @@ def prossimo_id_episodio():
     connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
     cursor = connection.cursor()
-    query = "SELECT MAX(id_episodio) FROM episodi"
+    query = "SELECT seq FROM sqlite_sequence WHERE name = 'episodi'"
 
     cursor.execute(query)
 

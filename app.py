@@ -352,8 +352,8 @@ def nuovo_episodio():
     if audio:
         extension = os.path.splitext(audio.filename)[-1].lower()
 
-        # static/Audio/<titolo>_<id_podcast>_<id_episodio>.<estensione>
-        nome_file = 'Audio/' + titolo + '_' + id_podcast + '_' + str(id_episodio) + extension
+        # static/Audio/<id_podcast>_<id_episodio>.<estensione>
+        nome_file = 'Audio/' + id_podcast + '_' + str(id_episodio) + extension
         audio.save('static/' + nome_file)
     else:
         # Errore
@@ -383,8 +383,17 @@ def modifica_episodio():
     id_episodio = request.form.get('id_episodio')
     nuovo_titolo = request.form.get('titolo')
     nuova_descrizione = request.form.get('descrizione')
+    nuovo_audio = request.files['audio']
+    nuova_data = request.form.get('data_pubblicazione')
 
-    if not dao.modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione):
+    if nuovo_audio:
+        extension = os.path.splitext(nuovo_audio.filename)[-1].lower()
+
+        # static/Audio/<id_podcast>_<id_episodio>.<estensione>
+        nome_file = 'Audio/' + id_podcast + '_' + str(id_episodio) + extension
+        nuovo_audio.save('static/' + nome_file)
+
+    if not dao.modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione, nuova_data):
         # Errore
         app.logger.info('impossibile modificare')
 
