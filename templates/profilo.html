@@ -46,7 +46,7 @@
 <div id="saluto" class="top-border">
     <div class="d-flex justify-content-evenly align-items-center">
         <img class="foto-profilo" src="{{ url_for('static', filename=current_user.get_immagine()) }}">
-        <h1 class="m-0 fst-italic">Ciao {{ current_user.get_username() }}</h1>
+        <h1 class="m-0">Ciao <em>{{ current_user.get_username() }}</em></h1>
     </div>
 </div>
 

@@ -2,10 +2,8 @@ import sqlite3
 
 db_path = 'database/db_esame.db'
 
-# Controlla che l'username sia univoco all'interno del database
 def utente_univoco(username):
-    # L'username non esiste
-    if username == None:
+    if username == None: # L'username non esiste
         return False
 
     connection = sqlite3.connect(db_path)
@@ -16,16 +14,16 @@ def utente_univoco(username):
     cursor.execute(query, (username,))
     existing_username = cursor.fetchone()
 
-    if int(existing_username[0]) == 1:
-        # username già usato
+    cursor.close()
+    connection.close()
+
+    if int(existing_username[0]) == 1: # Username già usato
         return False
 
     return True
 
-# Controlla che l'email sia univoca all'interno del database
 def email_univoca(email):
-    # L'email non esiste
-    if email == None:
+    if email == None: # L'email non esiste
         return False
 
     connection = sqlite3.connect(db_path)
@@ -36,13 +34,14 @@ def email_univoca(email):
     cursor.execute(query, (email,))
     existing_email = cursor.fetchone()
 
-    if int(existing_email[0]) == 1:
-        # email già usata
+    cursor.close()
+    connection.close()
+
+    if int(existing_email[0]) == 1: # Email già usata
         return False
         
     return True
 
-# Recupera l'utente dall'username
 def recupera_utente_username(username):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
@@ -59,7 +58,6 @@ def recupera_utente_username(username):
 
     return utente
 
-# Recupera l'utente dall'id
 def recupera_utente_id(id):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
@@ -76,7 +74,6 @@ def recupera_utente_id(id):
 
     return utente
 
-# Recupera i podcast creati da un utente
 def recupera_podcast_utente(id_utente):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
@@ -93,8 +90,7 @@ def recupera_podcast_utente(id_utente):
 
     return tutti_podcast
 
-# Recupera un podcast dall'id
-def recupera_podcast(id_podcast):
+def recupera_podcast_id(id_podcast):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
@@ -112,7 +108,6 @@ def recupera_podcast(id_podcast):
 
     return dict(podcast)
 
-# Recupera le informazioni di tutti i podcast
 def tutti_podcast():
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
@@ -153,7 +148,6 @@ def prossimo_id_podcast():
     else:
         return int(max_id[0]) + 1
 
-# Aggiunge un podcast al db
 def aggiungi_podcast(podcast):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
@@ -217,9 +211,8 @@ def elimina_podcast(id_podcast):
 
     return success
 
-# Controlla che il titolo per il podcast sia valido
-def titolo_podcast_valido(nuovo_titolo:str, id_utente):
-    # Un utente non può avere due podcast con lo stesso titolo
+# Un utente non può avere due podcast con lo stesso titolo
+def titolo_podcast_valido(nuovo_titolo:str, id_utente):    
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
@@ -238,7 +231,6 @@ def titolo_podcast_valido(nuovo_titolo:str, id_utente):
 
     return True
 
-# Aggiungi episodio al db
 def aggiungi_episodio(episodio):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
@@ -339,7 +331,7 @@ def recupera_episodi_podcast(id_podcast):
 
     return dati
 
-def recupera_episodio(id_episodio):
+def recupera_episodio_id(id_episodio):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
     connection.row_factory = sqlite3.Row
@@ -485,7 +477,6 @@ def commenti_episodio(id_episodio):
 
     return dati
 
-# Aggiungi nuovo utente al db
 def aggiungi_nuovo_utente(user):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")

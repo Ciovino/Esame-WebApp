@@ -45,9 +45,65 @@ def homepage():
                         tutti_podcast=tutti_podcast,
                         piu_seguiti=piu_seguiti)
 
-@app.route('/registrati')
+@app.route('/registrati', methods=['GET', 'POST'])
 def registrati():
-    return render_template('registrati.html')
+    if request.method == 'GET':
+        return render_template('registrati.html')
+    else: # POST nuovo utente
+        app.logger.debug('Sono in registrati')
+        # Nome utente univoco
+        username = request.form.get('username')
+        if not dao.utente_univoco(username):
+            # Messaggio di errore
+            app.logger.info('username già usato')
+            return redirect(url_for('registrati'))
+        
+        # Email univoca
+        email = request.form.get('email')
+        if not dao.email_univoca(email):
+            # Messaggio di errore
+            app.logger.info('email già usata')
+            return redirect(url_for('registrati'))
+        
+        # Cripta password
+        password = generate_password_hash(request.form.get('password'), method='sha256')
+
+        # Ascoltatore o Creatore
+        tipo_utente = request.form.get('tipo_utente')
+        if tipo_utente == 'Ascoltare':
+            tipo_utente = 0
+        elif tipo_utente == 'Creare':
+            tipo_utente = 1
+        else:
+            # Errore
+            app.logger.info('utente non valido')
+            return redirect(url_for('registrati'))
+        
+        # Immagine profilo
+        immagine_profilo = request.files['immagine_profilo']
+        if immagine_profilo:
+            extension = os.path.splitext(immagine_profilo.filename)[-1].lower()
+            nome_file = 'Utenti/' + username + extension
+
+            immagine_profilo.save('static/' + nome_file)
+        else:
+            nome_file = 'Utenti/_default.png'
+        
+        immagine_profilo = nome_file
+
+        new_user = {'username': username, 
+                    'email': email, 
+                    'password': password,
+                    'tipo_utente': tipo_utente,
+                    'immagine_profilo': immagine_profilo}
+
+        if not dao.aggiungi_nuovo_utente(new_user):
+            # Errore
+            app.logger.info('impossibile aggiungere')
+            return redirect(url_for('registrati'))
+
+        # Utente Registrato
+        return redirect(url_for('homepage'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -74,17 +130,6 @@ def login():
 
         return redirect(url_for('homepage'))
 
-@app.route('/profilo')
-@login_required
-def profilo():
-    return render_template('profilo.html')
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('homepage'))
-
 @app.route('/categorie')
 def categorie():
     return render_template('categorie.html', 
@@ -106,7 +151,12 @@ def singola_categoria(categoria):
                         podcast_categoria=podcast_categoria,
                         num_podcast = len(podcast_categoria))
 
-@app.route('/seguiti')
+@app.route('/profilo')
+@login_required
+def profilo():
+    return render_template('profilo.html')
+
+@app.route('/profilo/seguiti')
 @login_required
 def seguiti():
     podcast_seguiti = dao.recupera_seguiti(current_user.get_id())
@@ -115,81 +165,126 @@ def seguiti():
                         num_seguiti=len(podcast_seguiti), 
                         podcast_seguiti=podcast_seguiti)
 
-@app.route('/tuoi_podcast')
+@app.route('/profilo/tuoi_podcast', methods=['GET', 'POST'])
 @login_required
 def tuoi_podcast():
-    tutti_podcast = dao.recupera_podcast_utente(current_user.get_id())
-    num_podcast = len(tutti_podcast)
+    if request.method == 'GET':
+        tutti_podcast = dao.recupera_podcast_utente(current_user.get_id())
+        num_podcast = len(tutti_podcast)
 
-    return render_template('tuoi_podcast.html',
-                        num_podcast=num_podcast, 
-                        tutti_podcast=tutti_podcast,
-                        tutte_categorie=tutte_categorie)
+        return render_template('tuoi_podcast.html',
+                            num_podcast=num_podcast, 
+                            tutti_podcast=tutti_podcast,
+                            tutte_categorie=tutte_categorie)
+    else: # POST nuovo podcast
+        # Id_utente
+        id_utente = request.form.get('id_utente')
 
-@app.route('/nuovo-podcast', methods=['POST'])
-@login_required
-def nuovo_podcast():
-    # Id_utente
-    id_utente = request.form.get('id_utente')
+        if int(id_utente) != int(current_user.get_id()):
+            # Error 403 Forbidden
+            return redirect(url_for('tuoi_podcast'))
 
-    if int(id_utente) != int(current_user.get_id()):
-        # Error 403 Forbidden
+        # Titolo
+        titolo = request.form.get('titolo')
+        if not dao.titolo_podcast_valido(titolo, id_utente):
+            # Errore
+            flash('Errore nella creazione: Hai già un podcast con quel titolo.')
+            return redirect(url_for('tuoi_podcast'))
+
+        # Descrizione
+        descrizione = request.form.get('descrizione')
+        if descrizione.startswith(' '):
+            # Errore
+            flash('Errore nella creazione: La descrizione scelta non è valida.')
+            return redirect(url_for('tuoi_podcast'))
+
+        # Categoria
+        categorie_podcast = request.form.getlist('categoria')
+        categoria = da_lista_a_stringa(categorie_podcast)
+        if categoria == "":
+            # Errore
+            flash('Errore nella creazione: Seleziona almeno una categoria.')
+            return redirect(url_for('tuoi_podcast'))
+
+        # Immagine
+        immagine = request.files['immagine']
+        if immagine:
+            extension = os.path.splitext(immagine.filename)[-1].lower()
+            id_podcast = dao.prossimo_id_podcast()
+
+            # static/Podcast/Immagini/<id_utente>_<id_podcast>.<estensione>
+            nome_file = 'Podcast/Immagini/' + id_utente + '_' + str(id_podcast) + extension
+
+            immagine.save('static/' + nome_file)
+        else:
+            # Errore
+            flash('Errore nella creazione: Carica un\'immagine per il podcast.')
+            return redirect(url_for('tuoi_podcast'))
+        
+        immagine = nome_file
+
+        # Data di creazione
+        data_creazione = datetime.now().strftime('%Y-%m-%d')
+
+        podcast = {'id_utente': id_utente,
+                    'titolo' : titolo,
+                    'descrizione' : descrizione,
+                    'categoria' : categoria,
+                    'immagine' : immagine,
+                    'data_creazione' : data_creazione}
+
+        if not dao.aggiungi_podcast(podcast):
+            # Errore
+            flash('Al momento è impossibile creare un nuovo podcast. Riprova più tardi.')
+
         return redirect(url_for('tuoi_podcast'))
 
-    # Titolo
-    titolo = request.form.get('titolo')
-    if not dao.titolo_podcast_valido(titolo, id_utente):
-        # Errore
-        flash('Errore nella creazione: Hai già un podcast con quel titolo.')
-        return redirect(url_for('tuoi_podcast'))
-
-    # Descrizione
-    descrizione = request.form.get('descrizione')
-    if descrizione.startswith(' '):
-        # Errore
-        flash('Errore nella creazione: La descrizione scelta non è valida.')
-        return redirect(url_for('tuoi_podcast'))
-
-    # Categoria
-    categorie_podcast = request.form.getlist('categoria')
-    categoria = da_lista_a_stringa(categorie_podcast)
-    if categoria == "":
-        # Errore
-        flash('Errore nella creazione: Seleziona almeno una categoria.')
-        return redirect(url_for('tuoi_podcast'))
-
-    # Immagine
-    immagine = request.files['immagine']
-    if immagine:
-        extension = os.path.splitext(immagine.filename)[-1].lower()
-        id_podcast = dao.prossimo_id_podcast()
-
-        # static/Podcast/Immagini/<id_utente>_<id_podcast>.<estensione>
-        nome_file = 'Podcast/Immagini/' + id_utente + '_' + str(id_podcast) + extension
-
-        immagine.save('static/' + nome_file)
-    else:
-        # Errore
-        flash('Errore nella creazione: Carica un\'immagine per il podcast.')
-        return redirect(url_for('tuoi_podcast'))
+@app.route('/podcast/<int:id_podcast>')
+def podcast(id_podcast):
+    podcast_completo = dao.recupera_podcast_id(id_podcast)
+    episodi_pubblici = dao.recupera_episodi_podcast(id_podcast)
+    episodi_privati = []    
     
-    immagine = nome_file
+    for episodio in episodi_pubblici:
+        giorni = (datetime.now() - datetime.strptime(episodio['data'], '%Y-%m-%d')).days
 
-    # Data di creazione
-    data_creazione = datetime.now().strftime('%Y-%m-%d')
+        episodio['data'] = datetime.strptime(episodio['data'], '%Y-%m-%d').strftime('%d %b %Y')
 
-    podcast = {'id_utente': id_utente,
-                'titolo' : titolo,
-                'descrizione' : descrizione,
-                'categoria' : categoria,
-                'immagine' : immagine,
-                'data_creazione' : data_creazione}
+        if giorni < 0:
+            episodi_pubblici.remove(episodio)
+            episodi_privati.append(episodio)
+    
+    num_episodi_privati = len(episodi_privati)
+    num_episodi_pubblici = len(episodi_pubblici)
 
-    if not dao.aggiungi_podcast(podcast):
+    if current_user.is_authenticated:
+        seguito = dao.podcast_seguito(id_podcast, current_user.get_id())
+    else:
+        seguito = -1
+
+    return render_template('podcast.html', 
+                            podcast=podcast_completo,
+                            num_episodi_pubblici=num_episodi_pubblici, 
+                            episodi_pubblici=episodi_pubblici, 
+                            num_episodi_privati=num_episodi_privati, 
+                            episodi_privati=episodi_privati, 
+                            data_oggi=datetime.now().strftime('%Y-%m-%d'),
+                            seguito=seguito,
+                            tutte_categorie=tutte_categorie)
+
+@app.route('/segui', methods=['POST'])
+@login_required
+def segui():
+    id_utente = current_user.get_id()
+    id_podcast = request.form.get('id_podcast')
+
+    da_seguire = request.form.get('da_seguire')
+
+    if not dao.segui(id_podcast, id_utente, da_seguire):
         # Errore
-        flash('Al momento è impossibile creare un nuovo podcast. Riprova più tardi.')
-
-    return redirect(url_for('tuoi_podcast'))
+        app.logger.info('impossibile seguire/smettere di seguire il podcast')
+    
+    return redirect(url_for('podcast', id_podcast=id_podcast))
 
 @app.route('/modifica_podcast', methods=['POST'])
 @login_required
@@ -227,45 +322,12 @@ def elimina_podcast():
 
     return redirect(url_for('tuoi_podcast'))
 
-@app.route('/podcast/<int:id_podcast>')
-def podcast(id_podcast):
-    podcast_completo = dao.recupera_podcast(id_podcast)
-    episodi_pubblici = dao.recupera_episodi_podcast(id_podcast)
-    episodi_privati = []    
-    
-    for episodio in episodi_pubblici:
-        giorni = (datetime.now() - datetime.strptime(episodio['data'], '%Y-%m-%d')).days
-
-        episodio['data'] = datetime.strptime(episodio['data'], '%Y-%m-%d').strftime('%d %b %Y')
-
-        if giorni < 0:
-            episodi_pubblici.remove(episodio)
-            episodi_privati.append(episodio)
-    
-    num_episodi_privati = len(episodi_privati)
-    num_episodi_pubblici = len(episodi_pubblici)
-
-    if current_user.is_authenticated:
-        seguito = dao.podcast_seguito(id_podcast, current_user.get_id())
-    else:
-        seguito = -1
-
-    return render_template('podcast.html', 
-                            podcast=podcast_completo,
-                            num_episodi_pubblici=num_episodi_pubblici, 
-                            episodi_pubblici=episodi_pubblici, 
-                            num_episodi_privati=num_episodi_privati, 
-                            episodi_privati=episodi_privati, 
-                            data_oggi=datetime.now().strftime('%Y-%m-%d'),
-                            seguito=seguito,
-                            tutte_categorie=tutte_categorie)
-
 @app.route('/podcast/<int:id_podcast>/<int:id_episodio>')
 @login_required
 def episodio(id_podcast, id_episodio):
-    podcast = dao.recupera_podcast(id_podcast)
+    podcast = dao.recupera_podcast_id(id_podcast)
 
-    episodio = dao.recupera_episodio(id_episodio)
+    episodio = dao.recupera_episodio_id(id_episodio)
     episodio_precedente = dao.episodio_precedente(id_podcast, id_episodio, episodio['data'])
     episodio_successivo = dao.episodio_successivo(id_podcast, id_episodio, episodio['data'], datetime.now().strftime('%Y-%m-%d'))
 
@@ -281,65 +343,6 @@ def episodio(id_podcast, id_episodio):
                             episodio_successivo=episodio_successivo,
                             num_commenti = len(commenti),
                             commenti = commenti)
-
-@app.route('/nuovo-commento', methods=['POST'])
-@login_required
-def nuovo_commento():
-    # Id podcast
-    id_podcast = request.form.get('id_podcast')
-
-    # Id_utente
-    id_utente = request.form.get('id_utente')
-
-    # Id episodio
-    id_episodio = request.form.get('id_episodio')
-
-    # Contenuto 
-    contenuto = request.form.get('contenuto')
-
-    # Data
-    data = datetime.now().strftime('%Y-%m-%d')
-
-    commento = { 'id_utente' : id_utente,
-                'id_episodio' : id_episodio,
-                'contenuto': contenuto,
-                'data' : data}
-
-    if not dao.aggiungi_commento(commento):
-        # Errore
-        app.logger.info('impossibile aggiungere')
-
-    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
-
-@app.route('/modifica', methods=['POST'])
-@login_required
-def modifica():
-    id_podcast = request.form.get('id_podcast')
-    id_episodio = request.form.get('id_episodio')
-
-    id_commento = request.form.get('id_commento')
-
-    nuovo_contenuto = request.form.get('contenuto')
-
-    if not dao.modifica_commento(id_commento, nuovo_contenuto):
-        # Errore
-        app.logger.info('impossibile modificare')
-
-    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
-
-@app.route('/elimina', methods=['POST'])
-@login_required
-def elimina():
-    id_podcast = request.form.get('id_podcast')
-    id_episodio = request.form.get('id_episodio')
-
-    id_commento = request.form.get('id_commento')
-
-    if not dao.cancella_commento(id_commento):
-        # Errore
-        app.logger.info('impossibile eliminare')
-
-    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
 
 @app.route('/nuovo-episodio', methods=['POST'])
 @login_required
@@ -420,6 +423,71 @@ def elimina_episodio():
 
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
+@app.route('/nuovo-commento', methods=['POST'])
+@login_required
+def nuovo_commento():
+    # Id podcast
+    id_podcast = request.form.get('id_podcast')
+
+    # Id_utente
+    id_utente = request.form.get('id_utente')
+
+    # Id episodio
+    id_episodio = request.form.get('id_episodio')
+
+    # Contenuto 
+    contenuto = request.form.get('contenuto')
+
+    # Data
+    data = datetime.now().strftime('%Y-%m-%d')
+
+    commento = { 'id_utente' : id_utente,
+                'id_episodio' : id_episodio,
+                'contenuto': contenuto,
+                'data' : data}
+
+    if not dao.aggiungi_commento(commento):
+        # Errore
+        app.logger.info('impossibile aggiungere')
+
+    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
+
+@app.route('/modifica_commento', methods=['POST'])
+@login_required
+def modifica_commento():
+    id_podcast = request.form.get('id_podcast')
+    id_episodio = request.form.get('id_episodio')
+
+    id_commento = request.form.get('id_commento')
+
+    nuovo_contenuto = request.form.get('contenuto')
+
+    if not dao.modifica_commento(id_commento, nuovo_contenuto):
+        # Errore
+        app.logger.info('impossibile modificare')
+
+    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
+
+@app.route('/elimina_commento', methods=['POST'])
+@login_required
+def elimina_commento():
+    id_podcast = request.form.get('id_podcast')
+    id_episodio = request.form.get('id_episodio')
+
+    id_commento = request.form.get('id_commento')
+
+    if not dao.cancella_commento(id_commento):
+        # Errore
+        app.logger.info('impossibile eliminare')
+
+    return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('homepage'))
+
 @login_manager.user_loader
 def user_load(id):
     utente_db = dao.recupera_utente_id(id)
@@ -433,85 +501,11 @@ def user_load(id):
 
     return utente
 
-@app.route('/add_new_user', methods=['POST'])
-def add_new_user():
-    # Nome utente univoco
-    username = request.form.get('username')
-    app.logger.info(username)
-    if not dao.utente_univoco(username):
-        # Messaggio di errore
-        app.logger.info('username già usato')
-        return redirect(url_for('registrati'))
-    
-    # Email univoca
-    email = request.form.get('email')
-    app.logger.info(email)
-    if not dao.email_univoca(email):
-        # Messaggio di errore
-        app.logger.info('email già usata')
-        return redirect(url_for('registrati'))
-    
-    # Cripta password
-    password = generate_password_hash(request.form.get('password'), method='sha256')
-
-    # Ascoltatore o Creatore
-    tipo_utente = request.form.get('tipo_utente')
-    app.logger.info(tipo_utente)
-    if tipo_utente == 'Ascoltare':
-        tipo_utente = 0
-    elif tipo_utente == 'Creare':
-        tipo_utente = 1
-    else:
-        # Errore
-        app.logger.info('utente non valido')
-        return redirect(url_for('registrati'))
-    
-    # Immagine profilo
-    immagine_profilo = request.files['immagine_profilo']
-    if immagine_profilo:
-        extension = os.path.splitext(immagine_profilo.filename)[-1].lower()
-        nome_file = 'Utenti/Profilo/' + username + extension
-
-        immagine_profilo.save('static/' + nome_file)
-    else:
-        nome_file = 'Utenti/Profilo/_default.png'
-    
-    immagine_profilo = nome_file
-
-    new_user = {'username': username, 
-                'email': email, 
-                'password': password,
-                'tipo_utente': tipo_utente,
-                'immagine_profilo': immagine_profilo}
-
-    app.logger.info(new_user)
-
-    if not dao.aggiungi_nuovo_utente(new_user):
-        # Errore
-        app.logger.info('impossibile aggiungere')
-        return redirect(url_for('registrati'))
-
-    # Utente Registrato
-    return redirect(url_for('homepage'))
-
-@app.route('/segui', methods=['POST'])
-@login_required
-def segui():
-    id_utente = current_user.get_id()
-    id_podcast = request.form.get('id_podcast')
-
-    da_seguire = request.form.get('da_seguire')
-
-    if not dao.segui(id_podcast, id_utente, da_seguire):
-        # Errore
-        app.logger.info('impossibile seguire/smettere di seguire il podcast')
-    
-    return redirect(url_for('podcast', id_podcast=id_podcast))
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('error404.html')
 
+# Funzioni
 def da_lista_a_stringa(lista:list):
     if not lista or len(lista) == 0:
         return ""

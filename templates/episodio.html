@@ -115,15 +115,16 @@
             <div class="col-2 d-flex justify-content-center">
                 <div class="btn-group" role="group" aria-label="modifica commento">
                     <button type="button" class="btn" data-bs-toggle="modal"
-                        data-bs-target="#modifica">Modifica</button>
-                    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#elimina">Elimina</button>
+                        data-bs-target="#modifica_commento">Modifica</button>
+                    <button type="button" class="btn" data-bs-toggle="modal"
+                        data-bs-target="#elimina_commento">Elimina</button>
                 </div>
 
-                <div class="modal fade" id="modifica" tabindex="-1" aria-labelledby="modale-modifica"
+                <div class="modal fade" id="modifica_commento" tabindex="-1" aria-labelledby="modale-modifica"
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content decorazione-modal">
-                            <form action="/modifica" method="POST" enctype="multipart/form-data">
+                            <form action="/modifica_commento" method="POST" enctype="multipart/form-data">
                                 <div class="modal-header">
                                     <h3 class="text-center">Modifica il commento</h3>
                                 </div>
@@ -148,7 +149,8 @@
                     </div>
                 </div>
 
-                <div class="modal fade" id="elimina" tabindex="-1" aria-labelledby="modale-elimina" aria-hidden="true">
+                <div class="modal fade" id="elimina_commento" tabindex="-1" aria-labelledby="modale-elimina"
+                    aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content decorazione-modal">
                             <div class="modal-header d-flex justify-content-center">
@@ -156,7 +158,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="row justify-content-center align-items-start">
-                                    <form action="/elimina" method="POST" enctype="multipart/form-data"
+                                    <form action="/elimina_commento" method="POST" enctype="multipart/form-data"
                                         class="col-4 d-flex justify-content-center">
                                         <input type="hidden" name="id_commento" value="{{ commento.id_commento }}" />
                                         <input type="number" name="id_podcast" value="{{podcast.id_podcast}}" hidden>
