@@ -11,7 +11,12 @@
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>Podcast <i class="bi bi-house-fill"></i></h2>
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2>
+                <i class="bi bi-house-fill"></i>
+                Podcast
+            </h2>
+        </a>
 
         {% if current_user.is_authenticated %}
         <h4 class="ps-2 mb-3">
@@ -28,19 +33,17 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>Ricerca</h2>
+        <h2>
+            <i class="bi bi-mic"></i>
+            Ricerca
+        </h2>
+
         <h4 class="ps-2 mb-3">
             <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
         </h4>
-        {% if current_user.is_authenticated %}
-        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('seguiti') }}" title="Seguiti">I podcast che
-                segui</a></h4>
-        {% if current_user.is_creatore() %}
         <h4 class="ps-2 mb-3">
-            <a class="home-link" href="{{ url_for('tuoi_podcast') }}" title="I tuoi podcast">I tuoi podcast</a>
+            <a class="home-link" href="{{ url_for('tutti_podcast') }}" title="Categorie">Tutti i podcast</a>
         </h4>
-        {% endif %}
-        {% endif %}
     </div>
 </aside>
 {% endblock %}

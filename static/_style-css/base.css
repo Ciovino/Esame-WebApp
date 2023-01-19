@@ -110,3 +110,7 @@ div#footer {
     color: var(--prussian-blue);
     margin-top: auto;
 }
+
+.titolo-section {
+    padding: 0.5rem 0 0.5rem 0;
+}

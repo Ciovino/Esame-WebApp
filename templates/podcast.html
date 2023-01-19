@@ -17,8 +17,8 @@
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
             <h2>
-                Podcast
                 <i class="bi bi-house"></i>
+                Podcast
             </h2>
         </a>
 
@@ -35,18 +35,17 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>Ricerca</h2>
+        <h2>
+            <i class="bi bi-mic"></i>
+            Ricerca
+        </h2>
+
         <h4 class="ps-2 mb-3">
             <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
         </h4>
-        {% if current_user.is_authenticated %}
-        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('seguiti') }}" title="Seguiti">I podcast che
-                segui</a></h4>
-        {% if current_user.is_creatore() %}
-        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('tuoi_podcast') }}" title="I tuoi podcast">I tuoi
-                podcast</a></h4>
-        {% endif %}
-        {% endif %}
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('tutti_podcast') }}" title="Categorie">Tutti i podcast</a>
+        </h4>
     </div>
 </aside>
 {% endblock %}
@@ -353,14 +352,14 @@
 
 <div class="mt-4 d-flex justify-content-evenly">
 
-    <a type="button" class="p-2 home-link" data-bs-toggle="modal" data-bs-target="#modifica_podcast">
-        <h6 class="m-0">Modifica il podcast</h6>
+    <a type="button" class="p-2 main-link" data-bs-toggle="modal" data-bs-target="#modifica_podcast">
+        <h5 class="m-0">Modifica il podcast</h5>
     </a>
-    <a type="button" class="p-2 home-link" data-bs-toggle="modal" data-bs-target="#nuovo-episodio">
+    <a type="button" class="p-2 main-link" data-bs-toggle="modal" data-bs-target="#nuovo-episodio">
         <h5 class="m-0">Aggiungi un nuovo episodio</h5>
     </a>
-    <a type="button" class="p-2 home-link" data-bs-toggle="modal" data-bs-target="#elimina_podcast">
-        <h6 class="m-0">Cancella il podcast</h6>
+    <a type="button" class="p-2 main-link" data-bs-toggle="modal" data-bs-target="#elimina_podcast">
+        <h5 class="m-0">Cancella il podcast</h5>
     </a>
 
     <div class="modal fade" id="modifica_podcast" tabindex="-1" aria-labelledby="modale-modifica" aria-hidden="true">

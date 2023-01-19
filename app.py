@@ -239,6 +239,13 @@ def tuoi_podcast():
 
         return redirect(url_for('tuoi_podcast'))
 
+@app.route('/podcast')
+def tutti_podcast():
+    tutti_podcast = dao.tutti_podcast()
+
+    return render_template('tutti_podcast.html',
+                        tutti_podcast=tutti_podcast)
+
 @app.route('/podcast/<int:id_podcast>')
 def podcast(id_podcast):
     podcast_completo = dao.recupera_podcast_id(id_podcast)

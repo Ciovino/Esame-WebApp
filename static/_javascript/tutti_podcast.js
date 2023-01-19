@@ -10,8 +10,8 @@ const calcola_eliminati = function (podcast) {
     return eliminati;
 };
 
-const input = document.querySelector("#input-categoria");
-let lista_podcast = document.querySelectorAll(".podcast-categoria");
+const input = document.querySelector("#input-tutti-podcast");
+let lista_podcast = document.querySelectorAll(".tutti-podcast");
 let nessun_risultato = document.querySelector("#nessun-risultato");
 
 input.addEventListener("input", (event) => {

@@ -13,8 +13,8 @@
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
             <h2>
-                Podcast
                 <i class="bi bi-house"></i>
+                Podcast
             </h2>
         </a>
 
@@ -31,27 +31,26 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>Ricerca</h2>
-        <h4 class="ps-2 mb-3"><a class="home-link active" href="#" title="Categorie">Categorie</a></h4>
-        {% if current_user.is_authenticated %}
+        <h2>
+            <i class="bi bi-mic-fill"></i>
+            Ricerca
+        </h2>
+
         <h4 class="ps-2 mb-3">
-            <a class="home-link" href="{{ url_for('seguiti') }}" title="Seguiti">I podcast che segui</a>
+            <a class="home-link active" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
         </h4>
-        {% if current_user.is_creatore() %}
         <h4 class="ps-2 mb-3">
-            <a class="home-link" href="{{ url_for('tuoi_podcast') }}" title="I tuoi podcast">I tuoi podcast</a>
+            <a class="home-link" href="{{ url_for('tutti_podcast') }}" title="Categorie">Tutti i podcast</a>
         </h4>
-        {% endif %}
-        {% endif %}
     </div>
 </aside>
 {% endblock %}
 
 {% block contenuto_principale %}
-
 {% for nome_categoria, sotto_categoria in tutte_categorie.items() %}
-<div id="macro-categoria" class="top-border">
-    <h1>{{nome_categoria}}</h1>
+<h2 class="top-border m-0 titolo-section"><em>{{nome_categoria}}</em></h2>
+
+<div id="macro-categoria">
     <div class="d-flex flex-wrap justify-content-start align-items-start">
         {% for categoria in sotto_categoria %}
         <div class="card">
