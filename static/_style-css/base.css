@@ -25,12 +25,6 @@ body {
         rgba(141, 169, 196, 1) 93%,
         rgba(238, 244, 237, 1) 100%
     );
-    /*
-    background-image: url("Immagini/Sfondi/StackedWaves.svg");
-    background-size: cover;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    */
 
     min-height: 100%;
     display: flex;
@@ -51,16 +45,68 @@ body * {
     padding: 2px;
 }
 
+.clean-link {
+    color: var(--mint-cream);
+    text-decoration: none;
+}
+
+a.home-link {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    color: var(--mint-cream);
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    transition: 0.3s;
+}
+
+a.home-link:hover {
+    border: 1px solid var(--mint-cream);
+    background-color: var(--prussian-blue);
+}
+
+a.active {
+    border: 1px solid var(--mint-cream);
+    background-color: var(--prussian-blue);
+}
+
+a.main-link {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    color: var(--mint-cream);
+    text-decoration: none;
+
+    border: 3px solid var(--mint-cream);
+    background-color: var(--prussian-blue);
+    border-radius: 10px;
+
+    transition: 0.3s;
+}
+
+a.main-link:hover {
+    border: 3px solid var(--prussian-blue);
+    background-color: var(--mint-cream);
+    color: var(--prussian-blue);
+}
+
+a.main-link:active {
+    background-color: #c8c8c8;
+}
+
 a.footer-link {
     color: var(--prussian-blue);
     text-decoration: none;
 }
 
 .top-border {
-    border-top: 3px solid var(--oxford-blue);
+    border-top: 3px solid var(--pewter-blue);
 }
 
 div#footer {
+    border-top: 3px solid var(--oxford-blue);
     color: var(--prussian-blue);
     margin-top: auto;
 }
