@@ -1,0 +1,63 @@
+a.home-link {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    color: var(--mint-cream);
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    transition: 0.3s;
+}
+
+a.home-link:hover {
+    border: 1px solid var(--mint-cream);
+    background-color: var(--prussian-blue);
+}
+
+a.active {
+    border: 2px solid var(--mint-cream);
+    background-color: var(--indigo-dye);
+}
+
+div.card {
+    border-width: 0px;
+    padding: 0px;
+    margin: 3px;
+
+    background: transparent;
+}
+
+.immagine-podcast {
+    border: 2px solid var(--mint-cream);
+    border-radius: 20px;
+    border-radius: 20px;
+    padding: 0px;
+    max-width: 20rem;
+    max-height: 20rem;
+    object-fit: contain;
+}
+
+.card-body {
+    border-radius: 20px;
+    padding: 10px 20px 0px 20px;
+
+    color: var(--mint-cream);
+    min-height: 10rem;
+
+    background: rgb(0, 0, 0);
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.6) 44%,
+        rgba(149, 149, 149, 0) 100%
+    );
+}
+
+.card-title {
+    font-size: x-large;
+}
+
+.card-text {
+    overflow: hidden hidden;
+}

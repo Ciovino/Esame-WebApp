@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_session import Session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from user_model import User
@@ -53,27 +53,26 @@ def registrati():
 def login():
     if request.method == 'GET':
         return render_template('login.html')
-    
-    username = request.form.get('username')
-    password = request.form.get('password')
+    else: # POST
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-    utente_db = dao.recupera_utente_username(username)
+        utente_db = dao.recupera_utente_username(username)
 
-    if not utente_db or not check_password_hash(utente_db['password'], password):
-        # Credenziali non valide
-        return render_template('login.html')
-    else:
-        utente = User(id = utente_db['id_utente'],
-                    username = utente_db['username'],
-                    email = utente_db['username'],
-                    password = utente_db['password'],
-                    tipo_utente = utente_db['tipo_utente'],
-                    immagine_profilo = utente_db['immagine_profilo'])
+        if not utente_db or not check_password_hash(utente_db['password'], password):
+            # Credenziali non valide
+            return render_template('login.html')
+        else:
+            utente = User(id = utente_db['id_utente'],
+                        username = utente_db['username'],
+                        email = utente_db['username'],
+                        password = utente_db['password'],
+                        tipo_utente = utente_db['tipo_utente'],
+                        immagine_profilo = utente_db['immagine_profilo'])
 
-        login_user(utente)
-        # Login effettuato
+            login_user(utente)
 
-    return redirect(url_for('homepage'))
+        return redirect(url_for('homepage'))
 
 @app.route('/profilo')
 @login_required
@@ -134,21 +133,30 @@ def nuovo_podcast():
     id_utente = request.form.get('id_utente')
 
     if int(id_utente) != int(current_user.get_id()):
-        # Errore (strano)
+        # Error 403 Forbidden
         return redirect(url_for('tuoi_podcast'))
 
     # Titolo
     titolo = request.form.get('titolo')
     if not dao.titolo_podcast_valido(titolo, id_utente):
         # Errore
+        flash('Errore nella creazione: Hai già un podcast con quel titolo.')
         return redirect(url_for('tuoi_podcast'))
 
     # Descrizione
     descrizione = request.form.get('descrizione')
+    if descrizione.startswith(' '):
+        # Errore
+        flash('Errore nella creazione: La descrizione scelta non è valida.')
+        return redirect(url_for('tuoi_podcast'))
 
     # Categoria
-    categorie_podcast = request.form.getlist('categoria')    
+    categorie_podcast = request.form.getlist('categoria')
     categoria = da_lista_a_stringa(categorie_podcast)
+    if categoria == "":
+        # Errore
+        flash('Errore nella creazione: Seleziona almeno una categoria.')
+        return redirect(url_for('tuoi_podcast'))
 
     # Immagine
     immagine = request.files['immagine']
@@ -156,12 +164,13 @@ def nuovo_podcast():
         extension = os.path.splitext(immagine.filename)[-1].lower()
         id_podcast = dao.prossimo_id_podcast()
 
-        # static/Immagini/Podcast/<id_utente>_<id_podcast>.<estensione>
-        nome_file = 'Immagini/Podcast/' + id_utente + '_' + str(id_podcast) + extension
+        # static/Podcast/Immagini/<id_utente>_<id_podcast>.<estensione>
+        nome_file = 'Podcast/Immagini/' + id_utente + '_' + str(id_podcast) + extension
 
         immagine.save('static/' + nome_file)
     else:
         # Errore
+        flash('Errore nella creazione: Carica un\'immagine per il podcast.')
         return redirect(url_for('tuoi_podcast'))
     
     immagine = nome_file
@@ -178,7 +187,7 @@ def nuovo_podcast():
 
     if not dao.aggiungi_podcast(podcast):
         # Errore
-        app.logger.info('impossibile aggiungere')
+        flash('Al momento è impossibile creare un nuovo podcast. Riprova più tardi.')
 
     return redirect(url_for('tuoi_podcast'))
 
@@ -194,8 +203,8 @@ def modifica_podcast():
     if nuova_immagine:
         extension = os.path.splitext(nuova_immagine.filename)[-1].lower()
 
-        # static/Immagini/Podcast/<id_utente>_<id_podcast>.<estensione>
-        nome_file = 'Immagini/Podcast/' + str(current_user.get_id()) + '_' + id_podcast + extension
+        # static/Podcast/Immagini/<id_utente>_<id_podcast>.<estensione>
+        nome_file = 'Podcast/Immagini/' + str(current_user.get_id()) + '_' + id_podcast + extension
 
         nuova_immagine.save('static/' + nome_file)
     
@@ -352,8 +361,8 @@ def nuovo_episodio():
     if audio:
         extension = os.path.splitext(audio.filename)[-1].lower()
 
-        # static/Audio/<id_podcast>_<id_episodio>.<estensione>
-        nome_file = 'Audio/' + id_podcast + '_' + str(id_episodio) + extension
+        # static/Podcast/Audio/<id_podcast>_<id_episodio>.<estensione>
+        nome_file = 'Podcast/Audio/' + id_podcast + '_' + str(id_episodio) + extension
         audio.save('static/' + nome_file)
     else:
         # Errore
@@ -389,8 +398,8 @@ def modifica_episodio():
     if nuovo_audio:
         extension = os.path.splitext(nuovo_audio.filename)[-1].lower()
 
-        # static/Audio/<id_podcast>_<id_episodio>.<estensione>
-        nome_file = 'Audio/' + id_podcast + '_' + str(id_episodio) + extension
+        # static/Podcast/Audio/<id_podcast>_<id_episodio>.<estensione>
+        nome_file = 'Podcast/Audio/' + id_podcast + '_' + str(id_episodio) + extension
         nuovo_audio.save('static/' + nome_file)
 
     if not dao.modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione, nuova_data):
@@ -461,11 +470,11 @@ def add_new_user():
     immagine_profilo = request.files['immagine_profilo']
     if immagine_profilo:
         extension = os.path.splitext(immagine_profilo.filename)[-1].lower()
-        nome_file = 'Immagini/Profilo/' + username + extension
+        nome_file = 'Utenti/Profilo/' + username + extension
 
         immagine_profilo.save('static/' + nome_file)
     else:
-        nome_file = 'Immagini/Profilo/_default.png'
+        nome_file = 'Utenti/Profilo/_default.png'
     
     immagine_profilo = nome_file
 
@@ -504,7 +513,7 @@ def page_not_found(e):
     return render_template('error404.html')
 
 def da_lista_a_stringa(lista:list):
-    if not lista:
+    if not lista or len(lista) == 0:
         return ""
     
     stringa = lista[0]
@@ -513,9 +522,3 @@ def da_lista_a_stringa(lista:list):
         stringa = stringa + '_' + lista[i]
 
     return stringa
-
-def da_stringa_a_lista(stringa:str):
-    if not stringa:
-        return []
-
-    return stringa.split('_')

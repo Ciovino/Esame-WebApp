@@ -1,6 +1,6 @@
 import sqlite3
 
-db_path = 'database/db_test.db'
+db_path = 'database/db_esame.db'
 
 # Controlla che l'username sia univoco all'interno del database
 def utente_univoco(username):
@@ -218,8 +218,24 @@ def elimina_podcast(id_podcast):
     return success
 
 # Controlla che il titolo per il podcast sia valido
-def titolo_podcast_valido(titolo, id_utente):
+def titolo_podcast_valido(nuovo_titolo:str, id_utente):
     # Un utente non può avere due podcast con lo stesso titolo
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    cursor = connection.cursor()
+    query = '''SELECT titolo FROM podcast WHERE id_utente = ?'''
+
+    cursor.execute(query, (id_utente,))
+
+    tutti_titoli = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    for titolo in tutti_titoli:
+        if titolo[0].lower() == nuovo_titolo.lower():
+            return False
+
     return True
 
 # Aggiungi episodio al db

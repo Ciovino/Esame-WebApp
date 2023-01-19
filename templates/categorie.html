@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block css %}
-<link rel="stylesheet" href="{{url_for('static', filename='categorie.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='_style-css/Categorie/categorie.css')}}">
 {% endblock %}
 
 {% block titolo %}
@@ -55,7 +55,7 @@
     <div class="d-flex flex-wrap justify-content-start align-items-start">
         {% for categoria in sotto_categoria %}
         <div class="card">
-            <img src="{{url_for('static', filename='Immagini/Categorie/' + categoria + '.jpg')}}"
+            <img src="{{url_for('static', filename='Server/Categorie/' + categoria + '.jpg')}}"
                 class="immagine-podcast card-img" alt="{{categoria}}">
             <a href="{{ url_for('singola_categoria', categoria=categoria )}}">
                 <div class="card-img-overlay p-0">
