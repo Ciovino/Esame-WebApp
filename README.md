@@ -12,12 +12,10 @@ Realizzare un'applicazione web per la gestione di podcast.
   - Link per logout (**Con Login**);
 - Aside per la ricerca:
   - Pagina delle categorie:
-    - Elenco di tutte le categorie e al click si scoprono tutti i podcast della categoria;
-    - Barra di ricerca in alto, per una ricerca più rapida;
-  - Pagina dei podcast seguiti (**Con Login**);
-  - Pagina dei podcast creati (**Con Login e profilo Creatore**);
+    - Elenco di tutte le *categorie*;
+    - Elenco di *tutti i podcast*, con ricerca testuale;
 - Main, con i podcast:
-  - *Podcast recenti*: I 3/4 podcast che hanno l'aggiornamento più recente.
+  - *Podcast più seguiti*: I 3 podcast più seguiti nel sito.
   - *Tutti i podcast*: Tutti i podcast del sito (**da scegliere un ordinamento**);
 - *Footer*, con le icone per i social.
 
@@ -42,22 +40,32 @@ Realizzare un'applicazione web per la gestione di podcast.
   - *Password*;
   - *Tipo* di utente;
   - *Immagine profilo*.
+- Link:
+  - *Podcast seguiti*;
+  - *Podcast creati* (se l'utente è un creatore);
+
+### Pagina dei podcast seguiti
+- Elenco dei podcast (*Se non ci sono podcast, viene visualizzato "Non segui nessun podcast"*).
 
 ### Pagina dei podcast creati
-- Elenco dei podcast (*Se non ci sono podcast, viene visualizzato "Nessun podcast. Creane uno."*);
+- Elenco dei podcast;
 - *Bottone* per la creazione di un nuovo podcast:
   - *Titolo*;
   - *Descrizione*;
   - *Immagine*;
-  - *Categoria*.
+  - *Categorie*.
 
 ### Pagina del podcast
-- Immagine del podcast, *titolo* del podcast e nome dell'*autore*;
-- Elenco di *episodi pubblici*;
+- Immagine del podcast, *titolo* del podcast, nome dell'*autore*, *descrizione* del podcast;
+- Pulsante per seguire il podcast (se l'utente è loggato);
+- Elenco di *episodi pubblici* (la ricerca viene fatta solo tra questi episodi);
 - Elenco di *episodi privati* (visibili solo all'autore);
-- *Form* per aggiunta di un nuovo episodio.
+- *Form* per aggiunta di un nuovo episodio (visibili solo all'autore);
+- Pulsanti per modifica e cancellazione del podcast.
 
 ### Pagina degli episodi
+Sono gli utenti loggati vedranno il link per accedere a questa pagina.
+
 - *Immagine del podcast*, *titolo del podcast*, nome dell'*autore*, *titolo dell'episodio* e *descrizione dell'episodio*;
 - *Player* con link per:
   - *Episodio precedente* (se c'è);
@@ -66,4 +74,13 @@ Realizzare un'applicazione web per la gestione di podcast.
 - Sezione *commenti*:
   - Elenco di *tutti i commenti* presenti:
     - Ogni commento che l'utente loggato ha scritto è sia *modificabile* che *cancellabile*;
-  - *Form* per aggiunta di un nuovo commento
+  - *Form* per aggiunta di un nuovo commento.
+  - 
+### Categorie
+- Elenco di tutte le categorie presenti nel sito, divise per *macrocategorie*:
+  - **Arte e Intrattenimento**: *Arte*, *Commedia*, *Narrativa*, *Cinema*, *Letteratura*, *Musica*;
+  - **Business e Tecnologia**: *Economia*, *Tecnologia*, *Finanza*, *Politica*;
+  - **Formazione**: *Storia*, *Scienza*, *Filosofia*;
+  - **Sport e Divertimento**: *Sport*, *Tennis*, *Calcio*, *Bowling*, *Videogiochi*;
+  - **Lifestyle e Benessere**. *Moda*, *Cibo*, *Fitness*.
+- Ogni macrocategoria ha una pagina separata in cui sono elencati tutti i podcast appartenenti a quella categoria, con ricerca testuale.

@@ -84,12 +84,12 @@
 {% endif %}
 
 <div class="m-0 mt-4 d-flex justify-content-around">
-    <a href="{{ url_for('homepage') }}" class="main-link">
-        <h5 class="m-0 p-1">Torna alla Home</h5>
-    </a>
-
     <a href="{{ url_for('categorie') }}" class="main-link">
         <h5 class="m-0 p-1">Tutte le categorie</h5>
+    </a>
+
+    <a href="{{ url_for('homepage') }}" class="main-link">
+        <h5 class="m-0 p-1">Torna alla Home</h5>
     </a>
 </div>
 {% endblock %}
