@@ -10,14 +10,54 @@ const calcola_eliminati = function (episodi) {
     return eliminati;
 };
 
+const reset_ricerca = function (
+    icona_ricerca,
+    icona_reset,
+    input,
+    episodi,
+    nessun_risultato
+) {
+    input.value = "";
+    icona_reset.classList.add("non-visibile");
+    icona_ricerca.classList.remove("non-visibile");
+
+    for (let i = 0; i < episodi.length; i++) {
+        episodi[i].classList.remove("non-visibile");
+    }
+
+    nessun_risultato.classList.add("non-visibile");
+};
+
 const input_episodi = document.querySelector("#input-episodi");
+const avvia_ricerca = document.querySelector("#cerca-episodi");
 let lista_episodi = document.querySelectorAll("#episodio-pubblico");
 let nessun_risultato = document.querySelector("#nessun-risultato");
 
-input_episodi.addEventListener("input", (event) => {
+avvia_ricerca.addEventListener("click", (event) => {
     event.preventDefault();
 
+    let icona_ricerca = document.querySelector("#search-icon");
+    let icona_reset = document.querySelector("#cancel-icon");
+
     let richiesta = input_episodi.value.toLowerCase();
+
+    // Dopo una ricerca appare una X al posto della lente di ingrandimento
+    // L'input viene prima liberato prima di iniziare una nuova ricerca
+    let reset =
+        !icona_reset.classList.contains("non-visibile") || richiesta == "";
+
+    if (reset) {
+        return reset_ricerca(
+            icona_ricerca,
+            icona_reset,
+            input_episodi,
+            lista_episodi,
+            nessun_risultato
+        );
+    } else {
+        icona_reset.classList.remove("non-visibile");
+        icona_ricerca.classList.add("non-visibile");
+    }
 
     let eliminati = calcola_eliminati(lista_episodi);
 
@@ -32,14 +72,13 @@ input_episodi.addEventListener("input", (event) => {
         let testo_descrizione =
             descrizione.textContent || descrizione.innerHTML;
 
-        let reset = richiesta == "";
         let in_titolo = testo_titolo.toLowerCase().indexOf(richiesta) > -1;
         let in_descrizione =
             testo_descrizione.toLowerCase().indexOf(richiesta) > -1;
         let gia_eliminato = lista_episodi[i].classList.contains("non-visibile");
 
         if (gia_eliminato) {
-            if (reset || in_titolo || in_descrizione) {
+            if (in_titolo || in_descrizione) {
                 lista_episodi[i].classList.remove("non-visibile");
                 eliminati--;
             }
@@ -51,7 +90,6 @@ input_episodi.addEventListener("input", (event) => {
         }
     }
 
-    console.log(eliminati);
     if (eliminati == lista_episodi.length) {
         nessun_risultato.classList.remove("non-visibile");
     } else {

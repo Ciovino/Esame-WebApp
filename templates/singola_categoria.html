@@ -47,13 +47,14 @@
 {% block contenuto_principale %}
 
 <div class="row m-0 justify-content-evenly align-items-center top-border">
-    <h2 class="col m-0 titolo-section"><em>Podcast di {{categoria}}</em></h2>
+    <h2 class="col m-0 titolo-section">Podcast di {{categoria}}</h2>
     {% if num_podcast != 0 %}
     <div class="col-4 input-group w-auto">
         <input id="input-categoria" type="text" class="form-control" placeholder="Cerca tra i podcast"
-            aria-label="cerca podcast" aria-describedby="basic-addon2" value="">
-        <button class="btn-search" type="button" id="basic-addon2">
-            <i class="fs-5 bi bi-search"></i>
+            aria-label="cerca podcast" aria-describedby="cerca-podcast" value="">
+        <button class="btn-search" type="button" id="cerca-podcast">
+            <i id="search-icon" class="fs-5 bi bi-search"></i>
+            <i id="cancel-icon" class="fs-5 bi bi-x-lg non-visibile"></i>
         </button>
     </div>
     {% endif %}

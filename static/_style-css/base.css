@@ -113,4 +113,6 @@ div#footer {
 
 .titolo-section {
     padding: 0.5rem 0 0.5rem 0;
+
+    font-style: italic;
 }

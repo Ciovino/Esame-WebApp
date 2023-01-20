@@ -56,7 +56,7 @@
     </div>
 </div>
 
-<h2 class="m-0 titolo-section top-border"><em>Dati personali</em></h2>
+<h2 class="m-0 titolo-section top-border">Dati personali</h2>
 
 <dl id="info">
     <div class="row m-0 justify-content-evenly">
@@ -126,11 +126,13 @@
     </div>
 </dl>
 
-{% if current_user.is_creatore() %}
-<h2 class="m-0 titolo-section top-border"><em>Continua ad ascoltare e creare podcast</em></h2>
-{% else %}
-<h2 class="m-0 titolo-section top-border"><em>Continua ad ascoltare i tuoi podcast preferiti</em></h2>
-{% endif %}
+<h2 class="m-0 titolo-section top-border">
+    {% if current_user.is_creatore() %}
+    Continua ad ascoltare e creare podcast
+    {% else %}
+    Continua ad ascoltare i tuoi podcast preferiti
+    {% endif %}
+</h2>
 
 <div class="m-0 mt-2 d-flex justify-content-around">
     <a href="{{ url_for('seguiti') }}" class="main-link">
