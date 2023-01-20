@@ -50,19 +50,18 @@ def registrati():
     if request.method == 'GET':
         return render_template('registrati.html')
     else: # POST nuovo utente
-        app.logger.debug('Sono in registrati')
         # Nome utente univoco
         username = request.form.get('username')
         if not dao.utente_univoco(username):
             # Messaggio di errore
-            app.logger.info('username già usato')
+            flash('L\'username scelto è già in uso.')
             return redirect(url_for('registrati'))
         
         # Email univoca
         email = request.form.get('email')
         if not dao.email_univoca(email):
             # Messaggio di errore
-            app.logger.info('email già usata')
+            flash('L\'email scelta è già in uso.')
             return redirect(url_for('registrati'))
         
         # Cripta password
@@ -76,7 +75,7 @@ def registrati():
             tipo_utente = 1
         else:
             # Errore
-            app.logger.info('utente non valido')
+            flash('Il tipo utente inserito non è valido.')
             return redirect(url_for('registrati'))
         
         # Immagine profilo
@@ -99,7 +98,7 @@ def registrati():
 
         if not dao.aggiungi_nuovo_utente(new_user):
             # Errore
-            app.logger.info('impossibile aggiungere')
+            flash('Impossibile registarsi al momento. Riprova più tardi.')
             return redirect(url_for('registrati'))
 
         # Utente Registrato
@@ -116,7 +115,7 @@ def login():
         utente_db = dao.recupera_utente_username(username)
 
         if not utente_db or not check_password_hash(utente_db['password'], password):
-            # Credenziali non valide
+            flash('Credenziali inserite non sono valide')
             return render_template('login.html')
         else:
             utente = User(id = utente_db['id_utente'],
@@ -187,14 +186,12 @@ def tuoi_podcast():
         # Titolo
         titolo = request.form.get('titolo')
         if not dao.titolo_podcast_valido(titolo, id_utente):
-            # Errore
             flash('Errore nella creazione: Hai già un podcast con quel titolo.')
             return redirect(url_for('tuoi_podcast'))
 
         # Descrizione
         descrizione = request.form.get('descrizione')
         if descrizione.startswith(' '):
-            # Errore
             flash('Errore nella creazione: La descrizione scelta non è valida.')
             return redirect(url_for('tuoi_podcast'))
 
@@ -202,7 +199,6 @@ def tuoi_podcast():
         categorie_podcast = request.form.getlist('categoria')
         categoria = da_lista_a_stringa(categorie_podcast)
         if categoria == "":
-            # Errore
             flash('Errore nella creazione: Seleziona almeno una categoria.')
             return redirect(url_for('tuoi_podcast'))
 
@@ -217,7 +213,6 @@ def tuoi_podcast():
 
             immagine.save('static/' + nome_file)
         else:
-            # Errore
             flash('Errore nella creazione: Carica un\'immagine per il podcast.')
             return redirect(url_for('tuoi_podcast'))
         
@@ -234,8 +229,7 @@ def tuoi_podcast():
                     'data_creazione' : data_creazione}
 
         if not dao.aggiungi_podcast(podcast):
-            # Errore
-            flash('Al momento è impossibile creare un nuovo podcast. Riprova più tardi.')
+            flash('Impossibile creare un nuovo podcast. Riprova più tardi.')
 
         return redirect(url_for('tuoi_podcast'))
 
@@ -288,8 +282,7 @@ def segui():
     da_seguire = request.form.get('da_seguire')
 
     if not dao.segui(id_podcast, id_utente, da_seguire):
-        # Errore
-        app.logger.info('impossibile seguire/smettere di seguire il podcast')
+        flash('Impossibile seguire/smettere di seguire il podcast. Riprova più tardi')
     
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -313,8 +306,7 @@ def modifica_podcast():
     categoria_db = da_lista_a_stringa(nuove_categorie)
 
     if not dao.modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione, categoria_db):
-        # Errore
-        app.logger.info('impossibile modificare')
+        flash('Impossibile modificare il podcast al momento.')
 
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -324,8 +316,7 @@ def elimina_podcast():
     id_podcast = request.form.get('id_podcast')
 
     if not dao.elimina_podcast(id_podcast):
-        # Errore
-        app.logger.info('impossibile eliminare')
+        flash('Impossibile eliminare il podcast al momento')
 
     return redirect(url_for('tuoi_podcast'))
 
@@ -390,8 +381,7 @@ def nuovo_episodio():
                 'data' : data}
     
     if not dao.aggiungi_episodio(episodio):
-        # Errore
-        app.logger.info('impossibile aggiungere')
+        flash('Impossibile aggiungere un episodio al momento.')
 
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -413,8 +403,7 @@ def modifica_episodio():
         nuovo_audio.save('static/' + nome_file)
 
     if not dao.modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione, nuova_data):
-        # Errore
-        app.logger.info('impossibile modificare')
+        flash('Impossibile modificare l\'episodio al momento.')
 
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -425,8 +414,7 @@ def elimina_episodio():
     id_episodio = request.form.get('id_episodio')
 
     if not dao.elimina_episodio(id_episodio):
-        # Errore
-        app.logger.info('impossibile eliminare')
+        flash('Impossibile eliminare l\'episodio al momento.')
 
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -454,8 +442,7 @@ def nuovo_commento():
                 'data' : data}
 
     if not dao.aggiungi_commento(commento):
-        # Errore
-        app.logger.info('impossibile aggiungere')
+        flash('Impossibile commentare al momento. Riprova più tardi.')
 
     return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
 
@@ -470,8 +457,7 @@ def modifica_commento():
     nuovo_contenuto = request.form.get('contenuto')
 
     if not dao.modifica_commento(id_commento, nuovo_contenuto):
-        # Errore
-        app.logger.info('impossibile modificare')
+        flash('Impossibile modificare il commento al momento.')
 
     return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
 
@@ -484,8 +470,7 @@ def elimina_commento():
     id_commento = request.form.get('id_commento')
 
     if not dao.cancella_commento(id_commento):
-        # Errore
-        app.logger.info('impossibile eliminare')
+        flash('Impossibile eliminare il commento al momento.')
 
     return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
 

@@ -29,6 +29,19 @@
     </head>
 
     <body>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="row m-0 justify-content-center">
+            <div class="col-5 alert alert-warning alert-dismissible fade show m-2" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
         <div id="main" class="row m-0">
             {% block main %}
             <!-- Barra laterale -->

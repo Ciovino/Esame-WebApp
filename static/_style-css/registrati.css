@@ -40,7 +40,7 @@ a.clean-link:hover {
     color: var(--mint-cream);
 }
 
-button {
+button[type="submit"] {
     color: var(--mint-cream) !important;
     background-color: var(--indigo-dye) !important;
 }
