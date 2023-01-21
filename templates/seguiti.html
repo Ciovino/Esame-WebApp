@@ -12,7 +12,7 @@
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
-            <h2>
+            <h2 class="frase-titolo">
                 <i class="bi bi-house"></i>
                 Podcast
             </h2>
@@ -33,7 +33,7 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
+        <h2 class="frase-titolo">
             <i class="bi bi-mic"></i>
             Ricerca
         </h2>
@@ -49,7 +49,7 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-
+<h2 class="col m-0 frase-titolo">I podcast che segui</h2>
 {% if num_seguiti != 0 %}
 <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
     {% for podcast in podcast_seguiti %}
@@ -70,6 +70,6 @@
     {% endfor %}
 </div>
 {% else %}
-<h1 class="m-0 mt-3 text-center">Non segui nessun podcast</h1>
+<h3 class="m-0 mt-3 text-center">Non segui nessun podcast</h3>
 {% endif %}
 {% endblock %}

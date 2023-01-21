@@ -12,7 +12,7 @@
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
-            <h2>
+            <h2 class="frase-titolo">
                 <i class="bi bi-house"></i>
                 Podcast
             </h2>
@@ -33,7 +33,7 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
+        <h2 class="frase-titolo">
             <i class="bi bi-mic"></i>
             Ricerca
         </h2>
@@ -56,7 +56,7 @@
     </div>
 </div>
 
-<h2 class="m-0 titolo-section top-border">Dati personali</h2>
+<h2 class="m-0 frase-titolo top-border">Dati personali</h2>
 
 <dl id="info">
     <div class="row m-0 justify-content-evenly">
@@ -126,7 +126,7 @@
     </div>
 </dl>
 
-<h2 class="m-0 titolo-section top-border">
+<h2 class="m-0 frase-titolo top-border">
     {% if current_user.is_creatore() %}
     Continua ad ascoltare e creare podcast
     {% else %}

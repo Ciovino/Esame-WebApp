@@ -111,8 +111,10 @@ div#footer {
     margin-top: auto;
 }
 
-.titolo-section {
+.frase-titolo {
     padding: 0.5rem 0 0.5rem 0;
+
+    text-decoration: underline;
 
     font-style: italic;
 }

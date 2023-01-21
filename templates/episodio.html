@@ -12,7 +12,7 @@
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
-            <h2>
+            <h2 class="frase-titolo">
                 <i class="bi bi-house"></i>
                 Podcast
             </h2>
@@ -31,7 +31,7 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
+        <h2 class="frase-titolo">
             <i class="bi bi-mic"></i>
             Ricerca
         </h2>
@@ -78,7 +78,7 @@
         {% endif %}
 
         <a href="{{ url_for('podcast', id_podcast = podcast.id_podcast) }}" class="main-link">
-            <h5 class="m-0 p-1">Torna al podcast</h5>
+            <h5 class="m-0 p-1">Lista episodi</h5>
         </a>
 
         {% if episodio_successivo != None %}
@@ -91,8 +91,11 @@
     </div>
 </div>
 
-<div id="commenti" class="top-border pt-3">
-    <h3 class="m-0 text-center">Commenti</h3>
+{% if privato %} <!-- Se l'episodio è privato, non mostrare la sezione commenti -->
+<h2 class="top-border m-0 frase-titolo">Episodio privato</h2>
+{% else %}
+<div id="commenti" class="pt-3">
+    <h2 class="top-border m-0 frase-titolo">Commenti</h2>
 
     {% if num_commenti == 0%}
     <h5 class="m-0 text-center">Nessuno ha ancora commentato questo episodio.</h5>
@@ -131,7 +134,7 @@
                                     <div class="row d-flex align-items-start mb-2">
                                         <labal for="contenuto" class=" col-3 mt-2">Commento:</labal>
                                         <input type="text" name="contenuto" class="form-control col" required
-                                            minlength="2" maxlength="140"></input>
+                                            minlength="2" maxlength="140" autocomplete="off"></input>
                                     </div>
 
                                     <input type="hidden" name="id_commento" value="{{ commento.id_commento }}" />
@@ -191,7 +194,7 @@
         <div class="col-9">
             <label for="contenuto" class="visually-hidden">Commento</label>
             <input type="textarea" class="form-control" name="contenuto" placeholder="Scrivi un commento" required
-                minlength="2" maxlength="140">
+                minlength="2" maxlength="140" autocomplete="off">
         </div>
         <div class="col-1">
             <button type="submit" class="btn mb-3">Commenta</button>
@@ -202,4 +205,5 @@
     </form>
     {% endif %}
 </div>
+{% endif %}
 {% endblock %}

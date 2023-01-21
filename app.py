@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, url_for, flash
+from flask import Flask, render_template, redirect, request, url_for, flash, abort
 from flask_session import Session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from user_model import User
@@ -53,14 +53,12 @@ def registrati():
         # Nome utente univoco
         username = request.form.get('username')
         if not dao.utente_univoco(username):
-            # Messaggio di errore
             flash('L\'username scelto è già in uso.')
             return redirect(url_for('registrati'))
         
         # Email univoca
         email = request.form.get('email')
         if not dao.email_univoca(email):
-            # Messaggio di errore
             flash('L\'email scelta è già in uso.')
             return redirect(url_for('registrati'))
         
@@ -74,7 +72,6 @@ def registrati():
         elif tipo_utente == 'Creare':
             tipo_utente = 1
         else:
-            # Errore
             flash('Il tipo utente inserito non è valido.')
             return redirect(url_for('registrati'))
         
@@ -97,11 +94,9 @@ def registrati():
                     'immagine_profilo': immagine_profilo}
 
         if not dao.aggiungi_nuovo_utente(new_user):
-            # Errore
             flash('Impossibile registarsi al momento. Riprova più tardi.')
             return redirect(url_for('registrati'))
 
-        # Utente Registrato
         return redirect(url_for('homepage'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -176,30 +171,25 @@ def tuoi_podcast():
                             tutti_podcast=tutti_podcast,
                             tutte_categorie=tutte_categorie)
     else: # POST nuovo podcast
-        # Id_utente
-        id_utente = request.form.get('id_utente')
-
-        if int(id_utente) != int(current_user.get_id()):
-            # Error 403 Forbidden
-            return redirect(url_for('tuoi_podcast'))
+        id_utente = str(current_user.get_id())
 
         # Titolo
         titolo = request.form.get('titolo')
         if not dao.titolo_podcast_valido(titolo, id_utente):
-            flash('Errore nella creazione: Hai già un podcast con quel titolo.')
+            flash('Hai già un podcast con quel titolo.')
             return redirect(url_for('tuoi_podcast'))
 
         # Descrizione
-        descrizione = request.form.get('descrizione')
-        if descrizione.startswith(' '):
-            flash('Errore nella creazione: La descrizione scelta non è valida.')
+        descrizione = request.form.get('descrizione').strip()
+        if descrizione == "":
+            flash('Descrizione non valida.')
             return redirect(url_for('tuoi_podcast'))
 
         # Categoria
         categorie_podcast = request.form.getlist('categoria')
         categoria = da_lista_a_stringa(categorie_podcast)
         if categoria == "":
-            flash('Errore nella creazione: Seleziona almeno una categoria.')
+            flash('Seleziona almeno una categoria.')
             return redirect(url_for('tuoi_podcast'))
 
         # Immagine
@@ -326,8 +316,17 @@ def episodio(id_podcast, id_episodio):
     podcast = dao.recupera_podcast_id(id_podcast)
 
     episodio = dao.recupera_episodio_id(id_episodio)
-    episodio_precedente = dao.episodio_precedente(id_podcast, id_episodio, episodio['data'])
-    episodio_successivo = dao.episodio_successivo(id_podcast, id_episodio, episodio['data'], datetime.now().strftime('%Y-%m-%d'))
+    # Se l'episodio non è pubblico, solo il creatore del podcast può ascoltare l'episodio
+    privato = episodio['data'] > datetime.now().strftime('%Y-%m-%d')
+    if privato:
+        if current_user.get_id() != podcast['id_utente']:
+            abort(403)
+        
+        episodio_precedente = None
+        episodio_successivo = None
+    else:
+        episodio_precedente = dao.episodio_precedente(id_podcast, id_episodio, episodio['data'])
+        episodio_successivo = dao.episodio_successivo(id_podcast, id_episodio, episodio['data'], datetime.now().strftime('%Y-%m-%d'))
 
     commenti = dao.commenti_episodio(id_episodio)
 
@@ -337,6 +336,7 @@ def episodio(id_podcast, id_episodio):
     return render_template('episodio.html',
                             podcast = podcast,
                             episodio = episodio,
+                            privato = privato,
                             episodio_precedente=episodio_precedente,
                             episodio_successivo=episodio_successivo,
                             num_commenti = len(commenti),
@@ -495,6 +495,10 @@ def user_load(id):
 
 @app.errorhandler(404)
 def page_not_found(e):
+    return render_template('error404.html')
+
+@app.errorhandler(403)
+def forbidden(e):
     return render_template('error404.html')
 
 # Funzioni

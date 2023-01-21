@@ -16,7 +16,7 @@
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
-            <h2>
+            <h2 class="frase-titolo">
                 <i class="bi bi-house"></i>
                 Podcast
             </h2>
@@ -35,7 +35,7 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
+        <h2 class="frase-titolo">
             <i class="bi bi-mic"></i>
             Ricerca
         </h2>
@@ -56,7 +56,8 @@
         <img class="foto-podcast" src="{{ url_for('static', filename=podcast.immagine) }}">
         <div class="info-scritte d-flex flex-column align-items-start">
             <div class="titolo-autore">
-                <h1 class="m-0 col"><b>{{ podcast.titolo }}</b> - <em>{{ podcast.username }}</em></h1>
+                <h1 class="m-0 col"><b>{{ podcast.titolo }}</b> - <em>{{ podcast.username }}</em>
+                </h1>
             </div>
             <div class="descrizione-episodio">
                 <h5 class="m-0 col">{{ podcast.descrizione }}</h5>
@@ -91,11 +92,11 @@
 
 <div id="lista-pubblica" class="lista-episodi top-border pt-3">
     {% if num_episodi_pubblici == 0 %}
-    <h1 class="text-center">Non ci sono ancora episodi per questo podcast.</h1>
+    <h2 class="text-center">Non ci sono ancora episodi per questo podcast.</h2>
     {% else %}
     <div class="row m-0 justify-content-evenly align-items-center">
         <div class="col-3">
-            <h3 class="text-center titolo">Episodi</h3>
+            <h3 class="text-center">Lista episodi</h3>
         </div>
         <div class="col-3 input-group w-auto">
             <input id="input-episodi" type="text" class="form-control" placeholder="Cerca tra gli episodi"
@@ -229,7 +230,7 @@
         </div>
     </div>
     {% endfor %}
-    <h2 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h2>
+    <h3 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h3>
     {% endif %}
 </div>
 
@@ -263,6 +264,10 @@
                     <div class="btn-group" role="group" aria-label="modifica commento">
                         <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modifica_episodio">
                             <h6 class="m-0">Modifica</h6>
+                        </a>
+                        <a type="button" class="btn"
+                            href="{{ url_for('episodio', id_podcast=podcast.id_podcast, id_episodio=episodi_privati[idx].id_episodio) }}">
+                            <h6 class="m-0">Ascolta</h6>
                         </a>
                         <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#elimina_episodio">
                             <h6 class="m-0">Elimina</h6>
@@ -427,16 +432,16 @@
                     <div class="modal-body">
                         <div class="row d-flex align-items-center mb-2">
                             <labal for="titolo" class="col-3">Titolo:</labal>
-                            <input name="titolo" class="form-control col" type="text" placeholder="..." required>
+                            <input name="titolo" class="form-control col" type="text" autocomplete="off" required>
                         </div>
                         <div class="row d-flex align-items-start mb-2">
                             <labal for="descrizione" class=" col-3 mt-2">Descrizione:</labal>
                             <textarea name="descrizione" class="form-control col" rows="3" required minlength="10"
-                                maxlength="200"></textarea>
+                                maxlength="200" autocomplete="off"></textarea>
                         </div>
                         <div class="row d-flex align-items-start mb-2">
                             <labal for="audio" class="col-3 mt-2">File audio:</labal>
-                            <input name="audio" class="form-control col" type="file" accept=".mp3" required>
+                            <input name="audio" class="form-control col" type="file" accept=".mp3,.wav,.wma" required>
                         </div>
                         <div class="row d-flex align-items-start">
                             <labal for="data_pubblicazione" class="col-3 mt-2">Data:</labal>

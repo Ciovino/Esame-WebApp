@@ -16,7 +16,7 @@
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
-            <h2><i class="bi bi-house"></i> Podcast</h2>
+            <h2 class="frase-titolo"><i class="bi bi-house"></i> Podcast</h2>
         </a>
 
         {% if current_user.is_authenticated %}
@@ -32,7 +32,7 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2><i class="bi bi-mic-fill"></i> Ricerca</h2>
+        <h2 class="frase-titolo"><i class="bi bi-mic-fill"></i> Ricerca</h2>
 
         <h4 class="ps-2 mb-3">
             <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
@@ -47,11 +47,11 @@
 {% block contenuto_principale %}
 
 <div class="row m-0 justify-content-evenly align-items-center top-border">
-    <h2 class="col m-0 titolo-section">Podcast di {{categoria}}</h2>
+    <h2 class="col m-0 frase-titolo">Podcast di {{categoria}}</h2>
     {% if num_podcast != 0 %}
     <div class="col-4 input-group w-auto">
         <input id="input-categoria" type="text" class="form-control" placeholder="Cerca tra i podcast"
-            aria-label="cerca podcast" aria-describedby="cerca-podcast" value="">
+            aria-label="cerca podcast" aria-describedby="cerca-podcast" value="" autocomplete="off">
         <button class="btn-search" type="button" id="cerca-podcast">
             <i id="search-icon" class="fs-5 bi bi-search"></i>
             <i id="cancel-icon" class="fs-5 bi bi-x-lg non-visibile"></i>

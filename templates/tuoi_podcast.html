@@ -12,7 +12,7 @@
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
-            <h2>
+            <h2 class="frase-titolo">
                 <i class="bi bi-house"></i>
                 Podcast
             </h2>
@@ -33,7 +33,7 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
+        <h2 class="frase-titolo">
             <i class="bi bi-mic"></i>
             Ricerca
         </h2>
@@ -49,7 +49,7 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-<h2 class="top-border m-0 titolo-section">I tuoi podcast</h2>
+<h2 class="top-border m-0 frase-titolo">I tuoi podcast</h2>
 
 <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
     {% if num_podcast != 0 %}
@@ -92,12 +92,12 @@
                         <div class="modal-body">
                             <div class="row d-flex align-items-center mb-2">
                                 <labal for="titolo" class="col-3">Titolo:</labal>
-                                <input name="titolo" class="form-control col" type="text" placeholder="..." required>
+                                <input name="titolo" class="form-control col" type="text" autocomplete="off" required>
                             </div>
                             <div class="row d-flex align-items-start mb-2">
                                 <labal for="descrizione" class="col-3 mt-2">Descrizione:</labal>
                                 <textarea name="descrizione" class="form-control col" rows="3" required minlength="10"
-                                    maxlength="140"></textarea>
+                                    maxlength="140" autocomplete="off"></textarea>
                             </div>
                             <div class="row d-flex align-items-start mb-2">
                                 <labal for="immagine" class="col-3 mt-2">Immagine:</labal>
@@ -116,8 +116,6 @@
                                     {% endfor %}
                                 </select>
                             </div>
-
-                            <input type="hidden" name="id_utente" value="{{ current_user.get_id() }}" />
                         </div>
                         <div class="modal-footer">
                             <button class="me-3 btn-modal ps-3 pe-3" type="submit">

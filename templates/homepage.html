@@ -12,7 +12,7 @@
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
         <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
-            <h2>
+            <h2 class="frase-titolo">
                 <i class="bi bi-house-fill"></i>
                 Podcast
             </h2>
@@ -33,7 +33,7 @@
 
 <aside id="barra-ricerca" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
-        <h2>
+        <h2 class="frase-titolo">
             <i class="bi bi-mic"></i>
             Ricerca
         </h2>
@@ -51,7 +51,7 @@
 {% block contenuto_principale %}
 <!-- Podcast più seguiti -->
 <div id="podcast-recenti" class="top-border row m-0">
-    <h3 class="row m-0 titolo-section">I podcast più seguiti</h3>
+    <h3 class="row m-0 frase-titolo">I podcast più seguiti</h3>
 
     <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
         {% for podcast in piu_seguiti %}
@@ -75,7 +75,7 @@
 
 <!-- Tutti i podcast -->
 <div id="tutti-podcast" class="top-border row m-0">
-    <h3 class="row m-0 titolo-section">Tutti i podcast</h3>
+    <h3 class="row m-0 frase-titolo">Tutti i podcast</h3>
 
     <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
         {% for podcast in tutti_podcast %}
