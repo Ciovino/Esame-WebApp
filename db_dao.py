@@ -212,13 +212,13 @@ def elimina_podcast(id_podcast):
     return success
 
 # Un utente non può avere due podcast con lo stesso titolo
-def titolo_podcast_valido(nuovo_titolo:str, id_utente):    
+def titolo_podcast_valido(nuovo_titolo:str, id_utente, id_podcast):    
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")
     cursor = connection.cursor()
-    query = '''SELECT titolo FROM podcast WHERE id_utente = ?'''
+    query = '''SELECT titolo FROM podcast WHERE id_utente = ? AND id_podcast != ?'''
 
-    cursor.execute(query, (id_utente,))
+    cursor.execute(query, (id_utente, id_podcast))
 
     tutti_titoli = cursor.fetchall()
 
@@ -251,6 +251,27 @@ def aggiungi_episodio(episodio):
     connection.close()
 
     return success
+
+# Un podcast non può avere due episodi con lo stesso nome
+def titolo_episodio_valido(nuovo_titolo, id_podcast, id_episodio):
+    connection = sqlite3.connect(db_path)
+    connection.execute("PRAGMA foreign_keys = 1")
+    cursor = connection.cursor()
+    query = '''SELECT titolo FROM episodi WHERE id_podcast = ? AND id_episodio != ?'''
+
+    cursor.execute(query, (id_podcast, id_episodio))
+
+    tutti_titoli = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    for titolo in tutti_titoli:
+        if titolo[0].lower() == nuovo_titolo.lower():
+            return False
+
+    return True
+
 
 def modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione, nuova_data):
     connection = sqlite3.connect(db_path)

@@ -110,7 +110,7 @@ def login():
         utente_db = dao.recupera_utente_username(username)
 
         if not utente_db or not check_password_hash(utente_db['password'], password):
-            flash('Credenziali inserite non sono valide')
+            flash('Le credenziali inserite non sono valide.')
             return render_template('login.html')
         else:
             utente = User(id = utente_db['id_utente'],
@@ -175,7 +175,7 @@ def tuoi_podcast():
 
         # Titolo
         titolo = request.form.get('titolo')
-        if not dao.titolo_podcast_valido(titolo, id_utente):
+        if not dao.titolo_podcast_valido(titolo, id_utente, -1):
             flash('Hai già un podcast con quel titolo.')
             return redirect(url_for('tuoi_podcast'))
 
@@ -186,9 +186,9 @@ def tuoi_podcast():
             return redirect(url_for('tuoi_podcast'))
 
         # Categoria
-        categorie_podcast = request.form.getlist('categoria')
-        categoria = da_lista_a_stringa(categorie_podcast)
-        if categoria == "":
+        categorie = request.form.getlist('categoria')
+        categoria_db = da_lista_a_stringa(categorie)
+        if categoria_db == "":
             flash('Seleziona almeno una categoria.')
             return redirect(url_for('tuoi_podcast'))
 
@@ -203,7 +203,7 @@ def tuoi_podcast():
 
             immagine.save('static/' + nome_file)
         else:
-            flash('Errore nella creazione: Carica un\'immagine per il podcast.')
+            flash('Carica un\'immagine per il podcast.')
             return redirect(url_for('tuoi_podcast'))
         
         immagine = nome_file
@@ -214,7 +214,7 @@ def tuoi_podcast():
         podcast = {'id_utente': id_utente,
                     'titolo' : titolo,
                     'descrizione' : descrizione,
-                    'categoria' : categoria,
+                    'categoria' : categoria_db,
                     'immagine' : immagine,
                     'data_creazione' : data_creazione}
 
@@ -279,21 +279,34 @@ def segui():
 @app.route('/modifica_podcast', methods=['POST'])
 @login_required
 def modifica_podcast():
+    id_utente = str(current_user.get_id())
     id_podcast = request.form.get('id_podcast')
+
     nuovo_titolo = request.form.get('titolo')
-    nuova_descrizione = request.form.get('descrizione')
+    if not dao.titolo_podcast_valido(nuovo_titolo, id_utente, id_podcast):
+        flash('Hai già un podcast con quel titolo.')
+        redirect(url_for('podcast', id_podcast=id_podcast))
+
+    nuova_descrizione = request.form.get('descrizione').strip()
+    if nuova_descrizione == "":
+        flash('Descrizione non valida.')
+        redirect(url_for('podcast', id_podcast=id_podcast))
+
+    nuove_categorie = request.form.getlist('categoria')    
+    categoria_db = da_lista_a_stringa(nuove_categorie)
+    if categoria_db == "":
+        flash('Seleziona almeno una categoria.')
+        redirect(url_for('podcast', id_podcast=id_podcast))
+    
     nuova_immagine = request.files['immagine']
-    nuove_categorie = request.form.getlist('categoria')
 
     if nuova_immagine:
         extension = os.path.splitext(nuova_immagine.filename)[-1].lower()
 
         # static/Podcast/Immagini/<id_utente>_<id_podcast>.<estensione>
-        nome_file = 'Podcast/Immagini/' + str(current_user.get_id()) + '_' + id_podcast + extension
+        nome_file = 'Podcast/Immagini/' + id_utente + '_' + id_podcast + extension
 
-        nuova_immagine.save('static/' + nome_file)
-    
-    categoria_db = da_lista_a_stringa(nuove_categorie)
+        nuova_immagine.save('static/' + nome_file)    
 
     if not dao.modifica_podcast(id_podcast, nuovo_titolo, nuova_descrizione, categoria_db):
         flash('Impossibile modificare il podcast al momento.')
@@ -353,9 +366,15 @@ def nuovo_episodio():
 
     # Titolo
     titolo = request.form.get('titolo')
+    if dao.titolo_episodio_valido(titolo, id_podcast, id_episodio):
+        flash('Hai già un episodio con quel titolo.')
+        return redirect(url_for('podcast', id_podcast=id_podcast))
 
     # Descrizione
-    descrizione = request.form.get('descrizione')
+    descrizione = request.form.get('descrizione').strip()
+    if descrizione == "":
+        flash('La descrizione non è valida.')
+        return redirect(url_for('podcast', id_podcast=id_podcast))
 
     # Audio
     audio = request.files['audio']
@@ -366,13 +385,16 @@ def nuovo_episodio():
         nome_file = 'Podcast/Audio/' + id_podcast + '_' + str(id_episodio) + extension
         audio.save('static/' + nome_file)
     else:
-        # Errore
+        flash('Carica un file audio.')
         return redirect(url_for('podcast', id_podcast=id_podcast))
     
     audio = nome_file
 
     # Data
     data = request.form.get('data_pubblicazione')
+    if data > datetime.now().strftime('%Y-%m-%d'):
+        flash('La data inserita non è valida.')
+        return redirect(url_for('podcast', id_podcast=id_podcast))
 
     episodio = {'id_podcast' : id_podcast,
                 'titolo' : titolo,
@@ -390,11 +412,18 @@ def nuovo_episodio():
 def modifica_episodio():
     id_podcast = request.form.get('id_podcast')
     id_episodio = request.form.get('id_episodio')
+    
     nuovo_titolo = request.form.get('titolo')
-    nuova_descrizione = request.form.get('descrizione')
-    nuovo_audio = request.files['audio']
-    nuova_data = request.form.get('data_pubblicazione')
+    if dao.titolo_episodio_valido(nuovo_titolo, id_podcast, id_episodio):
+        flash('Hai già un episodio con quel titolo.')
+        return redirect(url_for('podcast', id_podcast=id_podcast))
 
+    nuova_descrizione = request.form.get('descrizione').strip()
+    if nuova_descrizione == "":
+        flash('La descrizione non è valida.')
+        return redirect(url_for('podcast', id_podcast=id_podcast))
+
+    nuovo_audio = request.files['audio']
     if nuovo_audio:
         extension = os.path.splitext(nuovo_audio.filename)[-1].lower()
 
@@ -402,8 +431,13 @@ def modifica_episodio():
         nome_file = 'Podcast/Audio/' + id_podcast + '_' + str(id_episodio) + extension
         nuovo_audio.save('static/' + nome_file)
 
+    nuova_data = request.form.get('data_pubblicazione')
+    if nuova_data > datetime.now().strftime('%Y-%m-%d'):
+        flash('La data inserita non è valida.')
+        return redirect(url_for('podcast', id_podcast=id_podcast))
+
     if not dao.modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione, nuova_data):
-        flash('Impossibile modificare l\'episodio al momento.')
+        flash('Impossibile modificare l\'episodio.')
 
     return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -425,13 +459,16 @@ def nuovo_commento():
     id_podcast = request.form.get('id_podcast')
 
     # Id_utente
-    id_utente = request.form.get('id_utente')
+    id_utente = str(current_user.get_id())
 
     # Id episodio
     id_episodio = request.form.get('id_episodio')
 
     # Contenuto 
-    contenuto = request.form.get('contenuto')
+    contenuto = request.form.get('contenuto').strip()
+    if contenuto == "":
+        flash('Il commento inserito non è valido.')
+        return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
 
     # Data
     data = datetime.now().strftime('%Y-%m-%d')
@@ -454,7 +491,10 @@ def modifica_commento():
 
     id_commento = request.form.get('id_commento')
 
-    nuovo_contenuto = request.form.get('contenuto')
+    nuovo_contenuto = request.form.get('contenuto').strip()
+    if nuovo_contenuto == "":
+        flash('Il commento inserito non è valido.')
+        return redirect(url_for('episodio', id_podcast=id_podcast, id_episodio=id_episodio))
 
     if not dao.modifica_commento(id_commento, nuovo_contenuto):
         flash('Impossibile modificare il commento al momento.')
