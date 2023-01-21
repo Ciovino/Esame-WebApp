@@ -9,9 +9,19 @@
 {% endblock %}
 
 {% block main %}
-<div id="error" class="row justify-content-center">
+<div id="title-error" class="row justify-content-center">
     <div class="col-4 bordo">
-        <h2 class="text-center m-0">404 - Pagina non trovata</h2>
+        <h2 class="text-center m-0 mt-2 mb-2">Errore 404 - Pagina non trovata</h2>
+        <h4 class="text-center m-0 pt-2 pb-2 top-border">
+            Sembra che qui non ci sia nessun podcast da ascoltare. Prova a tornare alla pagina precedente o torna alla
+            homepage.
+        </h4>
+
+        <div class="m-0 pt-2  mb-2 d-flex justify-content-around top-border">
+            <a href="{{ url_for('homepage') }}" class="main-link">
+                <h5 class="m-0 p-1">Torna alla Home</h5>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

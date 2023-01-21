@@ -81,3 +81,23 @@ div#card-nuovo-podcast {
     background-color: var(--mint-cream) !important;
     color: var(--oxford-blue) !important;
 }
+
+button {
+    color: var(--mint-cream) !important;
+    border: 2px solid var(--mint-cream);
+    border-radius: 10px;
+    background-color: transparent !important;
+
+    transition: 0.4s;
+}
+
+button:active {
+    background-color: var(--mint-cream) !important;
+    color: var(--oxford-blue) !important;
+}
+
+.btn-search {
+    color: var(--oxford-blue) !important;
+    background-color: #fff !important;
+    padding: 0px 10px 0px 10px;
+}

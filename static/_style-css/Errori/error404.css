@@ -1,4 +1,4 @@
-div#error {
+div#title-error {
     margin: 0;
     position: fixed;
     top: 50%;
@@ -13,4 +13,8 @@ div#error {
     border-radius: 15px;
 
     background-color: rgba(238, 244, 237, 0.6);
+}
+
+.top-border {
+    border-color: var(--prussian-blue);
 }

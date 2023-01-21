@@ -8,6 +8,10 @@
 <title>I Tuoi Podcast</title>
 {% endblock %}
 
+{% block script %}
+<script defer src="{{ url_for('static', filename='_javascript/tuoi_podcast.js') }}"></script>
+{% endblock %}
+
 {% block barra_laterale %}
 <header id="navbar-laterale" class="navbar top-border">
     <div class="container-fluid d-flex flex-column align-items-start">
@@ -49,12 +53,23 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-<h2 class="top-border m-0 frase-titolo">I tuoi podcast</h2>
+<div class="row m-0 justify-content-evenly align-items-center top-border">
+    <h2 class="col m-0 frase-titolo pt-0">I tuoi podcast</h2>
+
+    <div class="col-4 input-group w-auto">
+        <input id="input-tuoi-podcast" type="text" class="form-control" placeholder="Cerca tra i podcast"
+            aria-label="cerca podcast" aria-describedby="cerca-podcast" value="">
+        <button class="btn-search" type="button" id="cerca-podcast">
+            <i id="search-icon" class="fs-5 bi bi-search"></i>
+            <i id="cancel-icon" class="fs-5 bi bi-x-lg non-visibile"></i>
+        </button>
+    </div>
+</div>
 
 <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
     {% if num_podcast != 0 %}
     {% for podcast in tutti_podcast %}
-    <div class="card">
+    <div class="card tutti-podcast">
         <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
             alt="{{ podcast.titolo }}">
 
@@ -68,6 +83,7 @@
         </a>
     </div>
     {% endfor %}
+    <h2 id="nessun-risultato" class="text-center m-0 mt-3 mb-2 non-visibile">La ricerca non ha dato risultati.</h2>
     {% endif %}
 
     <div id="card-nuovo-podcast" class="card d-flex align-items-center justify-content-end">
@@ -127,5 +143,15 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="go-back" class="m-0 mt-4 d-flex justify-content-around">
+    <a href="{{ url_for('homepage') }}" class="main-link">
+        <h5 class="m-0 p-1">Torna alla Home</h5>
+    </a>
+
+    <a href="{{ url_for('profilo') }}" class="main-link">
+        <h5 class="m-0 p-1">Torna al profilo</h5>
+    </a>
 </div>
 {% endblock %}

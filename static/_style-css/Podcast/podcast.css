@@ -94,7 +94,3 @@ div.btn-group > button:hover {
     background-color: transparent !important;
     color: var(--mint-cream) !important;
 }
-
-.non-visibile {
-    display: none;
-}

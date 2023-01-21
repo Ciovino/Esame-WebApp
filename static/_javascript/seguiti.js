@@ -28,7 +28,7 @@ const reset_ricerca = function (
     nessun_risultato.classList.add("non-visibile");
 };
 
-const input = document.querySelector("#input-tutti-podcast");
+const input = document.querySelector("#input-seguiti");
 const avvia_ricerca = document.querySelector("#cerca-podcast");
 let lista_podcast = document.querySelectorAll(".tutti-podcast");
 let nessun_risultato = document.querySelector("#nessun-risultato");
@@ -86,11 +86,11 @@ avvia_ricerca.addEventListener("click", (event) => {
                 eliminati++;
             }
         }
-    }
 
-    if (eliminati == lista_podcast.length) {
-        nessun_risultato.classList.remove("non-visibile");
-    } else {
-        nessun_risultato.classList.add("non-visibile");
+        if (eliminati == lista_podcast.length) {
+            nessun_risultato.classList.remove("non-visibile");
+        } else {
+            nessun_risultato.classList.add("non-visibile");
+        }
     }
 });

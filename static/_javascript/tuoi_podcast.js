@@ -15,7 +15,11 @@ const reset_ricerca = function (
     icona_reset,
     input,
     podcast,
-    nessun_risultato
+    nessun_risultato,
+    posizione_originale,
+    destinazione,
+    nuovo_podcast,
+    go_back_link
 ) {
     input.value = "";
     icona_reset.classList.add("non-visibile");
@@ -25,13 +29,23 @@ const reset_ricerca = function (
         podcast[i].classList.remove("non-visibile");
     }
 
-    nessun_risultato.classList.add("non-visibile");
+    if (!nessun_risultato.classList.contains("non-visibile")) {
+        nessun_risultato.classList.add("non-visibile");
+
+        destinazione.removeChild(nuovo_podcast);
+        posizione_originale.appendChild(nuovo_podcast);
+    }
 };
 
-const input = document.querySelector("#input-tutti-podcast");
+let input = document.querySelector("#input-tuoi-podcast");
 const avvia_ricerca = document.querySelector("#cerca-podcast");
 let lista_podcast = document.querySelectorAll(".tutti-podcast");
 let nessun_risultato = document.querySelector("#nessun-risultato");
+
+let posizione_originale = document.querySelector(".immagini-podcast");
+let nuovo_podcast = document.querySelector("#card-nuovo-podcast");
+let go_back_link = document.querySelector("#go-back");
+let destinazione = document.querySelector("main");
 
 avvia_ricerca.addEventListener("click", (event) => {
     event.preventDefault();
@@ -52,7 +66,10 @@ avvia_ricerca.addEventListener("click", (event) => {
             icona_reset,
             input,
             lista_podcast,
-            nessun_risultato
+            nessun_risultato,
+            posizione_originale,
+            destinazione,
+            nuovo_podcast
         );
     } else {
         icona_reset.classList.remove("non-visibile");
@@ -89,8 +106,11 @@ avvia_ricerca.addEventListener("click", (event) => {
     }
 
     if (eliminati == lista_podcast.length) {
+        destinazione.insertBefore(nuovo_podcast, go_back_link);
         nessun_risultato.classList.remove("non-visibile");
     } else {
+        destinazione.removeChild(nuovo_podcast);
+        posizione_originale.appendChild(nuovo_podcast);
         nessun_risultato.classList.add("non-visibile");
     }
 });

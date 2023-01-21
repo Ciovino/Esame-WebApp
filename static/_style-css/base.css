@@ -118,3 +118,7 @@ div#footer {
 
     font-style: italic;
 }
+
+.non-visibile {
+    display: none;
+}
