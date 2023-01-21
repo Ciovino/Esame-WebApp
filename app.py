@@ -499,7 +499,7 @@ def page_not_found(e):
 
 @app.errorhandler(403)
 def forbidden(e):
-    return render_template('error404.html')
+    return render_template('error403.html')
 
 # Funzioni
 def da_lista_a_stringa(lista:list):
