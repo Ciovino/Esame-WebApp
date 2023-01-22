@@ -1,6 +1,5 @@
-- Bootstrap 5.3
-- Bootstrap Icon
-- Flask
-- Flask-Session
-- Flask-Login
-- Google Font
+- Bootstrap 5.3.0
+- Bootstrap Icon 1.10.3
+- Flask 2.2.2
+- Flask-Session 0.4.0
+- Flask-Login 0.6.2
