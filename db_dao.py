@@ -272,7 +272,6 @@ def titolo_episodio_valido(nuovo_titolo, id_podcast, id_episodio):
 
     return True
 
-
 def modifica_episodio(id_episodio, nuovo_titolo, nuova_descrizione, nuova_data):
     connection = sqlite3.connect(db_path)
     connection.execute("PRAGMA foreign_keys = 1")

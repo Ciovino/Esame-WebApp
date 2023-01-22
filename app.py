@@ -233,17 +233,21 @@ def tutti_podcast():
 @app.route('/podcast/<int:id_podcast>')
 def podcast(id_podcast):
     podcast_completo = dao.recupera_podcast_id(id_podcast)
-    episodi_pubblici = dao.recupera_episodi_podcast(id_podcast)
+    tutti_episodi = dao.recupera_episodi_podcast(id_podcast)
+    episodi_pubblici = []
     episodi_privati = []    
     
-    for episodio in episodi_pubblici:
+    for episodio in tutti_episodi:
+        app.logger.info(f"Episodi pubblici {episodi_pubblici}")
+        app.logger.info(f"Episodi privati {episodi_privati}")
         giorni = (datetime.now() - datetime.strptime(episodio['data'], '%Y-%m-%d')).days
 
         episodio['data'] = datetime.strptime(episodio['data'], '%Y-%m-%d').strftime('%d %b %Y')
 
         if giorni < 0:
-            episodi_pubblici.remove(episodio)
             episodi_privati.append(episodio)
+        else:
+            episodi_pubblici.append(episodio)
     
     num_episodi_privati = len(episodi_privati)
     num_episodi_pubblici = len(episodi_pubblici)
@@ -252,6 +256,9 @@ def podcast(id_podcast):
         seguito = dao.podcast_seguito(id_podcast, current_user.get_id())
     else:
         seguito = -1
+
+    app.logger.info(f"Episodi pubblici {episodi_pubblici}")
+    app.logger.info(f"Episodi privati {episodi_privati}")
 
     return render_template('podcast.html', 
                             podcast=podcast_completo,
@@ -366,7 +373,7 @@ def nuovo_episodio():
 
     # Titolo
     titolo = request.form.get('titolo')
-    if dao.titolo_episodio_valido(titolo, id_podcast, id_episodio):
+    if not dao.titolo_episodio_valido(titolo, id_podcast, -1):
         flash('Hai già un episodio con quel titolo.')
         return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -392,7 +399,7 @@ def nuovo_episodio():
 
     # Data
     data = request.form.get('data_pubblicazione')
-    if data > datetime.now().strftime('%Y-%m-%d'):
+    if data < datetime.now().strftime('%Y-%m-%d'):
         flash('La data inserita non è valida.')
         return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -414,7 +421,7 @@ def modifica_episodio():
     id_episodio = request.form.get('id_episodio')
     
     nuovo_titolo = request.form.get('titolo')
-    if dao.titolo_episodio_valido(nuovo_titolo, id_podcast, id_episodio):
+    if not dao.titolo_episodio_valido(nuovo_titolo, id_podcast, id_episodio):
         flash('Hai già un episodio con quel titolo.')
         return redirect(url_for('podcast', id_podcast=id_podcast))
 
@@ -432,7 +439,7 @@ def modifica_episodio():
         nuovo_audio.save('static/' + nome_file)
 
     nuova_data = request.form.get('data_pubblicazione')
-    if nuova_data > datetime.now().strftime('%Y-%m-%d'):
+    if nuova_data < datetime.now().strftime('%Y-%m-%d'):
         flash('La data inserita non è valida.')
         return redirect(url_for('podcast', id_podcast=id_podcast))
 

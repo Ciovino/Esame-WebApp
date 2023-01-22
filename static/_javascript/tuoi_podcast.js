@@ -76,6 +76,11 @@ avvia_ricerca.addEventListener("click", (event) => {
         icona_ricerca.classList.add("non-visibile");
     }
 
+    if (!lista_podcast || lista_podcast.length == 0) {
+        // Inutile fare una ricerca se non ci sono podcast
+        return;
+    }
+
     let eliminati = calcola_eliminati(lista_podcast);
 
     for (let i = 0; i < lista_podcast.length; i++) {

@@ -262,20 +262,20 @@
 
                 <div class="col-3 d-flex justify-content-center">
                     <div class="btn-group" role="group" aria-label="modifica commento">
-                        <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modifica_episodio">
+                        <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modifica_episodio_privato">
                             <h6 class="m-0">Modifica</h6>
                         </a>
                         <a type="button" class="btn"
                             href="{{ url_for('episodio', id_podcast=podcast.id_podcast, id_episodio=episodi_privati[idx].id_episodio) }}">
                             <h6 class="m-0">Ascolta</h6>
                         </a>
-                        <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#elimina_episodio">
+                        <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#elimina_episodio_privato">
                             <h6 class="m-0">Elimina</h6>
                         </a>
                     </div>
 
-                    <div class="modal fade" id="modifica_episodio" tabindex="-1" aria-labelledby="modale-modifica"
-                        aria-hidden="true">
+                    <div class="modal fade" id="modifica_episodio_privato" tabindex="-1"
+                        aria-labelledby="modale-modifica" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content decorazione-modal">
                                 <form action="/modifica_episodio" method="POST" enctype="multipart/form-data">
@@ -318,7 +318,7 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="elimina_episodio" tabindex="-2" aria-labelledby="modale-elimina"
+                    <div class="modal fade" id="elimina_episodio_privato" tabindex="-2" aria-labelledby="modale-elimina"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content decorazione-modal">
@@ -432,7 +432,8 @@
                     <div class="modal-body">
                         <div class="row d-flex align-items-center mb-2">
                             <labal for="titolo" class="col-3">Titolo:</labal>
-                            <input name="titolo" class="form-control col" type="text" autocomplete="off" required>
+                            <input name="titolo" class="form-control col" type="text" autocomplete="off" required
+                                minlength="2" maxlength="25">
                         </div>
                         <div class="row d-flex align-items-start mb-2">
                             <labal for="descrizione" class=" col-3 mt-2">Descrizione:</labal>
