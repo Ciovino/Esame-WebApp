@@ -1,97 +1,75 @@
 "use strict;";
 
-const calcola_eliminati = function (podcast) {
-    let eliminati = 0;
-    for (let i = 0; i < podcast.length; i++) {
-        if (podcast[i].classList.contains("non-visibile")) {
-            eliminati++;
-        }
+let input = document.querySelector("#input-tuoi-podcast"); // Campo input per la ricerca
+const avvia_ricerca = document.querySelector("#cerca-podcast"); // Bottone per iniziare la ricerca
+
+// Dopo una ricera, se l'input cambia viene ri-visualizzata la lente di ingrandimento, per effettuare una nuova ricerca
+input.addEventListener("input", (event) => {
+    event.preventDefault();
+
+    let icona_ricerca = document.querySelector("#search-icon"); // Icona con la lente di ingrandimento
+    let icona_reset = document.querySelector("#cancel-icon"); // Icona con una X
+
+    if (!icona_reset.classList.contains("non-visibile")) {
+        icona_reset.classList.add("non-visibile");
+        icona_ricerca.classList.remove("non-visibile");
     }
-    return eliminati;
-};
-
-const reset_ricerca = function (
-    icona_ricerca,
-    icona_reset,
-    input,
-    podcast,
-    nessun_risultato,
-    posizione_originale,
-    destinazione,
-    nuovo_podcast,
-    go_back_link
-) {
-    input.value = "";
-    icona_reset.classList.add("non-visibile");
-    icona_ricerca.classList.remove("non-visibile");
-
-    for (let i = 0; i < podcast.length; i++) {
-        podcast[i].classList.remove("non-visibile");
-    }
-
-    if (!nessun_risultato.classList.contains("non-visibile")) {
-        nessun_risultato.classList.add("non-visibile");
-
-        destinazione.removeChild(nuovo_podcast);
-        posizione_originale.appendChild(nuovo_podcast);
-    }
-};
-
-let input = document.querySelector("#input-tuoi-podcast");
-const avvia_ricerca = document.querySelector("#cerca-podcast");
-let lista_podcast = document.querySelectorAll(".tutti-podcast");
-let nessun_risultato = document.querySelector("#nessun-risultato");
-
-let posizione_originale = document.querySelector(".immagini-podcast");
-let nuovo_podcast = document.querySelector("#card-nuovo-podcast");
-let go_back_link = document.querySelector("#go-back");
-let destinazione = document.querySelector("main");
+});
 
 avvia_ricerca.addEventListener("click", (event) => {
     event.preventDefault();
 
-    let icona_ricerca = document.querySelector("#search-icon");
-    let icona_reset = document.querySelector("#cancel-icon");
+    // Nodi da usare
+    let lista_podcast = document.querySelectorAll(".tutti-podcast"); // Lista di tutti i podcast
+    let nessun_risultato = document.querySelector("#nessun-risultato"); // Messaggio da visualizzare se la ricerca non ha trovato nulla
+    let icona_ricerca = document.querySelector("#search-icon"); // Icona con la lente di ingrandimento
+    let icona_reset = document.querySelector("#cancel-icon"); // Icona con una X
 
     let richiesta = input.value.toLowerCase();
 
     // Dopo una ricerca appare una X al posto della lente di ingrandimento
     // L'input viene prima liberato prima di iniziare una nuova ricerca
     let reset =
-        !icona_reset.classList.contains("non-visibile") || richiesta == "";
+        !icona_reset.classList.contains("non-visibile") || // Se c'è una X
+        richiesta == "" || // Se c'è scritto qualcosa nell'input
+        lista_podcast.length == 0; // Se ci sono dei podcast tra cui effettuare la ricerca
 
     if (reset) {
-        return reset_ricerca(
-            icona_ricerca,
-            icona_reset,
-            input,
-            lista_podcast,
-            nessun_risultato,
-            posizione_originale,
-            destinazione,
-            nuovo_podcast
-        );
+        input.value = ""; // Cancella
+
+        // Ripristina la lente di ingrandimento
+        icona_reset.classList.add("non-visibile");
+        icona_ricerca.classList.remove("non-visibile");
+
+        nessun_risultato.classList.add("non-visibile");
+
+        // Ripristina i podcast
+        for (let i = 0; i < lista_podcast.length; i++) {
+            lista_podcast[i].classList.remove("non-visibile");
+        }
+
+        return;
     } else {
+        // Scambia la lente di ingrandimento con la X
         icona_reset.classList.remove("non-visibile");
         icona_ricerca.classList.add("non-visibile");
     }
 
-    if (!lista_podcast || lista_podcast.length == 0) {
-        // Inutile fare una ricerca se non ci sono podcast
-        return;
-    }
-
+    // Calcola quanti podcast sono stati nascosti con la precedente ricerca
     let eliminati = calcola_eliminati(lista_podcast);
 
     for (let i = 0; i < lista_podcast.length; i++) {
+        // Nodi
         let titolo = lista_podcast[i].getElementsByClassName("card-title")[0];
         let descrizione =
             lista_podcast[i].getElementsByClassName("card-text")[0];
 
+        // Stringhe
         let testo_titolo = titolo.textContent || titolo.innerHTML;
         let testo_descrizione =
             descrizione.textContent || descrizione.innerHTML;
 
+        // Booleani
         let in_titolo = testo_titolo.toLowerCase().indexOf(richiesta) > -1;
         let in_descrizione =
             testo_descrizione.toLowerCase().indexOf(richiesta) > -1;
@@ -103,7 +81,7 @@ avvia_ricerca.addEventListener("click", (event) => {
                 eliminati--;
             }
         } else {
-            if (!reset && !in_titolo && !in_descrizione) {
+            if (!in_titolo && !in_descrizione) {
                 lista_podcast[i].classList.add("non-visibile");
                 eliminati++;
             }
@@ -111,11 +89,18 @@ avvia_ricerca.addEventListener("click", (event) => {
     }
 
     if (eliminati == lista_podcast.length) {
-        destinazione.insertBefore(nuovo_podcast, go_back_link);
         nessun_risultato.classList.remove("non-visibile");
     } else {
-        destinazione.removeChild(nuovo_podcast);
-        posizione_originale.appendChild(nuovo_podcast);
         nessun_risultato.classList.add("non-visibile");
     }
 });
+
+const calcola_eliminati = function (podcast) {
+    let eliminati = 0;
+    for (let i = 0; i < podcast.length; i++) {
+        if (podcast[i].classList.contains("non-visibile")) {
+            eliminati++;
+        }
+    }
+    return eliminati;
+};

@@ -66,7 +66,7 @@
     </div>
 </div>
 
-<div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
+<section class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
     {% if num_podcast != 0 %}
     {% for podcast in tutti_podcast %}
     <div class="card tutti-podcast">
@@ -84,7 +84,8 @@
     </div>
     {% endfor %}
     {% endif %}
-    <h2 id="nessun-risultato" class="text-center m-0 mt-3 mb-2 non-visibile">La ricerca non ha dato risultati.</h2>
+    <h2 id="nessun-risultato" class="text-center m-0 mt-3 mb-2 w-100 non-visibile">La ricerca non ha dato risultati.
+    </h2>
 
     <div id="card-nuovo-podcast" class="card d-flex align-items-center justify-content-end">
         <a type="button" data-bs-toggle="modal" data-bs-target="#nuovo-podcast">
@@ -143,7 +144,7 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <div id="go-back" class="m-0 mt-4 d-flex justify-content-around">
     <a href="{{ url_for('homepage') }}" class="main-link">

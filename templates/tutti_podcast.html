@@ -68,7 +68,7 @@
 </div>
 
 
-<div id="tutti-podcast" class="row m-0">
+<section id="tutti-podcast" class="row m-0">
     <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
         {% for podcast in tutti_podcast %}
         <div class="card tutti-podcast">
@@ -78,8 +78,8 @@
             <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
                 <div class="card-img-overlay p-0">
                     <div class="card-body">
-                        <p class="card-title m-0">{{ podcast.titolo }}</p>
-                        <p class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</p>
+                        <h4 class="card-title m-0">{{ podcast.titolo }}</h4>
+                        <h6 class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</h6>
                         <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
         {% endfor %}
         <h2 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h2>
     </div>
-</div>
+</section>
 
 <div class="m-0 mt-4 d-flex justify-content-around">
     <a href="{{ url_for('homepage') }}" class="main-link">

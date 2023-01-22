@@ -35,7 +35,7 @@ div#main {
     padding-top: 1rem;
 }
 
-main {
+#contenuto-principale {
     max-height: 92vh;
 
     overflow: hidden scroll;
@@ -105,8 +105,8 @@ a.footer-link {
     border-top: 3px solid var(--pewter-blue);
 }
 
-div#footer {
-    border-top: 3px solid var(--oxford-blue);
+footer {
+    border-top: 3px solid var(--oxford-blue) !important;
     color: var(--prussian-blue);
     margin-top: auto;
 }

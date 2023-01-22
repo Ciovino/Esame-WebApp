@@ -50,20 +50,20 @@
 
 {% block contenuto_principale %}
 <!-- Podcast più seguiti -->
-<div id="podcast-recenti" class="top-border row m-0">
+<section id="podcast-recenti" class="top-border row m-0">
     <h3 class="row m-0 frase-titolo">I podcast più seguiti</h3>
 
     <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
         {% for podcast in piu_seguiti %}
-        <div class="card d-flexjustify-content-center">
+        <div class="card">
             <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
                 alt="{{ podcast.titolo }}">
 
             <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
                 <div class="card-img-overlay p-0">
                     <div class="card-body">
-                        <p class="card-title m-0">{{ podcast.titolo }}</p>
-                        <p class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</p>
+                        <h4 class="card-title m-0">{{ podcast.titolo }}</h4>
+                        <h6 class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</h6>
                         <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
                     </div>
                 </div>
@@ -71,10 +71,10 @@
         </div>
         {% endfor %}
     </div>
-</div>
+</section>
 
 <!-- Tutti i podcast -->
-<div id="tutti-podcast" class="top-border row m-0">
+<section id="tutti-podcast" class="top-border row m-0">
     <h3 class="row m-0 frase-titolo">Tutti i podcast</h3>
 
     <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
@@ -86,8 +86,8 @@
             <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
                 <div class="card-img-overlay p-0">
                     <div class="card-body">
-                        <p class="card-title m-0">{{ podcast.titolo }}</p>
-                        <p class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</p>
+                        <h4 class="card-title m-0">{{ podcast.titolo }}</h4>
+                        <h6 class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</h6>
                         <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
                     </div>
                 </div>
@@ -95,5 +95,5 @@
         </div>
         {% endfor %}
     </div>
-</div>
+</section>
 {% endblock %}

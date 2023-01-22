@@ -45,10 +45,8 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-
 <div class="row m-0 justify-content-evenly align-items-center top-border">
     <h2 class="col m-0 frase-titolo">Podcast di {{categoria}}</h2>
-    {% if num_podcast != 0 %}
     <div class="col-4 input-group w-auto">
         <input id="input-categoria" type="text" class="form-control" placeholder="Cerca tra i podcast"
             aria-label="cerca podcast" aria-describedby="cerca-podcast" value="" autocomplete="off">
@@ -57,11 +55,10 @@
             <i id="cancel-icon" class="fs-5 bi bi-x-lg non-visibile"></i>
         </button>
     </div>
-    {% endif %}
 </div>
 
 {% if num_podcast != 0 %}
-<div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-center">
+<section class="immagini-podcast d-flex flex-wrap justify-content-start align-items-center">
     {% for podcast in podcast_categoria %}
     <div class="card podcast-categoria">
         <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
@@ -70,8 +67,8 @@
         <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
             <div class="card-img-overlay p-0">
                 <div class="card-body">
-                    <p class="card-title m-0">{{ podcast.titolo }}</p>
-                    <p class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</p>
+                    <h4 class="card-title m-0">{{ podcast.titolo }}</h4>
+                    <h6 class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</h6>
                     <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
                 </div>
             </div>
@@ -79,7 +76,7 @@
     </div>
     {% endfor %}
     <h2 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h2>
-</div>
+</section>
 {% else %}
 <h3 class="m-0">Non ci sono podcast per questa categoria</h3>
 {% endif %}

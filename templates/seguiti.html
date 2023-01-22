@@ -67,7 +67,7 @@
 </div>
 
 {% if num_seguiti != 0 %}
-<div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
+<section class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
     {% for podcast in podcast_seguiti %}
     <div class="card tutti-podcast">
         <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
@@ -85,10 +85,10 @@
     </div>
     {% endfor %}
     <h2 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h2>
-</div>
-{% else %}
-<h3 class="m-0 mt-3 text-center">Non segui nessun podcast</h3>
-{% endif %}
+    {% else %}
+    <h3 class="m-0 mt-3 text-center">Non segui nessun podcast</h3>
+    {% endif %}
+</section>
 
 <div class="m-0 mt-4 d-flex justify-content-around">
     <a href="{{ url_for('homepage') }}" class="main-link">

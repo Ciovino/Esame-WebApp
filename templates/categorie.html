@@ -48,9 +48,8 @@
 
 {% block contenuto_principale %}
 {% for nome_categoria, sotto_categoria in tutte_categorie.items() %}
-<h2 class="top-border m-0 frase-titolo">{{nome_categoria}}</h2>
-
-<div id="macro-categoria">
+<section class="top-border">
+    <h2 class="m-0 frase-titolo">{{nome_categoria}}</h2>
     <div class="d-flex flex-wrap justify-content-start align-items-start">
         {% for categoria in sotto_categoria %}
         <div class="card">
@@ -59,13 +58,13 @@
             <a href="{{ url_for('singola_categoria', categoria=categoria )}}">
                 <div class="card-img-overlay p-0">
                     <div class="card-body">
-                        <p class="card-title">{{categoria}}</p>
+                        <h4 class="card-title">{{categoria}}</h4>
                     </div>
                 </div>
             </a>
         </div>
         {% endfor %}
     </div>
-</div>
+</section>
 {% endfor %}
 {% endblock %}

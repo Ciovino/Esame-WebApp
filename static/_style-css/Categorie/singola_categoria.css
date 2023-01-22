@@ -32,14 +32,6 @@ div.card {
     );
 }
 
-.card-title {
-    font-size: x-large;
-}
-
-.card-text {
-    overflow: hidden hidden;
-}
-
 button {
     color: var(--mint-cream) !important;
     border: 2px solid var(--mint-cream);

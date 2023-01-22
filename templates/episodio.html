@@ -47,7 +47,7 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-<div id="titolo" class="top-border">
+<section id="titolo" class="top-border">
     <div class="d-flex justify-content-evenly align-items-center">
         <img class="foto-podcast" src="{{ url_for('static', filename=podcast.immagine) }}">
         <div class="info-scritte d-flex flex-column align-items-start">
@@ -62,9 +62,9 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div id="player">
+<section id="player">
     <div class="row m-0 justify-content-center">
         <audio class="col-10" src="{{ url_for('static', filename=episodio.audio) }}" type="audio/mp3" controls></audio>
     </div>
@@ -87,14 +87,13 @@
             <h5 class="m-0 p-1">Episodio successivo</h5>
         </a>
         {% endif %}
-
     </div>
-</div>
+</section>
 
 {% if privato %} <!-- Se l'episodio è privato, non mostrare la sezione commenti -->
 <h2 class="top-border m-0 frase-titolo">Episodio privato</h2>
 {% else %}
-<div id="commenti" class="pt-3">
+<section id="commenti" class="pt-3">
     <h2 class="top-border m-0 frase-titolo">Commenti</h2>
 
     {% if num_commenti == 0%}
@@ -203,6 +202,6 @@
         <input type="number" name="id_podcast" value="{{podcast.id_podcast}}" hidden>
     </form>
     {% endif %}
-</div>
-{% endif %}
-{% endblock %}
+    </div>
+    {% endif %}
+    {% endblock %}

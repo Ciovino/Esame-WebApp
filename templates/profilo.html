@@ -24,7 +24,8 @@
         </h4>
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
         {% else %}
-        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
         </h4>
         <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
         {% endif %}
@@ -49,12 +50,12 @@
 {% endblock %}
 
 {% block contenuto_principale %}
-<div id="saluto" class="top-border">
+<section id="saluto" class="top-border">
     <div class="d-flex justify-content-evenly align-items-center">
         <img class="foto-profilo" src="{{ url_for('static', filename=current_user.get_immagine()) }}">
         <h1 class="m-0 saluto">Ciao <em>{{ current_user.get_username() }}</em></h1>
     </div>
-</div>
+</section>
 
 <h2 class="m-0 frase-titolo top-border">Dati personali</h2>
 

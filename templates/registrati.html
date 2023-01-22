@@ -9,8 +9,7 @@
 {% endblock %}
 
 {% block main %}
-<div id="nuovo-utente" class="row justify-content-center">
-
+<main id="nuovo-utente" class="row justify-content-center">
     <form action="/registrati" method="POST" enctype="multipart/form-data" class="decorazione-form col-4">
         <!-- Freccia per tornare alla home -->
         <h2 id="torna-homepage">
@@ -21,28 +20,28 @@
         <h1 class="text-center fst-italic mb-4 mt-3">Registrati</h1>
 
         <!-- Username (Univoco) -->
-        <div>
+        <div class="margine">
             <label for="username">Scegli il tuo username</label>
             <input required type="text" class="form-control" name="username" placeholder="Username" minlength="4"
                 maxlength="20" autocomplete="off">
         </div>
 
         <!-- Email -->
-        <div>
+        <div class="margine">
             <label for="email">Scrivi la tua email</label>
             <input required type="email" class="form-control" name="email" placeholder="email@esempio.com"
                 autocomplete="off">
         </div>
 
         <!-- Password -->
-        <div>
+        <div class="margine">
             <label for="name">Scegli una password</label>
             <input required type="password" class="form-control" name="password" placeholder="Password" minlength="8">
         </div>
 
         <div class="row justify-content-center m-0">
             <!-- Creatore -->
-            <div class="col-4 m-0">
+            <div class="col-4">
                 <label for="tipo_utente">Cosa vuoi fare?</label>
                 <select required name="tipo_utente" class="form-select">
                     <option selected>Ascoltare</option>
@@ -51,7 +50,7 @@
             </div>
 
             <!-- Immagine profilo -->
-            <div class="col-8 m-0">
+            <div class="col-8">
                 <label for="immagine_profilo">Scegli un'immagine profilo</label>
                 <input name="immagine_profilo" class="form-control" type="file" accept=".jpg,.jpeg,.png">
             </div>
@@ -59,7 +58,7 @@
 
         <div class="row justify-content-center align-items-center m-0 mt-3 mb-3">
             <!-- Link per andare al Login -->
-            <div id="login" class="col-7 m-0">
+            <div id="login" class="col-7">
                 <h6 class="text-center m-0">Ti sei già registrato?</h6>
                 <h6 class="text-center m-0">
                     Vai al <a href="{{ url_for('login') }}" title="Vai al Login" class="clean-link"> Login</a>
@@ -67,12 +66,12 @@
             </div>
 
             <!-- Bottone per registrarsi -->
-            <div id="registrati" class="col-5 m-0 d-flex justify-content-center">
+            <div class="col-5 d-flex justify-content-center">
                 <button type="submit" class="btn btn-lg">
                     Registrati
                 </button>
             </div>
         </div>
     </form>
-</div>
+</main>
 {% endblock %}
