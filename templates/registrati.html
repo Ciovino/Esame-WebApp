@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='_style-css/registrati.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - Registrati</title>
+{% endblock %}
+
+{% block main %}
+<main id="nuovo-utente" class="row justify-content-center">
+    <form action="/registrati" method="POST" enctype="multipart/form-data" class="decorazione-form col-4">
+        <!-- Freccia per tornare alla home -->
+        <h2 id="torna-homepage">
+            <a class="clean-link" title="Homepage" href="{{url_for('homepage')}}">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+        </h2>
+        <h1 class="text-center fst-italic mb-4 mt-3">Registrati</h1>
+
+        <!-- Username (Univoco) -->
+        <div class="margine">
+            <label for="username">Scegli il tuo username</label>
+            <input required type="text" class="form-control" name="username" placeholder="Username" minlength="4"
+                maxlength="20" autocomplete="off">
+        </div>
+
+        <!-- Email -->
+        <div class="margine">
+            <label for="email">Scrivi la tua email</label>
+            <input required type="email" class="form-control" name="email" placeholder="email@esempio.com"
+                autocomplete="off">
+        </div>
+
+        <!-- Password -->
+        <div class="margine">
+            <label for="name">Scegli una password</label>
+            <input required type="password" class="form-control" name="password" placeholder="Password" minlength="8">
+        </div>
+
+        <div class="row justify-content-center m-0">
+            <!-- Creatore -->
+            <div class="col-4">
+                <label for="tipo_utente">Cosa vuoi fare?</label>
+                <select required name="tipo_utente" class="form-select">
+                    <option selected>Ascoltare</option>
+                    <option>Creare</option>
+                </select>
+            </div>
+
+            <!-- Immagine profilo -->
+            <div class="col-8">
+                <label for="immagine_profilo">Scegli un'immagine profilo</label>
+                <input name="immagine_profilo" class="form-control" type="file" accept=".jpg,.jpeg,.png">
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center m-0 mt-3 mb-3">
+            <!-- Link per andare al Login -->
+            <div id="login" class="col-7">
+                <h6 class="text-center m-0">Ti sei già registrato?</h6>
+                <h6 class="text-center m-0">
+                    Vai al <a href="{{ url_for('login') }}" title="Vai al Login" class="clean-link"> Login</a>
+                </h6>
+            </div>
+
+            <!-- Bottone per registrarsi -->
+            <div class="col-5 d-flex justify-content-center">
+                <button type="submit" class="btn btn-lg">
+                    Registrati
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
+{% endblock %}

@@ -1,0 +1,497 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='_style-css/Podcast/podcast.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - {{ podcast.titolo }}</title>
+{% endblock %}
+
+{% block script %}
+<script defer src="{{ url_for('static', filename='_javascript/podcast.js') }}"></script>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2 class="frase-titolo">
+                <i class="bi bi-house"></i>
+                Podcast
+            </h2>
+        </a>
+
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+        {% else %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
+        {% endif %}
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2 class="frase-titolo">
+            <i class="bi bi-mic"></i>
+            Ricerca
+        </h2>
+
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
+        </h4>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('tutti_podcast') }}" title="Categorie">Tutti i podcast</a>
+        </h4>
+    </div>
+</aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+<section id="titolo" class="top-border">
+    <div class="d-flex justify-content-evenly align-items-center">
+        <img class="foto-podcast" src="{{ url_for('static', filename=podcast.immagine) }}">
+        <div class="info-scritte d-flex flex-column align-items-start">
+            <div class="titolo-autore">
+                <h1 class="m-0 col"><b>{{ podcast.titolo }}</b> - <em>{{ podcast.username }}</em>
+                </h1>
+            </div>
+            <div class="descrizione-episodio">
+                <h5 class="m-0 col">{{ podcast.descrizione }}</h5>
+            </div>
+
+            {% if seguito != -1 %}
+            <div class="segui">
+                <form action="/segui" method="POST" enctype="multipart/form-data">
+                    {% if seguito == 1 %}
+                    <!-- Podcast seguito -->
+                    <h6 class="m-0">
+                        <button type="submit" class="btn-segui">
+                            Non seguire più <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </h6>
+                    <input type="hidden" name="da_seguire" value="0">
+                    {% elif seguito == 0 %}
+                    <!-- Podcast non seguito -->
+                    <h6 class="m-0">
+                        <button type="submit" class="btn-segui">
+                            Segui <i class="bi bi-heart"></i>
+                        </button>
+                    </h6>
+                    <input type="hidden" name="da_seguire" value="1">
+                    {% endif %}
+                    <input type="hidden" name="id_podcast" value="{{ podcast.id_podcast }}">
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section id="lista-pubblica" class="lista-episodi top-border pt-3">
+    <div class="row m-0 justify-content-evenly align-items-center">
+        <div class="col-3">
+            <h3 class="text-center">Lista episodi</h3>
+        </div>
+        <div class="col-3 input-group w-auto">
+            <input id="input-episodi" type="text" class="form-control" placeholder="Cerca tra gli episodi"
+                aria-label="cerca episodio" aria-describedby="cerca-episodi" value="">
+            <button class="btn-search" type="button" id="cerca-episodi">
+                <i id="search-icon" class="fs-5 bi bi-search"></i>
+                <i id="cancel-icon" class="fs-5 bi bi-x-lg non-visibile"></i>
+            </button>
+        </div>
+    </div>
+
+    {% if num_episodi_pubblici != 0 %}
+    {% for idx in range(num_episodi_pubblici) %}
+    <div id="episodio-pubblico" class="episodio row justify-content-center">
+        <div class="sfondo col-11">
+            <div class="titolo-episodio row m-0 justify-content-end">
+                <!-- Numero episodio - Titolo - Data -->
+                <div class="col-1 ">
+                    <h4 class="m-0 text-center">{{ idx + 1 }}</h4>
+                </div>
+                <div class="col-8">
+                    <h4 class="m-0 titolo-episodio">{{ episodi_pubblici[idx].titolo }}</h4>
+                </div>
+                <div class="col-3">
+                    <h4 class="m-0">{{ episodi_pubblici[idx].data }}</h4>
+                </div>
+            </div>
+
+            <div class="titolo-episodio row m-0 justify-content-center align-items-start">
+                <!-- Descrizione - Modifica - Ascolta - Cancella -->
+                <div class="col-8 d-flex align-items-center">
+                    <p class="m-0 ps-2 descrizione-episodio">{{ episodi_pubblici[idx].descrizione }}</p>
+                </div>
+                <div class="col-3 d-flex justify-content-center">
+                    {% if current_user.is_authenticated %}
+                    {% if (current_user.get_id() == podcast.id_utente) %}
+                    <div class="col-2 d-flex justify-content-center">
+                        <div class="btn-group" role="group" aria-label="modifica commento">
+                            <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modifica_episodio">
+                                <h6 class="m-0">Modifica</h6>
+                            </a>
+                            <a type="button" class="btn"
+                                href="{{ url_for('episodio', id_podcast=podcast.id_podcast, id_episodio=episodi_pubblici[idx].id_episodio) }}">
+                                <h6 class="m-0">Ascolta</h6>
+                            </a>
+                            <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#elimina_episodio">
+                                <h6 class="m-0">Elimina</h6>
+                            </a>
+                        </div>
+
+                        <div class="modal fade" id="modifica_episodio" tabindex="-1" aria-labelledby="modale-modifica"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content decorazione-modal">
+                                    <form action="/modifica_episodio" method="POST" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h3 class="text-center">Modifica l'episodio</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row d-flex align-items-start mb-2">
+                                                <labal for="titolo" class="col-3 mt-2">Titolo:</labal>
+                                                <input type="text" name="titolo" class="form-control col" minlength="2"
+                                                    maxlength="25" value="{{ episodi_pubblici[idx].titolo }}"></input>
+                                            </div>
+                                            <div class="row d-flex align-items-start mb-2">
+                                                <labal for="descrizione" class="col-3 mt-2">Descrizione:</labal>
+                                                <input type="text" name="descrizione" class="form-control col"
+                                                    minlength="10" maxlength="200"
+                                                    value="{{ episodi_pubblici[idx].descrizione }}"></input>
+                                            </div>
+                                            <div class="row d-flex align-items-start mb-2">
+                                                <labal for="audio" class="col-3 mt-2">File audio:</labal>
+                                                <input name="audio" class="form-control col" type="file" accept=".mp3">
+                                            </div>
+                                            <div class="row d-flex align-items-start">
+                                                <labal for="data_pubblicazione" class="col-3 mt-2">Data:</labal>
+                                                <input type="date" name="data_pubblicazione" class="form-control col"
+                                                    min="{{ data_oggi }}" value="{{ data_oggi }}">
+                                            </div>
+
+                                            <input type="hidden" name="id_episodio"
+                                                value="{{episodi_pubblici[idx].id_episodio}}">
+                                            <input type="hidden" name="id_podcast" value="{{podcast.id_podcast}}">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="me-3 btn-modal ps-3 pe-3" type="submit">
+                                                <h5 class="m-0">Modifica</h5>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="elimina_episodio" tabindex="-2" aria-labelledby="modale-elimina"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content decorazione-modal">
+                                    <div class="modal-header d-flex justify-content-center">
+                                        <h5 class="m-0">Sei sicuro di voler cancellare l'episodio?</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row justify-content-center align-items-start">
+                                            <form action="/elimina_episodio" method="POST" enctype="multipart/form-data"
+                                                class="col-4 d-flex justify-content-center">
+                                                <input type="number" name="id_episodio"
+                                                    value="{{episodi_pubblici[idx].id_episodio}}" hidden>
+                                                <input type="number" name="id_podcast" value="{{podcast.id_podcast}}"
+                                                    hidden>
+
+                                                <button class="btn-modal ps-3 pe-3" type="submit">
+                                                    <h5 class="m-0">Si</h5>
+                                                </button>
+                                            </form>
+                                            <div class="col-4 d-flex justify-content-center">
+                                                <button class="btn-modal ps-3 pe-3" data-bs-dismiss="modal">
+                                                    <h5 class="m-0 text-center">No</h5>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('episodio', id_podcast=podcast.id_podcast, id_episodio=episodi_pubblici[idx].id_episodio) }}"
+                        class="btn" tabindex="-1" role="button">Ascolta</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <h3 id="nessun-risultato" class="text-center m-0 mt-3 non-visibile">La ricerca non ha dato risultati</h3>
+    {% else %}
+    <h2 class="text-center">Non ci sono ancora episodi per questo podcast.</h2>
+    {% endif %}
+</section>
+
+<section id="lista-privata" class="lista-episodi top-border mt-3 pt-2">
+    {% if current_user.is_authenticated and (current_user.get_id()==podcast.id_utente) %}
+    {% if num_episodi_privati != 0 %}
+    <h3 class="text-center">Episodi non ancora pubblicati</h3>
+    {% for idx in range(num_episodi_privati) %}
+    <div class="episodio row justify-content-center">
+        <div class="sfondo col-11">
+            <div class="titolo-episodio row m-0 justify-content-end">
+                <!-- Numero episodio - Titolo - Data -->
+                <div class="col-1">
+                    <h4 class="m-0 text-center">{{ idx + 1 + num_episodi_pubblici }}</h4>
+                </div>
+                <div class="col-8">
+                    <h4 class="m-0">{{ episodi_privati[idx].titolo }}</h4>
+                </div>
+                <div class="col-3">
+                    <h4 class="m-0">{{ episodi_privati[idx].data }}</h4>
+                </div>
+            </div>
+
+            <div class="titolo-episodio row m-0 justify-content-center">
+                <!-- Descrizione - Modifica - Cancella -->
+                <div class="col-8 d-flex align-items-center">
+                    <p class="m-0 ps-2">{{ episodi_privati[idx].descrizione }}</p>
+                </div>
+
+                <div class="col-3 d-flex justify-content-center">
+                    <div class="btn-group" role="group" aria-label="modifica commento">
+                        <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modifica_episodio_privato">
+                            <h6 class="m-0">Modifica</h6>
+                        </a>
+                        <a type="button" class="btn"
+                            href="{{ url_for('episodio', id_podcast=podcast.id_podcast, id_episodio=episodi_privati[idx].id_episodio) }}">
+                            <h6 class="m-0">Ascolta</h6>
+                        </a>
+                        <a type="button" class="btn" data-bs-toggle="modal" data-bs-target="#elimina_episodio_privato">
+                            <h6 class="m-0">Elimina</h6>
+                        </a>
+                    </div>
+
+                    <div class="modal fade" id="modifica_episodio_privato" tabindex="-1"
+                        aria-labelledby="modale-modifica" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content decorazione-modal">
+                                <form action="/modifica_episodio" method="POST" enctype="multipart/form-data">
+                                    <div class="modal-header">
+                                        <h3 class="text-center">Modifica l'episodio</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row d-flex align-items-start mb-2">
+                                            <labal for="titolo" class="col-3 mt-2">Titolo:</labal>
+                                            <input type="text" name="titolo" class="form-control col" minlength="2"
+                                                maxlength="25" value="{{ episodi_privati[idx].titolo }}"></input>
+                                        </div>
+                                        <div class="row d-flex align-items-start mb-2">
+                                            <labal for="descrizione" class="col-3 mt-2">Descrizione:</labal>
+                                            <input type="text" name="descrizione" class="form-control col"
+                                                minlength="10" maxlength="200"
+                                                value="{{ episodi_privati[idx].descrizione }}"></input>
+                                        </div>
+                                        <div class="row d-flex align-items-start mb-2">
+                                            <labal for="audio" class="col-3 mt-2">File audio:</labal>
+                                            <input name="audio" class="form-control col" type="file" accept=".mp3">
+                                        </div>
+                                        <div class="row d-flex align-items-start">
+                                            <labal for="data_pubblicazione" class="col-3 mt-2">Data:</labal>
+                                            <input type="date" name="data_pubblicazione" class="form-control col"
+                                                min="{{ data_oggi }}" value="{{ data_oggi }}">
+                                        </div>
+
+                                        <input type="hidden" name="id_episodio"
+                                            value="{{episodi_privati[idx].id_episodio}}">
+                                        <input type="hidden" name="id_podcast" value="{{podcast.id_podcast}}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="me-3 btn-modal ps-3 pe-3" type="submit">
+                                            <h5 class="m-0">Modifica</h5>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="elimina_episodio_privato" tabindex="-2" aria-labelledby="modale-elimina"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content decorazione-modal">
+                                <div class="modal-header d-flex justify-content-center">
+                                    <h5 class="m-0">Sei sicuro di voler cancellare l'episodio?</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row justify-content-center align-items-start">
+                                        <form action="/elimina_episodio" method="POST" enctype="multipart/form-data"
+                                            class="col-4 d-flex justify-content-center">
+                                            <input type="number" name="id_episodio"
+                                                value="{{episodi_privati[idx].id_episodio}}" hidden>
+                                            <input type="number" name="id_podcast" value="{{podcast.id_podcast}}"
+                                                hidden>
+
+                                            <button class="btn-modal ps-3 pe-3" type="submit">
+                                                <h5 class="m-0">Si</h5>
+                                            </button>
+                                        </form>
+                                        <div class="col-4 d-flex justify-content-center">
+                                            <button class="btn-modal ps-3 pe-3" data-bs-dismiss="modal">
+                                                <h5 class="m-0 text-center">No</h5>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="mt-4 d-flex justify-content-evenly">
+
+        <a type="button" class="p-2 main-link" data-bs-toggle="modal" data-bs-target="#modifica_podcast">
+            <h5 class="m-0">Modifica il podcast</h5>
+        </a>
+        <a type="button" class="p-2 main-link" data-bs-toggle="modal" data-bs-target="#nuovo-episodio">
+            <h5 class="m-0">Aggiungi un nuovo episodio</h5>
+        </a>
+        <a type="button" class="p-2 main-link" data-bs-toggle="modal" data-bs-target="#elimina_podcast">
+            <h5 class="m-0">Cancella il podcast</h5>
+        </a>
+
+        <div class="modal fade" id="modifica_podcast" tabindex="-1" aria-labelledby="modale-modifica"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content decorazione-modal">
+                    <form action="/modifica_podcast" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h3 class="text-center">Modifica il podcast</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row d-flex align-items-start mb-2">
+                                <labal for="titolo" class="col-3 mt-2">Titolo:</labal>
+                                <input type="text" name="titolo" class="form-control col" required minlength="2"
+                                    maxlength="25" value="{{ podcast.titolo }}"></input>
+                            </div>
+                            <div class="row d-flex align-items-start mb-2">
+                                <labal for="descrizione" class="col-3 mt-2">Descrizione:</labal>
+                                <input type="text" name="descrizione" class="form-control col" required minlength="10"
+                                    maxlength="140" value="{{ podcast.descrizione }}"></input>
+                            </div>
+                            <div class="row d-flex align-items-start mb-2">
+                                <labal for="immagine" class="col-3 mt-2">Immagine:</labal>
+                                <input name="immagine" class="form-control col" type="file" accept=".jpg,.jpeg,.png">
+                            </div>
+                            <div class="row d-flex align-items-start">
+                                <labal for="categoria" class="col-3 mt-2">Categoria:</labal>
+                                <select name="categoria" class="form-control col" multiple required size="4">
+                                    {% for nome_categoria, sotto_categorie in tutte_categorie.items() %}
+                                    <optgroup label="{{nome_categoria}}">
+                                        {% for categoria in sotto_categorie %}
+                                        {% if podcast.categoria.find(categoria) > -1 %}
+                                        <!-- Vecchia categoria, già selezionata -->
+                                        <option value="{{categoria}}" selected>{{categoria}}</option>
+                                        {% else %}
+                                        <!-- Categorie non selezionate -->
+                                        <option value="{{categoria}}">{{categoria}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </optgroup>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <input type="hidden" name="id_podcast" value="{{podcast.id_podcast}}">
+                        </div>
+                        <div class="modal-footer">
+                            <button class="me-3 btn-modal ps-3 pe-3" type="submit">
+                                <h5 class="m-0">Modifica</h5>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="nuovo-episodio" tabindex="-1" aria-labelledby="modale-nuovo-episodio"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content decorazione-modal">
+                    <form action="/nuovo-episodio" method="POST" enctype="multipart/form-data">
+                        <div class=" modal-header">
+                            <h4 class="text-center">Carica un nuovo episodio</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row d-flex align-items-center mb-2">
+                                <labal for="titolo" class="col-3">Titolo:</labal>
+                                <input name="titolo" class="form-control col" type="text" autocomplete="off" required
+                                    minlength="2" maxlength="25">
+                            </div>
+                            <div class="row d-flex align-items-start mb-2">
+                                <labal for="descrizione" class=" col-3 mt-2">Descrizione:</labal>
+                                <textarea name="descrizione" class="form-control col" rows="3" required minlength="10"
+                                    maxlength="200" autocomplete="off"></textarea>
+                            </div>
+                            <div class="row d-flex align-items-start mb-2">
+                                <labal for="audio" class="col-3 mt-2">File audio:</labal>
+                                <input name="audio" class="form-control col" type="file" accept=".mp3,.wav,.wma"
+                                    required>
+                            </div>
+                            <div class="row d-flex align-items-start">
+                                <labal for="data_pubblicazione" class="col-3 mt-2">Data:</labal>
+                                <input type="date" name="data_pubblicazione" class="form-control col" required
+                                    min="{{ data_oggi }}" value="{{ data_oggi }}">
+                            </div>
+
+                            <input type="hidden" name="id_podcast" value="{{ podcast.id_podcast }}" />
+                        </div>
+                        <div class="modal-footer">
+                            <button class="me-3 ps-3 pe-3" type="submit">
+                                <h5 class="m-0">Crea</h5>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="elimina_podcast" tabindex="-2" aria-labelledby="modale-elimina" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content decorazione-modal">
+                    <div class="modal-header d-flex justify-content-center">
+                        <h5 class="m-0">Sei sicuro di voler cancellare il podcast?</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row justify-content-center align-items-start">
+                            <form action="/elimina_podcast" method="POST" enctype="multipart/form-data"
+                                class="col-4 d-flex justify-content-center">
+                                <input type="hidden" name="id_podcast" value="{{ podcast.id_podcast }}" />
+
+                                <button class="btn-modal ps-3 pe-3" type="submit">
+                                    <h5 class="m-0">Si</h5>
+                                </button>
+                            </form>
+                            <div class="col-4 d-flex justify-content-center">
+                                <button class="btn-modal ps-3 pe-3" data-bs-dismiss="modal">
+                                    <h5 class="m-0 text-center">No</h5>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

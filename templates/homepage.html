@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='_style-css/homepage.css') }}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast</title>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2 class="frase-titolo">
+                <i class="bi bi-house-fill"></i>
+                Podcast
+            </h2>
+        </a>
+
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+        {% else %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
+        {% endif %}
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2 class="frase-titolo">
+            <i class="bi bi-mic"></i>
+            Ricerca
+        </h2>
+
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
+        </h4>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('tutti_podcast') }}" title="Categorie">Tutti i podcast</a>
+        </h4>
+    </div>
+</aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+<!-- Podcast più seguiti -->
+<section id="podcast-recenti" class="top-border row m-0">
+    <h3 class="row m-0 frase-titolo">I podcast più seguiti</h3>
+
+    <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
+        {% for podcast in piu_seguiti %}
+        <div class="card">
+            <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
+                alt="{{ podcast.titolo }}">
+
+            <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
+                <div class="card-img-overlay p-0">
+                    <div class="card-body">
+                        <h4 class="card-title m-0">{{ podcast.titolo }}</h4>
+                        <h6 class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</h6>
+                        <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Tutti i podcast -->
+<section id="tutti-podcast" class="top-border row m-0">
+    <h3 class="row m-0 frase-titolo">Tutti i podcast</h3>
+
+    <div class="immagini-podcast d-flex flex-wrap justify-content-start align-items-start">
+        {% for podcast in tutti_podcast %}
+        <div class="card">
+            <img src="{{url_for('static', filename=podcast.immagine)}}" class="immagine-podcast card-img"
+                alt="{{ podcast.titolo }}">
+
+            <a href="{{ url_for('podcast', id_podcast=podcast.id_podcast) }}">
+                <div class="card-img-overlay p-0">
+                    <div class="card-body">
+                        <h4 class="card-title m-0">{{ podcast.titolo }}</h4>
+                        <h6 class="card-subtitle mb-1 fst-italic">{{ podcast.username }}</h6>
+                        <p class="card-text text-wrap">{{ podcast.descrizione }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='_style-css/Categorie/categorie.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - Categorie</title>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2 class="frase-titolo">
+                <i class="bi bi-house"></i>
+                Podcast
+            </h2>
+        </a>
+
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a></h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+        {% else %}
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
+        {% endif %}
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2 class="frase-titolo">
+            <i class="bi bi-mic-fill"></i>
+            Ricerca
+        </h2>
+
+        <h4 class="ps-2 mb-3">
+            <a class="home-link active" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
+        </h4>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('tutti_podcast') }}" title="Categorie">Tutti i podcast</a>
+        </h4>
+    </div>
+</aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+{% for nome_categoria, sotto_categoria in tutte_categorie.items() %}
+<section class="top-border">
+    <h2 class="m-0 frase-titolo">{{nome_categoria}}</h2>
+    <div class="d-flex flex-wrap justify-content-start align-items-start">
+        {% for categoria in sotto_categoria %}
+        <div class="card">
+            <img src="{{url_for('static', filename='Server/Categorie/' + categoria + '.jpg')}}"
+                class="immagine-podcast card-img" alt="{{categoria}}">
+            <a href="{{ url_for('singola_categoria', categoria=categoria )}}">
+                <div class="card-img-overlay p-0">
+                    <div class="card-body">
+                        <h4 class="card-title">{{categoria}}</h4>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

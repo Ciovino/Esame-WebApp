@@ -1,0 +1,46 @@
+main#nuovo-utente {
+    margin: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+}
+
+h2#torna-homepage {
+    position: absolute;
+    margin-top: 1.5rem;
+    margin-left: 2rem;
+}
+
+form div.margine {
+    margin: 1.5rem;
+}
+
+form.decorazione-form {
+    color: var(--oxford-blue);
+
+    border: 3px solid var(--prussian-blue);
+    border-radius: 15px;
+
+    background-color: rgba(238, 244, 237, 0.6);
+}
+
+label {
+    padding-left: 5px;
+}
+
+a.clean-link {
+    color: var(--prussian-blue);
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+a.clean-link:hover {
+    color: var(--mint-cream);
+}
+
+button[type="submit"] {
+    color: var(--mint-cream) !important;
+    background-color: var(--indigo-dye) !important;
+}

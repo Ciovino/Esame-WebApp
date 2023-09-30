@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='_style-css/login.css')}}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - Login</title>
+{% endblock %}
+
+{% block main %}
+<main id="login-utente" class="row justify-content-center">
+    <form action="/login" method="POST" enctype="multipart/form-data" class="decorazione-form col-3">
+        <!-- Homepage -->
+        <h2 id="torna-homepage">
+            <a class="clean-link" title="Homepage" href="{{url_for('homepage')}}">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+        </h2>
+        <h1 class="text-center fst-italic mb-4 mt-3">Login</h1>
+
+        <!-- Username -->
+        <div class="margine">
+            <label for="username">Scrivi il tuo username</label>
+            <input required type="text" class="form-control" name="username" placeholder="Username" minlength="4"
+                maxlength="20" autocomplete="off">
+        </div>
+
+        <!-- Password -->
+        <div class="margine">
+            <label for="name">Scrivi la tua password</label>
+            <input required type="password" class="form-control" name="password" placeholder="Password" minlength="8">
+        </div>
+
+        <div class="row justify-content-center align-items-center m-0 mt-3 mb-3">
+            <!-- Link per andare alla Registrazione -->
+            <div id="login" class="col-7">
+                <h6 class="text-center m-0">Non sei già registrato?</h6>
+                <h6 class="text-center m-0">
+                    <a href="{{ url_for('registrati') }}" title="Vai al Login" class="clean-link">Registrati qui.</a>
+                </h6>
+            </div>
+
+            <!-- Bottone per il login -->
+            <div id="registrati" class="col-5 d-flex justify-content-center">
+                <button type="submit" class="btn btn-lg">
+                    Login
+                </button>
+            </div>
+        </div>
+    </form>
+</main>
+{% endblock %}

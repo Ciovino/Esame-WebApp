@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='_style-css/Privato/profilo.css') }}">
+{% endblock %}
+
+{% block titolo %}
+<title>Podcast - Profilo</title>
+{% endblock %}
+
+{% block barra_laterale %}
+<header id="navbar-laterale" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <a class="clean-link p-0" href="{{ url_for('homepage') }}" title="Homepage">
+            <h2 class="frase-titolo">
+                <i class="bi bi-house"></i>
+                Podcast
+            </h2>
+        </a>
+
+        {% if current_user.is_authenticated %}
+        <h4 class="ps-2 mb-3">
+            <a class="home-link active" href="{{ url_for('profilo') }}" title="Profilo">Profilo</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('logout') }}" title="Logout">Logout</a></h4>
+        {% else %}
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('registrati') }}" title="Registrati">Registrati</a>
+        </h4>
+        <h4 class="ps-2 mb-3"><a class="home-link" href="{{ url_for('login') }}" title="Login">Login</a></h4>
+        {% endif %}
+    </div>
+</header>
+
+<aside id="barra-ricerca" class="navbar top-border">
+    <div class="container-fluid d-flex flex-column align-items-start">
+        <h2 class="frase-titolo">
+            <i class="bi bi-mic"></i>
+            Ricerca
+        </h2>
+
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('categorie') }}" title="Categorie">Categorie</a>
+        </h4>
+        <h4 class="ps-2 mb-3">
+            <a class="home-link" href="{{ url_for('tutti_podcast') }}" title="Categorie">Tutti i podcast</a>
+        </h4>
+    </div>
+</aside>
+{% endblock %}
+
+{% block contenuto_principale %}
+<section id="saluto" class="top-border">
+    <div class="d-flex justify-content-evenly align-items-center">
+        <img class="foto-profilo" src="{{ url_for('static', filename=current_user.get_immagine()) }}">
+        <h1 class="m-0 saluto">Ciao <em>{{ current_user.get_username() }}</em></h1>
+    </div>
+</section>
+
+<h2 class="m-0 frase-titolo top-border">Dati personali</h2>
+
+<dl id="info">
+    <div class="row m-0 justify-content-evenly">
+        <div class="col-7 row m-0 align-items-center justify-content-evenly">
+            <dt class="col-6">
+                <label class="m-0 form-label">
+                    <h3 class="m-0">Username</h3>
+                </label>
+            </dt>
+            <dd class="col-6 m-0">
+                <input type="text" class="form-control" readonly value="{{ current_user.get_username() }}">
+            </dd>
+        </div>
+    </div>
+
+    <div class="row m-0 justify-content-evenly">
+        <div class="col-7 row m-0 align-items-center justify-content-evenly">
+            <dt class="col-6">
+                <label class="m-0 form-label">
+                    <h3 class="m-0">Email</h3>
+                </label>
+            </dt>
+            <dd class="col-6 m-0">
+                <input type="text" class="form-control" readonly value="{{ current_user.get_email() }}">
+            </dd>
+        </div>
+    </div>
+
+    <div class="row m-0 justify-content-evenly">
+        <div class="col-7 row m-0 align-items-center justify-content-evenly">
+            <dt class="col-6">
+                <label class="m-0 form-label">
+                    <h3 class="m-0">Password</h3>
+                </label>
+            </dt>
+            <dd class="col-6 m-0">
+                <input type="text" class="form-control" readonly value="{{ current_user.get_password() }}">
+            </dd>
+        </div>
+    </div>
+
+    <div class="row m-0 justify-content-evenly">
+        <div class="col-7 row m-0 align-items-center justify-content-evenly">
+            <dt class="col-6">
+                <label class="m-0 form-label">
+                    <h3 class="m-0">Tipo Utente</h3>
+                </label>
+            </dt>
+            <dd class="col-6 m-0">
+                <input type="text" class="form-control" readonly value="{{ current_user.get_tipo() }}">
+            </dd>
+        </div>
+    </div>
+
+    <div class="row m-0 justify-content-evenly">
+        <div class="col-7 row m-0 align-items-center justify-content-evenly">
+            <dt class="col-6">
+                <label class="m-0 form-label">
+                    <h3 class="m-0">Immagine profilo</h3>
+                </label>
+            </dt>
+            <dd class="col-6 m-0">
+                <img class="foto-profilo piccola ps-0 pe-0"
+                    src="{{ url_for('static', filename=current_user.get_immagine()) }}">
+            </dd>
+        </div>
+    </div>
+</dl>
+
+<h2 class="m-0 frase-titolo top-border">
+    {% if current_user.is_creatore() %}
+    Continua ad ascoltare e creare podcast
+    {% else %}
+    Continua ad ascoltare i tuoi podcast preferiti
+    {% endif %}
+</h2>
+
+<div class="m-0 mt-2 d-flex justify-content-around">
+    <a href="{{ url_for('seguiti') }}" class="main-link">
+        <h5 class="m-0 p-1">Podcast che segui</h5>
+    </a>
+
+    {% if current_user.is_creatore() %}
+    <a href="{{ url_for('tuoi_podcast') }}" class="main-link">
+        <h5 class="m-0 p-1">I tuoi podcast</h5>
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

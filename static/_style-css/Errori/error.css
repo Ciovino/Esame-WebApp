@@ -1,0 +1,20 @@
+div#title-error {
+    margin: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+}
+
+.bordo {
+    color: var(--oxford-blue);
+
+    border: 3px solid var(--prussian-blue);
+    border-radius: 15px;
+
+    background-color: rgba(238, 244, 237, 0.6);
+}
+
+.top-border {
+    border-color: var(--prussian-blue);
+}
